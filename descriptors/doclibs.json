@@ -1,0 +1,55 @@
+{
+  "service": "doclibs",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "get-doclib-list",
+      "doc_id": 544,
+      "name": "获取团队文档库列表",
+      "summary": "获取团队文档库列表",
+      "http_method": "GET",
+      "path": "/v7/doclibs",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.doclib.readwrite",
+        "kso.doclib.readwrite",
+        "kso.doclib.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "分页大小,公网上限是100",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页token",
+            "enum": null
+          },
+          {
+            "name": "user_role",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "按用户在文档库对应用户组的角色筛选组,按ctime返回,置顶不生效",
+            "enum": [
+              "`readonly`",
+              "`normal`",
+              "`admin`",
+              "`owner`"
+            ]
+          }
+        ],
+        "header": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+
+    ╔══════════════════════════════════════════════════╗
+    ║                    Ready to Go                   ║
+    ║                                                  ║
+    ║  wpscli auth status                              ║
+    ║  wpscli schema calendars                         ║
+    ║  wpscli raw GET /v7/users --auth-type app       ║
+    ║                                                  ║
+    ║  Keep shipping, keep automating.                ║
+    ║                                                  ║
+    ╚══════════════════════════════════════════════════╝
+

@@ -1,0 +1,506 @@
+{
+  "service": "files",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "batch-get-file-info",
+      "doc_id": 514,
+      "name": "批量获取文件信息",
+      "summary": "批量获取文件信息",
+      "http_method": "GET",
+      "path": "/v7/files/batch_get",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file.readwrite",
+        "kso.file.read",
+        "kso.file.readwrite",
+        "kso.file.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "file_ids",
+            "location": "query",
+            "ptype": "array",
+            "required": true,
+            "description": "文件ID列表",
+            "enum": null
+          },
+          {
+            "name": "with_permission",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回文件操作权限",
+            "enum": null
+          },
+          {
+            "name": "with_ext_attrs",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回文件扩展属性",
+            "enum": null
+          },
+          {
+            "name": "with_drive",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回文件所属drive信息",
+            "enum": null
+          },
+          {
+            "name": "mode",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "批量获取结果的返回模式。（默认）fastfail-快速失败，遇到错误时立即终止并返回；detailed-返回详情，遇到错误时继续执行，最终返回成功的文件集合和失败列表。",
+            "enum": [
+              "`fastfail`",
+              "`detailed`"
+            ]
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "get-file-info",
+      "doc_id": 522,
+      "name": "获取文件信息",
+      "summary": "获取文件信息",
+      "http_method": "GET",
+      "path": "/v7/files/{file_id}/meta",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file.readwrite",
+        "kso.file.read",
+        "kso.file.readwrite",
+        "kso.file.read",
+        "kso.mcp.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "with_permission",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回文件操作权限",
+            "enum": null
+          },
+          {
+            "name": "with_ext_attrs",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回文件扩展属性",
+            "enum": null
+          },
+          {
+            "name": "with_drive",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返文件所属drive信息",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "get-permission-settings",
+      "doc_id": 494,
+      "name": "获取文件权限配置项",
+      "summary": "获取文件权限配置项",
+      "http_method": "GET",
+      "path": "/v7/files/{file_id}/permission_settings",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file_permission.readwrite",
+        "kso.file_permission.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "file_id表示文件id,参考drive.v7_list_files接口返回的data.items[?].id",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "keys",
+            "location": "query",
+            "ptype": "array",
+            "required": true,
+            "description": "权限相关设置枚举（allow_guest_create_upload：允许团队外用户上传）",
+            "enum": [
+              "`allow_guest_create_upload`",
+              "`share_entity`",
+              "`copy_content_entity`",
+              "`save_as_entity`",
+              "`upload_entity`",
+              "`rename_entity`",
+              "`move_entity`"
+            ]
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "post-permission-settings",
+      "doc_id": 497,
+      "name": "设置文件权限配置项",
+      "summary": "设置文件权限配置项",
+      "http_method": "GET",
+      "path": "/v7/files/{file_id}/permission_settings",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file_permission.readwrite",
+        "kso.file_permission.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "file_id表示文件id,参考drive.v7_list_files接口返回的data.items[?].id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "query-ai-search-drive-status",
+      "doc_id": 526,
+      "name": "查询驱动盘AI搜索状态",
+      "summary": "查询驱动盘AI搜索状态",
+      "http_method": "GET",
+      "path": "/v7/files/ai_search/query_drive_status",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file.search",
+        "kso.file_search.readwrite",
+        "kso.file.search"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "search-file",
+      "doc_id": 529,
+      "name": "文件搜索",
+      "summary": "文件搜索",
+      "http_method": "GET",
+      "path": "/v7/files/search",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file.search",
+        "kso.file_search.readwrite",
+        "kso.file.search",
+        "kso.mcp.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "keyword",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "搜索关键字",
+            "enum": null
+          },
+          {
+            "name": "file_type",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "文件类型,不传默认全搜",
+            "enum": [
+              "`folder`",
+              "`file`",
+              "`shortcut`"
+            ]
+          },
+          {
+            "name": "file_exts",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "文件后缀",
+            "enum": null
+          },
+          {
+            "name": "drive_ids",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "搜索盘列表,v7接口支持数组,但是还没有应用场景",
+            "enum": null
+          },
+          {
+            "name": "parent_ids",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "搜索目录列表",
+            "enum": null
+          },
+          {
+            "name": "creator_ids",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "创建者id,公网只支持选择是否自己创建的文件",
+            "enum": null
+          },
+          {
+            "name": "modifier_ids",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "编辑者id",
+            "enum": null
+          },
+          {
+            "name": "sharer_ids",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "分享者id",
+            "enum": null
+          },
+          {
+            "name": "receiver_ids",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "接收者id",
+            "enum": null
+          },
+          {
+            "name": "time_type",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "时间范围",
+            "enum": [
+              "`ctime`",
+              "`mtime`",
+              "`otime`",
+              "`stime`"
+            ]
+          },
+          {
+            "name": "start_time",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "最小时间",
+            "enum": null
+          },
+          {
+            "name": "end_time",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "最大时间",
+            "enum": null
+          },
+          {
+            "name": "with_permission",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回文件操作权限",
+            "enum": null
+          },
+          {
+            "name": "with_link",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回文件分享信息",
+            "enum": null
+          },
+          {
+            "name": "with_total",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回搜索到的总条数",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "分页大小,公网限制最大为500",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "翻页token",
+            "enum": null
+          },
+          {
+            "name": "channels",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "渠道信息",
+            "enum": null
+          },
+          {
+            "name": "device_ids",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "设备id",
+            "enum": null
+          },
+          {
+            "name": "exclude_channels",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "排除渠道信息",
+            "enum": null
+          },
+          {
+            "name": "exclude_file_exts",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "排除文件后缀",
+            "enum": null
+          },
+          {
+            "name": "filter_user_id",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "创建者分享者过滤",
+            "enum": null
+          },
+          {
+            "name": "file_ext_groups",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "文件分组后缀",
+            "enum": null
+          },
+          {
+            "name": "with_folder",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回文件夹文件, 已过期, 使用file_type字段实现",
+            "enum": null
+          },
+          {
+            "name": "with_drive",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回驱动盘",
+            "enum": null
+          },
+          {
+            "name": "order",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "排序方式",
+            "enum": [
+              "`desc`",
+              "`asc`"
+            ]
+          },
+          {
+            "name": "order_by",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "排序字段",
+            "enum": [
+              "`ctime`",
+              "`mtime`"
+            ]
+          },
+          {
+            "name": "scope",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "搜索范围",
+            "enum": [
+              "`all`",
+              "`share_by_me`",
+              "`share_to_me`",
+              "`latest`",
+              "`personal_drive`",
+              "`group_drive`",
+              "`recycle`",
+              "`customize`",
+              "`latest_opened`",
+              "`latest_edited`"
+            ]
+          },
+          {
+            "name": "search_operator_name",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "搜索文件的创建者或文件分享者",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

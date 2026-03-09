@@ -1,0 +1,68 @@
+{
+  "service": "coop_files",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "batch-get-attachment-thumbnail",
+      "doc_id": 163,
+      "name": "批量查询附件缩略图",
+      "summary": "批量查询附件缩略图",
+      "http_method": "GET",
+      "path": "/v7/coop/files/{file_id}/attachments/thumbnails/batch_get",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.coop_files.readwrite",
+        "kso.coop_files.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-attachment-info",
+      "doc_id": 164,
+      "name": "查询附件信息",
+      "summary": "查询附件信息",
+      "http_method": "GET",
+      "path": "/v7/coop/files/{file_id}/attachments/{attachment_id}",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.coop_files.readwrite",
+        "kso.coop_files.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          },
+          {
+            "name": "attachment_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "附件ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    }
+  ]
+}

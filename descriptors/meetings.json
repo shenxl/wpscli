@@ -1,0 +1,613 @@
+{
+  "service": "meetings",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "end-meeting",
+      "doc_id": 355,
+      "name": "结束会议",
+      "summary": "结束会议",
+      "http_method": "GET",
+      "path": "/v7/meetings/{meeting_id}/end",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "meeting_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "会议ID（视频会议的唯一标识，视频会议开始后才会产生）",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-meeting",
+      "doc_id": 356,
+      "name": "获取会议详情",
+      "summary": "获取会议详情",
+      "http_method": "GET",
+      "path": "/v7/meetings/{meeting_id}",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting.read",
+        "kso.meeting.readwrite",
+        "kso.meeting.read",
+        "kso.meeting.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "meeting_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "会议ID（视频会议的唯一标识，视频会议开始后才会产生）",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-minute-summary",
+      "doc_id": 365,
+      "name": "获取纪要总结要点",
+      "summary": "获取纪要总结要点",
+      "http_method": "GET",
+      "path": "/v7/meetings/{meeting_id}/minutes/{minute_id}/summary",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting_minutes_content.read",
+        "kso.meeting_minutes_content.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "meeting_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "会议ID（视频会议的唯一标识，视频会议开始后才会产生）",
+            "enum": null
+          },
+          {
+            "name": "minute_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "纪要ID，可通过获取纪要列表接口获取",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-minute-transcript",
+      "doc_id": 366,
+      "name": "获取纪要语音转写",
+      "summary": "获取纪要语音转写",
+      "http_method": "GET",
+      "path": "/v7/meetings/{meeting_id}/minutes/{minute_id}/transcript",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting_minutes_content.read",
+        "kso.meeting_minutes_content.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "meeting_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "会议ID（视频会议的唯一标识，视频会议开始后才会产生）",
+            "enum": null
+          },
+          {
+            "name": "minute_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "纪要ID，可通过获取纪要列表接口获取",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-minutes",
+      "doc_id": 367,
+      "name": "获取指定会议的纪要列表",
+      "summary": "获取指定会议的纪要列表",
+      "http_method": "GET",
+      "path": "/v7/meetings/{meeting_id}/minutes",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting_minutes.read",
+        "kso.meeting_minutes.readwrite",
+        "kso.meeting_minutes.read",
+        "kso.meeting_minutes.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "meeting_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "会议ID（视频会议的唯一标识，视频会议开始后才会产生）",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-participants",
+      "doc_id": 357,
+      "name": "获取会议参会人列表",
+      "summary": "获取会议参会人列表",
+      "http_method": "GET",
+      "path": "/v7/meetings/{meeting_id}/participants",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting.read",
+        "kso.meeting.readwrite",
+        "kso.meeting.read",
+        "kso.meeting.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "meeting_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "会议ID",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页标记，第一次请求不填，表示从头开始遍历；分页查询结果还有更多项时会同时返回新的 page_token，下次遍历可采用该 page_token 获取查询结果",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小，默认20，最大100",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-recording-chapters",
+      "doc_id": 370,
+      "name": "获取录制的章节",
+      "summary": "获取录制的章节",
+      "http_method": "GET",
+      "path": "/v7/meetings/{meeting_id}/recordings/{recording_id}/chapters",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting_recording_content.read",
+        "kso.meeting_recording_content.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "meeting_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "会议ID（视频会议的唯一标识，视频会议开始后才会产生）",
+            "enum": null
+          },
+          {
+            "name": "recording_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "录制ID，可通过获取录制列表接口获取",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-recording-summary",
+      "doc_id": 371,
+      "name": "获取录制总结要点",
+      "summary": "获取录制总结要点",
+      "http_method": "GET",
+      "path": "/v7/meetings/{meeting_id}/recordings/{recording_id}/summary",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting_recording_content.read",
+        "kso.meeting_recording_content.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "meeting_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "会议ID（视频会议的唯一标识，视频会议开始后才会产生）",
+            "enum": null
+          },
+          {
+            "name": "recording_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "录制ID，可通过获取录制列表接口获取",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-recording-transcript",
+      "doc_id": 372,
+      "name": "获取录制语音转写",
+      "summary": "获取录制语音转写",
+      "http_method": "GET",
+      "path": "/v7/meetings/{meeting_id}/recordings/{recording_id}/transcript",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting_recording_content.read",
+        "kso.meeting_recording_content.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "meeting_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "会议ID（视频会议的唯一标识，视频会议开始后才会产生）",
+            "enum": null
+          },
+          {
+            "name": "recording_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "录制ID，可通过获取录制列表接口获取",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-recordings",
+      "doc_id": 373,
+      "name": "获取指定会议的录制列表",
+      "summary": "获取指定会议的录制列表",
+      "http_method": "GET",
+      "path": "/v7/meetings/{meeting_id}/recordings",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting_recording.read",
+        "kso.meeting_recording.read",
+        "kso.meeting_recording.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "meeting_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "会议ID（视频会议的唯一标识，视频会议开始后才会产生）",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "invite-participants",
+      "doc_id": 359,
+      "name": "邀请参会人",
+      "summary": "邀请参会人",
+      "http_method": "GET",
+      "path": "/v7/meetings/{meeting_id}/participants/invite",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "meeting_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "会议ID（视频会议的唯一标识，视频会议开始后才会产生）",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "list-meetings",
+      "doc_id": 360,
+      "name": "获取会议列表",
+      "summary": "获取会议列表",
+      "http_method": "GET",
+      "path": "/v7/meetings",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting.read",
+        "kso.meeting.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "join_code",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "入会码，应用身份下只支持使用入会码查询会议",
+            "enum": null
+          },
+          {
+            "name": "start_time",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "查询开始时间（unix时间，单位sec）",
+            "enum": null
+          },
+          {
+            "name": "end_time",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "查询结束时间（unix时间，单位sec）",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页标记，第一次请求不填，表示从头开始遍历；分页查询结果还有更多项时会同时返回新的 page_token，下次遍历可采用该 page_token 获取查询结果",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "remove-participants",
+      "doc_id": 361,
+      "name": "移除参会人",
+      "summary": "移除参会人",
+      "http_method": "GET",
+      "path": "/v7/meetings/{meeting_id}/participants/remove",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "meeting_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "会议ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "set-host",
+      "doc_id": 362,
+      "name": "设置主持人",
+      "summary": "设置主持人",
+      "http_method": "GET",
+      "path": "/v7/meetings/{meeting_id}/set_host",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting.readwrite",
+        "kso.meeting.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "meeting_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "会议ID（视频会议的唯一标识，视频会议开始后才会产生）",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "start-recording",
+      "doc_id": 375,
+      "name": "开始录制",
+      "summary": "开始录制",
+      "http_method": "GET",
+      "path": "/v7/meetings/{meeting_id}/recordings/start",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting_recording.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "meeting_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "会议ID（视频会议的唯一标识，视频会议开始后才会产生）",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "stop-recording",
+      "doc_id": 376,
+      "name": "停止录制",
+      "summary": "停止录制",
+      "http_method": "GET",
+      "path": "/v7/meetings/{meeting_id}/recordings/stop",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting_recording.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "meeting_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "会议ID（视频会议的唯一标识，视频会议开始后才会产生）",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "service": "drive_tasks",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "get-file-task",
+      "doc_id": 500,
+      "name": "获取异步任务信息",
+      "summary": "获取异步任务信息",
+      "http_method": "GET",
+      "path": "/v7/drive_tasks/{task_id}/meta",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file.readwrite",
+        "kso.file.read",
+        "kso.file.readwrite",
+        "kso.file.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "task_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    }
+  ]
+}

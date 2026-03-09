@@ -1,0 +1,344 @@
+{
+  "service": "mailboxes",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "create-draft",
+      "doc_id": 226,
+      "name": "创建草稿",
+      "summary": "创建草稿",
+      "http_method": "GET",
+      "path": "/v7/mailboxes/{mailbox_id}/messages/create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.mail.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "mailbox_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-folder-list",
+      "doc_id": 241,
+      "name": "获取目录列表",
+      "summary": "获取目录列表",
+      "http_method": "GET",
+      "path": "/v7/mailboxes/{mailbox_id}/folders",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.mailbox.readwrite",
+        "kso.mailbox.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "mailbox_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小，默认取10",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "翻页token，首次无需提供",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "get-folder-mail-list",
+      "doc_id": 227,
+      "name": "获取特定目录下的邮件列表",
+      "summary": "获取特定目录下的邮件列表",
+      "http_method": "GET",
+      "path": "/v7/mailboxes/{mailbox_id}/folders/{folder_id}/messages",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.mail.readwrite",
+        "kso.mail.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "mailbox_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          },
+          {
+            "name": "folder_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "start_time",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "邮件的起始时间戳（单位秒），默认为1",
+            "enum": null
+          },
+          {
+            "name": "end_time",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "邮件的结束时间戳（单位秒），须大于start_time。默认无穷大",
+            "enum": null
+          },
+          {
+            "name": "filter",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "邮件筛选条件，默认为all",
+            "enum": [
+              "`unread`",
+              "`flagged`"
+            ]
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "分页大小，默认取5",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "翻页token，首次无需提供",
+            "enum": null
+          },
+          {
+            "name": "thread_id",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "会话id",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "get-mail",
+      "doc_id": 228,
+      "name": "获取指定邮件",
+      "summary": "获取指定邮件",
+      "http_method": "GET",
+      "path": "/v7/mailboxes/{mailbox_id}/folders/{folder_id}/messages/{message_id}",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.mail.readwrite",
+        "kso.mail.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "mailbox_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          },
+          {
+            "name": "folder_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          },
+          {
+            "name": "message_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "with_ocr_body",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否需要OCR识别后的邮件体。默认返回未经OCR识别的邮件体。",
+            "enum": null
+          },
+          {
+            "name": "with_importance_flag",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否需要邮件重要性标识。默认不返回importance_flag字段",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "get-mailboxes",
+      "doc_id": 246,
+      "name": "获取邮箱列表",
+      "summary": "获取邮箱列表",
+      "http_method": "GET",
+      "path": "/v7/mailboxes",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.mailbox.readwrite",
+        "kso.mailbox.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小（范围1-100，默认20）",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "翻页token（第一次请求不传）",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "get-sub-folder-list",
+      "doc_id": 242,
+      "name": "获取子目录列表",
+      "summary": "获取子目录列表",
+      "http_method": "GET",
+      "path": "/v7/mailboxes/{mailbox_id}/folders/{folder_id}/children",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.mailbox.readwrite",
+        "kso.mailbox.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "mailbox_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          },
+          {
+            "name": "folder_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小，默认取10",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "翻页token，首次无需提供",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "send-draft",
+      "doc_id": 229,
+      "name": "发送草稿",
+      "summary": "发送草稿",
+      "http_method": "GET",
+      "path": "/v7/mailboxes/{mailbox_id}/messages/{message_id}/send",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.mail.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "mailbox_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          },
+          {
+            "name": "message_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    }
+  ]
+}

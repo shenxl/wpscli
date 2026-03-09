@@ -1,0 +1,111 @@
+{
+  "service": "meeting_room_banned_users",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "create-meeting-room-banned-user",
+      "doc_id": 322,
+      "name": "创建会议室黑名单用户",
+      "summary": "创建会议室黑名单用户",
+      "http_method": "GET",
+      "path": "/v7/meeting_room_banned_users/create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting_rooms.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "delete-meeting-room-banned-user",
+      "doc_id": 323,
+      "name": "删除会议室黑名单用户",
+      "summary": "删除会议室黑名单用户",
+      "http_method": "GET",
+      "path": "/v7/meeting_room_banned_users/delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting_rooms.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-meeting-room-banned-user-list",
+      "doc_id": 324,
+      "name": "获取会议室黑名单用户列表",
+      "summary": "获取会议室黑名单用户列表",
+      "http_method": "GET",
+      "path": "/v7/meeting_room_banned_users",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting_rooms.read",
+        "kso.meeting_rooms.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "每页数量，默认20",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页凭证，首次不传，后续需要",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

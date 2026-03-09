@@ -1,0 +1,12 @@
+
+    ╔══════════════════════════════════════════════════╗
+    ║                 Config Sources                   ║
+    ║                                                  ║
+    ║  Priority:                                       ║
+    ║   WPS_CLI_TOKEN                                  ║
+    ║   WPS_OAUTH_SERVER                               ║
+    ║   ~/.config/wps/credentials.json                 ║
+    ║   WPS_CLI_AK / WPS_CLI_SK                        ║
+    ║                                                  ║
+    ╚══════════════════════════════════════════════════╝
+

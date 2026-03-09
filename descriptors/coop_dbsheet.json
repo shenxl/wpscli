@@ -1,0 +1,1829 @@
+{
+  "service": "coop_dbsheet",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "add-subjects",
+      "doc_id": 165,
+      "name": "批量添加成员",
+      "summary": "批量添加成员",
+      "http_method": "GET",
+      "path": "/v7/coop/dbsheet/{file_id}/content_permissions/subjects/batch_add",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "bind-parent",
+      "doc_id": 185,
+      "name": "绑定父子记录",
+      "summary": "绑定父子记录",
+      "http_method": "GET",
+      "path": "/v7/coop/dbsheet/{file_id}/sheets/{sheet_id}/records/parents/{parent_id}/children/batch_bind",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "数据表ID",
+            "enum": null
+          },
+          {
+            "name": "parent_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "父记录ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "change-subjects",
+      "doc_id": 166,
+      "name": "批量更改成员权限",
+      "summary": "批量更改成员权限",
+      "http_method": "GET",
+      "path": "/v7/coop/dbsheet/{file_id}/content_permissions/subjects/batch_change",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "create-field",
+      "doc_id": 176,
+      "name": "创建字段",
+      "summary": "创建字段",
+      "http_method": "POST",
+      "path": "/v7/coop/dbsheet/{file_id}/sheets/{sheet_id}/fields",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "文件 id",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": false,
+            "description": "数据表 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "create-permission",
+      "doc_id": 167,
+      "name": "新增自定义角色",
+      "summary": "新增自定义角色",
+      "http_method": "GET",
+      "path": "/v7/coop/dbsheet/{file_id}/content_permissions/batch_add/async_tasks/create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "create-record",
+      "doc_id": 191,
+      "name": "创建记录",
+      "summary": "创建记录",
+      "http_method": "POST",
+      "path": "/v7/coop/dbsheet/{file_id}/sheets/{sheet_id}/records/create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "文件 id",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": false,
+            "description": "工作表 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "create-sheet",
+      "doc_id": 207,
+      "name": "创建工作表",
+      "summary": "创建工作表",
+      "http_method": "POST",
+      "path": "/v7/coop/dbsheet/{file_id}/sheets/create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "文件 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "create-view",
+      "doc_id": 210,
+      "name": "创建视图",
+      "summary": "创建视图",
+      "http_method": "POST",
+      "path": "/v7/coop/dbsheet/{file_id}/sheets/{sheet_id}/views",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "文件 id",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": false,
+            "description": "数据表 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "create-webhook",
+      "doc_id": 215,
+      "name": "创建webhook",
+      "summary": "创建webhook",
+      "http_method": "POST",
+      "path": "/v7/coop/dbsheet/{file_id}/hooks/create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "文件 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "delete-field",
+      "doc_id": 177,
+      "name": "删除字段",
+      "summary": "删除字段",
+      "http_method": "POST",
+      "path": "/v7/coop/dbsheet/{file_id}/sheets/{sheet_id}/fields/delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "文件 id",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": false,
+            "description": "数据表 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "delete-permission",
+      "doc_id": 168,
+      "name": "删除自定义角色",
+      "summary": "删除自定义角色",
+      "http_method": "GET",
+      "path": "/v7/coop/dbsheet/{file_id}/content_permissions/delete/async_tasks/create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "delete-record",
+      "doc_id": 193,
+      "name": "删除记录",
+      "summary": "删除记录",
+      "http_method": "POST",
+      "path": "/v7/coop/dbsheet/{file_id}/sheets/{sheet_id}/records/batch_delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "文件 id",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": false,
+            "description": "工作表 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "delete-sheet",
+      "doc_id": 208,
+      "name": "删除工作表",
+      "summary": "删除工作表",
+      "http_method": "POST",
+      "path": "/v7/coop/dbsheet/{file_id}/sheets/{sheet_id}/delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "文件 id",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": false,
+            "description": "数据表 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "delete-view",
+      "doc_id": 211,
+      "name": "删除视图",
+      "summary": "删除视图",
+      "http_method": "POST",
+      "path": "/v7/coop/dbsheet/{file_id}/sheets/{sheet_id}/views/{view_id}/delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "文件 id",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": false,
+            "description": "数据表 id",
+            "enum": null
+          },
+          {
+            "name": "view_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "视图 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "delete-webhook",
+      "doc_id": 216,
+      "name": "删除webhook",
+      "summary": "删除webhook",
+      "http_method": "POST",
+      "path": "/v7/coop/dbsheet/{file_id}/hooks/{hook_id}/delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "文件 id",
+            "enum": null
+          },
+          {
+            "name": "hook_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "需要取消的 hook id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "disable-parent",
+      "doc_id": 186,
+      "name": "禁用父子关系（仅对前端生效）",
+      "summary": "禁用父子关系（仅对前端生效）",
+      "http_method": "GET",
+      "path": "/v7/coop/dbsheet/{file_id}/sheets/{sheet_id}/records/parents/disable",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "数据表ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "enable-parent",
+      "doc_id": 187,
+      "name": "启用父子关系（仅对前端生效）",
+      "summary": "启用父子关系（仅对前端生效）",
+      "http_method": "GET",
+      "path": "/v7/coop/dbsheet/{file_id}/sheets/{sheet_id}/records/parents/enable",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "数据表ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-schema",
+      "doc_id": 183,
+      "name": "获取Schema",
+      "summary": "获取Schema",
+      "http_method": "GET",
+      "path": "/v7/coop/dbsheet/{file_id}/schema",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read",
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "文件 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "list-child",
+      "doc_id": 188,
+      "name": "查询子记录",
+      "summary": "查询子记录",
+      "http_method": "GET",
+      "path": "/v7/coop/dbsheet/{file_id}/sheets/{sheet_id}/records/parents/{parent_id}/children",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read",
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "数据表ID",
+            "enum": null
+          },
+          {
+            "name": "parent_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "父记录ID",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页获取记录时的每页大小. 缺省值为100，取值范围1-1000。",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页起始位置. 当存在分页, 且未查询到最后一页或 maxRecords 记录时, 返回值会包含 next_page_token",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "list-permission",
+      "doc_id": 170,
+      "name": "列举自定义角色",
+      "summary": "列举自定义角色",
+      "http_method": "GET",
+      "path": "/v7/coop/dbsheet/{file_id}/content_permissions",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read",
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "list-record",
+      "doc_id": 195,
+      "name": "列举记录",
+      "summary": "列举记录",
+      "http_method": "POST",
+      "path": "/v7/coop/dbsheet/{file_id}/sheets/{sheet_id}/records",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read",
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "文件 id",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": false,
+            "description": "数据表 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "list-record-by-page",
+      "doc_id": 194,
+      "name": "按页列举记录",
+      "summary": "按页列举记录",
+      "http_method": "POST",
+      "path": "/v7/coop/dbsheet/{file_id}/sheets/{sheet_id}/records/list_by_page",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read",
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "文件 id",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": false,
+            "description": "数据表 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "list-subjects",
+      "doc_id": 171,
+      "name": "列举成员",
+      "summary": "列举成员",
+      "http_method": "GET",
+      "path": "/v7/coop/dbsheet/{file_id}/content_permissions/subjects",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read",
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件 id",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "cloud_permission_id",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "云权限id",
+            "enum": null
+          },
+          {
+            "name": "permission_type",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "权限组类型",
+            "enum": [
+              "`system`",
+              "`team_custom`",
+              "`content_custom`"
+            ]
+          },
+          {
+            "name": "alias_name",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "权限别名（拿不到permission_id时传递此项）",
+            "enum": [
+              "`manageable`",
+              "`viewable`",
+              "`editable`"
+            ]
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页起始位置标识，首页请求可不传，默认分页数量20个item",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "list-webhook",
+      "doc_id": 217,
+      "name": "列举webhook",
+      "summary": "列举webhook",
+      "http_method": "GET",
+      "path": "/v7/coop/dbsheet/{file_id}/hooks",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "文件 id",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "with_detail",
+            "location": "query",
+            "ptype": "bool",
+            "required": false,
+            "description": "是否返回 hook 规则详情，默认 false",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "parent-status",
+      "doc_id": 189,
+      "name": "查询父子关系是否禁用（仅对前端生效）",
+      "summary": "查询父子关系是否禁用（仅对前端生效）",
+      "http_method": "GET",
+      "path": "/v7/coop/dbsheet/{file_id}/sheets/{sheet_id}/records/parents/status",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read",
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "数据表ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "remove-subjects",
+      "doc_id": 172,
+      "name": "批量删除成员",
+      "summary": "批量删除成员",
+      "http_method": "GET",
+      "path": "/v7/coop/dbsheet/{file_id}/content_permissions/subjects/batch_remove",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "search-record",
+      "doc_id": 196,
+      "name": "检索记录",
+      "summary": "检索记录",
+      "http_method": "GET",
+      "path": "/v7/coop/dbsheet/{file_id}/sheets/{sheet_id}/records/{record_id}",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read",
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "文件 id",
+            "enum": null
+          },
+          {
+            "name": "record_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "记录 id",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": false,
+            "description": "数据表 id",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "prefer_id",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否使用字段 / 选项 id 而不是字段 / 选项名来标识",
+            "enum": null
+          },
+          {
+            "name": "show_fields_info",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否展示字段信息。 选填。 为 true 时，会额外地返回一个 fields 结构体，展示字段信息（类似 Base Schema 中的 fields）。",
+            "enum": null
+          },
+          {
+            "name": "show_record_extra_info",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否展示额外信息。 选填。 为 true 时，会额外显示创建者、创建时间、最后修改者、最后修改时间信息（与是否有创建者、创建时间、最后修改者、最后修改时间字段无关）",
+            "enum": null
+          },
+          {
+            "name": "text_value",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "返回值类型。 original 返回原始值， text 返回文本值， compound 返回原始值和文本值",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "unbind-parent",
+      "doc_id": 190,
+      "name": "解绑父子记录",
+      "summary": "解绑父子记录",
+      "http_method": "GET",
+      "path": "/v7/coop/dbsheet/{file_id}/sheets/{sheet_id}/records/parents/{parent_id}/children/batch_unbind",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "数据表ID",
+            "enum": null
+          },
+          {
+            "name": "parent_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "父记录ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "update-field",
+      "doc_id": 178,
+      "name": "更新字段",
+      "summary": "更新字段",
+      "http_method": "POST",
+      "path": "/v7/coop/dbsheet/{file_id}/sheets/{sheet_id}/fields/update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "文件 id",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": false,
+            "description": "数据表 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "update-record",
+      "doc_id": 197,
+      "name": "更新记录",
+      "summary": "更新记录",
+      "http_method": "POST",
+      "path": "/v7/coop/dbsheet/{file_id}/sheets/{sheet_id}/records/update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "文件 id",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": false,
+            "description": "工作表 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "update-sheet",
+      "doc_id": 209,
+      "name": "更新工作表",
+      "summary": "更新工作表",
+      "http_method": "POST",
+      "path": "/v7/coop/dbsheet/{file_id}/sheets/{sheet_id}/update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "文件 id",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": false,
+            "description": "工作表 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "update-view",
+      "doc_id": 214,
+      "name": "更新视图",
+      "summary": "更新视图",
+      "http_method": "POST",
+      "path": "/v7/coop/dbsheet/{file_id}/sheets/{sheet_id}/views/{view_id}/update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "文件 id",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": false,
+            "description": "数据表 id",
+            "enum": null
+          },
+          {
+            "name": "view_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "视图 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    }
+  ]
+}

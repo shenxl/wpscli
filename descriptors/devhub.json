@@ -1,0 +1,454 @@
+{
+  "service": "devhub",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "app-detail",
+      "doc_id": 38,
+      "name": "智能体应用详情查询",
+      "summary": "智能体应用详情查询",
+      "http_method": "GET",
+      "path": "/v7/devhub/apps/{app_id}/detail",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.devhub_app.readwrite",
+        "kso.devhub_app.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "app_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：'application/json'",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：'Bearer {access_token}'",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "chat-cancel",
+      "doc_id": 39,
+      "name": "取消对话",
+      "summary": "取消对话",
+      "http_method": "GET",
+      "path": "/v7/devhub/apps/{app_id}/chats/cancel",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.devhub_chat.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "app_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：'application/json'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: 'Wed, 23 Jan 2013 06:43:08 GMT'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：'Bearer {access_token}'",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "session-create",
+      "doc_id": 42,
+      "name": "创建会话",
+      "summary": "创建会话",
+      "http_method": "GET",
+      "path": "/v7/devhub/apps/{app_id}/sessions/create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.devhub_session.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "app_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：'application/json'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: 'Wed, 23 Jan 2013 06:43:08 GMT'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：'Bearer {access_token}'",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "session-delete",
+      "doc_id": 43,
+      "name": "删除会话",
+      "summary": "删除会话",
+      "http_method": "GET",
+      "path": "/v7/devhub/sessions/{session_id}/delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.devhub_session.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "session_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：'application/json'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: 'Wed, 23 Jan 2013 06:43:08 GMT'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：'Bearer {access_token}'",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "session-list",
+      "doc_id": 44,
+      "name": "查询会话列表",
+      "summary": "查询会话列表",
+      "http_method": "GET",
+      "path": "/v7/devhub/apps/{app_id}/sessions/list",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.devhub_session.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "app_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "next_page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页token,首次查询时不需要传递，第一次查询结束后，查询下一页数据需要传递",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "分页大小",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：'application/json'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: 'Wed, 23 Jan 2013 06:43:08 GMT'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：'Bearer {access_token}'",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "session-message",
+      "doc_id": 45,
+      "name": "查询会话历史消息",
+      "summary": "查询会话历史消息",
+      "http_method": "GET",
+      "path": "/v7/devhub/apps/{app_id}/sessions/messages",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.devhub_session.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "app_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "session_id",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "会话id",
+            "enum": null
+          },
+          {
+            "name": "with_event",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否携带调试的信息",
+            "enum": null
+          },
+          {
+            "name": "next_page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页token",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：'application/json'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: 'Wed, 23 Jan 2013 06:43:08 GMT'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：'Bearer {access_token}'",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "session-single-name",
+      "doc_id": 46,
+      "name": "查询单个会话名称",
+      "summary": "查询单个会话名称",
+      "http_method": "GET",
+      "path": "/v7/devhub/sessions/{session_id}/name",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.devhub_session.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "session_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：'application/json'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: 'Wed, 23 Jan 2013 06:43:08 GMT'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：'Bearer {access_token}'",
+            "enum": null
+          }
+        ]
+      }
+    }
+  ]
+}

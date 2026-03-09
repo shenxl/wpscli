@@ -1,0 +1,1318 @@
+{
+  "service": "calendars",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "batch-create-calendar-event",
+      "doc_id": 118,
+      "name": "批量创建基础日程",
+      "summary": "批量创建基础日程",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}/events/batch_create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar_events.readwrite",
+        "kso.calendar_events.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id，可从日历列表、主日历详情获取，或使用primary指代用户的主日历",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "batch-create-calendar-permission",
+      "doc_id": 129,
+      "name": "批量创建日历权限",
+      "summary": "批量创建日历权限",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}/permissions/batch_create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar.readwrite",
+        "kso.calendar.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id，可从日历列表、主日历详情获取",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "batch-create-event-attendee",
+      "doc_id": 109,
+      "name": "添加日程参与者",
+      "summary": "添加日程参与者",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}/events/{event_id}/attendees/batch_create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar_events.readwrite",
+        "kso.calendar_events.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id，可从日历列表、主日历详情获取，或使用primary指代用户的主日历",
+            "enum": null
+          },
+          {
+            "name": "event_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日程id，可从日程列表获取",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "batch-create-event-meeting-room",
+      "doc_id": 114,
+      "name": "添加日程会议室",
+      "summary": "添加日程会议室",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}/events/{event_id}/meeting_rooms/batch_create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar_events.readwrite",
+        "kso.calendar_events.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id，可从日历列表、主日历详情获取，或使用primary指代用户的主日历",
+            "enum": null
+          },
+          {
+            "name": "event_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日程id，可从日程列表获取",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "batch-delete-event-attendee",
+      "doc_id": 110,
+      "name": "删除日程参与者",
+      "summary": "删除日程参与者",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}/events/{event_id}/attendees/batch_delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar_events.readwrite",
+        "kso.calendar_events.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id，可从日历列表、主日历详情获取，或使用primary指代用户的主日历",
+            "enum": null
+          },
+          {
+            "name": "event_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日程id，可从日程列表获取",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "batch-delete-event-meeting-room",
+      "doc_id": 115,
+      "name": "删除日程会议室",
+      "summary": "删除日程会议室",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}/events/{event_id}/meeting_rooms/batch_delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar_events.readwrite",
+        "kso.calendar_events.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id，可从日历列表、主日历详情获取，或使用primary指代用户的主日历",
+            "enum": null
+          },
+          {
+            "name": "event_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日程id，可从日程列表获取",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "batch-get-main-calendar",
+      "doc_id": 137,
+      "name": "批量查询主日历信息",
+      "summary": "批量查询主日历信息",
+      "http_method": "GET",
+      "path": "/v7/calendars/primary/batch_get",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar.read",
+        "kso.calendar.readwrite",
+        "kso.calendar.read",
+        "kso.calendar.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "create-calendar",
+      "doc_id": 138,
+      "name": "创建日历",
+      "summary": "创建日历",
+      "http_method": "GET",
+      "path": "/v7/calendars/create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar.readwrite",
+        "kso.calendar.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "create-calendar-event",
+      "doc_id": 120,
+      "name": "创建日程",
+      "summary": "创建日程",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}/events/create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar_events.readwrite",
+        "kso.calendar_events.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id，可从日历列表、主日历详情获取，或使用primary指代用户的主日历",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "create-calendar-event-chat",
+      "doc_id": 119,
+      "name": "创建日程群聊",
+      "summary": "创建日程群聊",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}/events/{event_id}/create_chat",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar_events.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id",
+            "enum": null
+          },
+          {
+            "name": "event_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日程id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "create-calendar-permission",
+      "doc_id": 130,
+      "name": "创建日历权限",
+      "summary": "创建日历权限",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}/permissions/create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar.readwrite",
+        "kso.calendar.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id，可从日历列表、主日历详情获取",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "create-timeoff-event",
+      "doc_id": 134,
+      "name": "创建请假日程",
+      "summary": "创建请假日程",
+      "http_method": "GET",
+      "path": "/v7/calendars/primary/timeoff_events/create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar_events.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "delete-calendar",
+      "doc_id": 139,
+      "name": "删除日历",
+      "summary": "删除日历",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}/delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar.readwrite",
+        "kso.calendar.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id，可从日历列表、主日历详情获取",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "delete-calendar-event",
+      "doc_id": 121,
+      "name": "删除日程",
+      "summary": "删除日程",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}/events/{event_id}/delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar_events.readwrite",
+        "kso.calendar_events.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id，可从日历列表、主日历详情获取，或使用primary指代用户的主日历",
+            "enum": null
+          },
+          {
+            "name": "event_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日程id，可从日程列表获取",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "delete-calendar-permission",
+      "doc_id": 131,
+      "name": "删除日历权限",
+      "summary": "删除日历权限",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}/permissions/{calendar_permission_id}/delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar.readwrite",
+        "kso.calendar.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id，可从日历列表、主日历详情获取",
+            "enum": null
+          },
+          {
+            "name": "calendar_permission_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历权限id，可从日历权限列表获取",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "delete-timeoff-event",
+      "doc_id": 135,
+      "name": "删除请假日程",
+      "summary": "删除请假日程",
+      "http_method": "GET",
+      "path": "/v7/calendars/primary/timeoff_events/{timeoff_event_id}/delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar_events.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "timeoff_event_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "请假日程id，创建请假日程时返回",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-calendar-event",
+      "doc_id": 125,
+      "name": "查询日程",
+      "summary": "查询日程",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}/events/{event_id}",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar_events.read",
+        "kso.calendar_events.readwrite",
+        "kso.calendar_events.read",
+        "kso.calendar_events.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id，可从日历列表、主日历详情获取，或使用primary指代用户的主日历",
+            "enum": null
+          },
+          {
+            "name": "event_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日程id，可从日程列表获取",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-calendar-event-instances",
+      "doc_id": 123,
+      "name": "查询日程实例",
+      "summary": "查询日程实例",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}/events/{event_id}/event_instances",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar_events.read",
+        "kso.calendar_events.readwrite",
+        "kso.calendar_events.read",
+        "kso.calendar_events.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id，可从日历列表、主日历详情获取，或使用primary指代用户的主日历",
+            "enum": null
+          },
+          {
+            "name": "event_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日程id，可从日程列表获取",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-calendar-event-instances-list",
+      "doc_id": 122,
+      "name": "查询日程实例列表",
+      "summary": "查询日程实例列表",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}/event_instances",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar_events.read",
+        "kso.calendar_events.readwrite",
+        "kso.calendar_events.read",
+        "kso.calendar_events.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id，可从日历列表、主日历详情获取，或使用primary指代用户的主日历",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "start_time",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "开始查询时间，RFC3339格式，需要url编码， 配合end_time使用查询指定区间内的日程，0<结束-开始<=31天，例如“2024-01-15T14%3A30%3A00%2B08%3A00”",
+            "enum": null
+          },
+          {
+            "name": "end_time",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "结束查询时间，RFC3339格式，需要url编码， 配合start_time使用查询指定区间内的日程，0<结束-开始<=31天，例如“2024-01-15T14%3A30%3A00%2B08%3A00”",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-calendar-event-list",
+      "doc_id": 124,
+      "name": "查询日程列表",
+      "summary": "查询日程列表",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}/events",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar_events.read",
+        "kso.calendar_events.readwrite",
+        "kso.calendar_events.read",
+        "kso.calendar_events.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id，可从日历列表、主日历详情获取，或使用primary指代用户的主日历",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "start_time",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "开始查询时间，RFC3339格式，需要url编码， 配合end_time使用查询指定区间内的日程，0<结束-开始<=31天，例如“2024-01-15T14%3A30%3A00%2B08%3A00”",
+            "enum": null
+          },
+          {
+            "name": "end_time",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "结束查询时间，RFC3339格式，需要url编码， 配合start_time使用查询指定区间内的日程，0<结束-开始<=31天，例如“2024-01-15T14%3A30%3A00%2B08%3A00”",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页token",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "最多返回 page_size 个数据，默认为30",
+            "enum": null
+          },
+          {
+            "name": "with_cancelled",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否包含已取消的日程，用于增量同步，注意仅返回 id 和 部分基础信息，请勿依赖其他字段， 根据id删除本地数据即可",
+            "enum": null
+          },
+          {
+            "name": "sync_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "增量同步标记，一个查询条件已经返回全部数据后，会返回 next_sync_token字段，下次遍历可用该字段的值作为 sync_token 获取自上一次以来发生变更的日程列表（在上次查询之后创建及被修改的日程都会返回）。",
+            "enum": null
+          },
+          {
+            "name": "anchor_time",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "时间锚点，RFC3339格式，指定拉取该时间点之后发生变更的日程数据（在该时间点之后创建及被修改的日程都会返回），例如“2024-01-15T14%3A30%3A00%2B08%3A00”",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-calendar-id",
+      "doc_id": 140,
+      "name": "查询日历",
+      "summary": "查询日历",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar.read",
+        "kso.calendar.readwrite",
+        "kso.calendar.read",
+        "kso.calendar.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id，可从日历列表、主日历详情获取",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-calendar-list",
+      "doc_id": 141,
+      "name": "查询日历列表",
+      "summary": "查询日历列表",
+      "http_method": "GET",
+      "path": "/v7/calendars",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar.read",
+        "kso.calendar.readwrite",
+        "kso.calendar.read",
+        "kso.calendar.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页标记，第一次请求不需要传递此参数，后续请求需要传递上一次响应中的next_page_token",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "每页返回的日历数量，默认为20，最大值为20",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "get-calendar-permission-list",
+      "doc_id": 132,
+      "name": "查询日历权限列表",
+      "summary": "查询日历权限列表",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}/permissions",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar.read",
+        "kso.calendar.readwrite",
+        "kso.calendar.read",
+        "kso.calendar.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id，可从日历列表、主日历详情获取",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页标记，第一次请求不需要传递此参数，后续请求需要传递上一次响应中的next_page_token",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "每页返回的权限数量，默认为20，最大值为20",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-event-attendee-group-members",
+      "doc_id": 111,
+      "name": "查询日程参与者为用户组的成员",
+      "summary": "查询日程参与者为用户组的成员",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}/events/{event_id}/attendee_groups/{group_id}/members",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar_events.read",
+        "kso.calendar_events.readwrite",
+        "kso.calendar_events.read",
+        "kso.calendar_events.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id，可从日历列表、主日历详情获取，或使用primary指代用户的主日历",
+            "enum": null
+          },
+          {
+            "name": "event_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日程id，可从日程列表获取",
+            "enum": null
+          },
+          {
+            "name": "group_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "参与者组ID，可从参与者列表获取，当参与者为群组时，group_id为群组ID",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页标记，第一次请求不需要传递此参数，后续请求需要传递上一次响应中的next_page_token",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "每页返回的参与者数量，最大值为100",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-event-attendee-list",
+      "doc_id": 112,
+      "name": "查询日程参与者列表",
+      "summary": "查询日程参与者列表",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}/events/{event_id}/attendees",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar_events.read",
+        "kso.calendar_events.readwrite",
+        "kso.calendar_events.read",
+        "kso.calendar_events.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id，可从日历列表、主日历详情获取，或使用primary指代用户的主日历",
+            "enum": null
+          },
+          {
+            "name": "event_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日程id，可从日程列表获取",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页标记，第一次请求不需要传递此参数，后续请求需要传递上一次响应中的next_page_token",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "每页返回的参与者数量，最大值为100",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-event-meeting-room-list",
+      "doc_id": 116,
+      "name": "查询日程会议室列表",
+      "summary": "查询日程会议室列表",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}/events/{event_id}/meeting_rooms",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar_events.read",
+        "kso.calendar_events.readwrite",
+        "kso.calendar_events.read",
+        "kso.calendar_events.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id，可从日历列表、主日历详情获取，或使用primary指代用户的主日历",
+            "enum": null
+          },
+          {
+            "name": "event_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日程id，可从日程列表获取",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-main-calendar",
+      "doc_id": 143,
+      "name": "查询主日历信息",
+      "summary": "查询主日历信息",
+      "http_method": "GET",
+      "path": "/v7/calendars/primary",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar.read",
+        "kso.calendar.readwrite",
+        "kso.calendar.read",
+        "kso.calendar.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "search-calendar-event",
+      "doc_id": 127,
+      "name": "搜索日程",
+      "summary": "搜索日程",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}/events/search",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar_events.read",
+        "kso.calendar_events.readwrite",
+        "kso.calendar_events.read",
+        "kso.calendar_events.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id，可从日历列表、主日历详情获取，或使用primary指代用户的主日历",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "subscribe-calendar",
+      "doc_id": 145,
+      "name": "订阅日历",
+      "summary": "订阅日历",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}/subscribe",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar.readwrite",
+        "kso.calendar.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "unsubscribe-calendar",
+      "doc_id": 146,
+      "name": "取消订阅日历",
+      "summary": "取消订阅日历",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}/unsubscribe",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar.readwrite",
+        "kso.calendar.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "update-calendar",
+      "doc_id": 147,
+      "name": "更新日历",
+      "summary": "更新日历",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}/update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar.readwrite",
+        "kso.calendar.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id，可从日历列表、主日历详情获取",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "update-calendar-event",
+      "doc_id": 128,
+      "name": "更新日程",
+      "summary": "更新日程",
+      "http_method": "GET",
+      "path": "/v7/calendars/{calendar_id}/events/{event_id}/update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar_events.readwrite",
+        "kso.calendar_events.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "calendar_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日历id，可从日历列表、主日历详情获取，或使用primary指代用户的主日历",
+            "enum": null
+          },
+          {
+            "name": "event_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "日程id，可从日程列表获取",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    }
+  ]
+}

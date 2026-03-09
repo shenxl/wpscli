@@ -1,0 +1,222 @@
+{
+  "service": "links",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "get-link-info",
+      "doc_id": 482,
+      "name": "获取分享链接信息",
+      "summary": "获取分享链接信息",
+      "http_method": "GET",
+      "path": "/v7/links/{link_id}/meta",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file_link.readwrite",
+        "kso.file_link.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "link_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-recv-link-list",
+      "doc_id": 483,
+      "name": "获取接收的分享链接列表",
+      "summary": "获取接收的分享链接列表",
+      "http_method": "GET",
+      "path": "/v7/links/recv",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file_link.readwrite",
+        "kso.file_link.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "with_permission",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回文件操作权限",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "分页大小,公网限制最大为500",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "翻页token",
+            "enum": null
+          },
+          {
+            "name": "order_by",
+            "location": "query",
+            "ptype": "object",
+            "required": false,
+            "description": "排序字段，默认为mtime, 没有dtime",
+            "enum": null
+          },
+          {
+            "name": "order",
+            "location": "query",
+            "ptype": "object",
+            "required": false,
+            "description": "排序方式，默认为desc",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-send-link-list",
+      "doc_id": 484,
+      "name": "获取发送的分享链接列表",
+      "summary": "获取发送的分享链接列表",
+      "http_method": "GET",
+      "path": "/v7/links/send",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file_link.readwrite",
+        "kso.file_link.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "with_permission",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回文件操作权限",
+            "enum": null
+          },
+          {
+            "name": "with_drive",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回drive信息",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "分页大小,公网限制最大为500",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "翻页token",
+            "enum": null
+          },
+          {
+            "name": "order_by",
+            "location": "query",
+            "ptype": "object",
+            "required": false,
+            "description": "排序字段，默认为mtime, 没有dtime",
+            "enum": null
+          },
+          {
+            "name": "order",
+            "location": "query",
+            "ptype": "object",
+            "required": false,
+            "description": "排序方式，默认为desc",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "update-link",
+      "doc_id": 487,
+      "name": "修改分享链接属性",
+      "summary": "修改分享链接属性",
+      "http_method": "GET",
+      "path": "/v7/links/{link_id}/update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file_link.readwrite",
+        "kso.file_link.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "link_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    }
+  ]
+}

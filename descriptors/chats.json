@@ -1,0 +1,1162 @@
+{
+  "service": "chats",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "batch-delete-chat-member",
+      "doc_id": 283,
+      "name": "批量删除群成员",
+      "summary": "批量删除群成员",
+      "http_method": "POST",
+      "path": "/v7/chats/{chat_id}/members/batch_delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.chat.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "chat_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "会话 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "batch-get-chat",
+      "doc_id": 285,
+      "name": "批量获取会话信息",
+      "summary": "批量获取会话信息",
+      "http_method": "POST",
+      "path": "/v7/chats/batch_get",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.chat.readwrite",
+        "kso.chat.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "batch-get-chat-member",
+      "doc_id": 284,
+      "name": "批量添加群成员",
+      "summary": "批量添加群成员",
+      "http_method": "POST",
+      "path": "/v7/chats/{chat_id}/members/batch_create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.chat.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "chat_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "会话 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "create-chat",
+      "doc_id": 286,
+      "name": "创建会话（单聊或群聊）",
+      "summary": "创建会话（单聊或群聊）",
+      "http_method": "POST",
+      "path": "/v7/chats/create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.chat.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "create-dept-chat",
+      "doc_id": 299,
+      "name": "创建部门群",
+      "summary": "创建部门群",
+      "http_method": "POST",
+      "path": "/v7/chats/create_dept_chat",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.chat_dept.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "delete-chat",
+      "doc_id": 287,
+      "name": "解散群聊",
+      "summary": "解散群聊",
+      "http_method": "POST",
+      "path": "/v7/chats/{chat_id}/delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.chat.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "chat_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "会话 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "gen-chat-share-link",
+      "doc_id": 288,
+      "name": "获取群分享链接",
+      "summary": "获取群分享链接",
+      "http_method": "GET",
+      "path": "/v7/chats/{chat_id}/share_link",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.chat.readwrite",
+        "kso.chat.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "chat_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-chat-bookmark",
+      "doc_id": 289,
+      "name": "获取会话书签",
+      "summary": "获取会话书签",
+      "http_method": "GET",
+      "path": "/v7/chats/{chat_id}/bookmarks",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.chat_bookmark.readwrite",
+        "kso.chat_bookmark.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "chat_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-chat-info",
+      "doc_id": 290,
+      "name": "获取会话信息",
+      "summary": "获取会话信息",
+      "http_method": "GET",
+      "path": "/v7/chats/{chat_id}",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.chat.readwrite",
+        "kso.chat.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "chat_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "with_group_ext_attrs",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回 group_ext_attrs, 默认 false 不返回",
+            "enum": null
+          },
+          {
+            "name": "with_ext_attrs",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回 ext_attrs, 默认 false 不返回",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "get-chat-list",
+      "doc_id": 291,
+      "name": "获取会话列表",
+      "summary": "获取会话列表",
+      "http_method": "GET",
+      "path": "/v7/chats",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.chat.readwrite",
+        "kso.chat.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "分页大小",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页token",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "get-chat-member",
+      "doc_id": 292,
+      "name": "获取群成员列表",
+      "summary": "获取群成员列表",
+      "http_method": "GET",
+      "path": "/v7/chats/{chat_id}/members",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.chat.readwrite",
+        "kso.chat.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "chat_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "会话 id",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "分页大小",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页 token",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-chat-message",
+      "doc_id": 303,
+      "name": "获取会话历史消息",
+      "summary": "获取会话历史消息",
+      "http_method": "GET",
+      "path": "/v7/chats/{chat_id}/messages",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.chat_message.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "chat_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "会话 id",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "start_time",
+            "location": "query",
+            "ptype": "int",
+            "required": false,
+            "description": "查询历史消息的起始时间（秒级时间戳）",
+            "enum": null
+          },
+          {
+            "name": "end_time",
+            "location": "query",
+            "ptype": "int",
+            "required": false,
+            "description": "查询历史消息的结束时间（秒级时间戳）",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页token",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "int",
+            "required": false,
+            "description": "分页大小",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-chat-unread-count",
+      "doc_id": 293,
+      "name": "获取用户会话未读数",
+      "summary": "获取用户会话未读数",
+      "http_method": "GET",
+      "path": "/v7/chats/unread_count",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.chat.readwrite",
+        "kso.chat.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-chats-download",
+      "doc_id": 294,
+      "name": "获取会话文件下载地址",
+      "summary": "获取会话文件下载地址",
+      "http_method": "GET",
+      "path": "/v7/chats/{chat_id}/messages/{message_id}/resources/{storage_key}/download",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.chat_message.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "chat_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          },
+          {
+            "name": "message_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          },
+          {
+            "name": "storage_key",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "file_name",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "下载的文件名称",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "get-message",
+      "doc_id": 305,
+      "name": "获取指定消息的内容",
+      "summary": "获取指定消息的内容",
+      "http_method": "GET",
+      "path": "/v7/chats/{chat_id}/messages/{message_id}",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.chat_message.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "chat_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "会话 id",
+            "enum": null
+          },
+          {
+            "name": "message_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "消息 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-p2p-chat",
+      "doc_id": 295,
+      "name": "根据user_id获取chat_id",
+      "summary": "根据user_id获取chat_id",
+      "http_method": "GET",
+      "path": "/v7/chats/get_p2p_chat",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.chat_message.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "user_id",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "用户id，仅能获取到当前应用与用户的对话",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "is-in-chat",
+      "doc_id": 296,
+      "name": "判断用户或机器人是否在群里",
+      "summary": "判断用户或机器人是否在群里",
+      "http_method": "GET",
+      "path": "/v7/chats/{chat_id}/members/is_in_chat",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.chat.read",
+        "kso.chat.readwrite",
+        "kso.chat.read",
+        "kso.chat.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "chat_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "normalize-dept-chat",
+      "doc_id": 300,
+      "name": "部门群转普通群",
+      "summary": "部门群转普通群",
+      "http_method": "POST",
+      "path": "/v7/chats/normalize_dept_chat",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.chat_dept.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "dept_id",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "部门ID",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "reply-msg",
+      "doc_id": 308,
+      "name": "回复消息",
+      "summary": "回复消息",
+      "http_method": "POST",
+      "path": "/v7/chats/{chat_id}/messages/{message_id}/reply",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.chat_message.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "chat_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "会话 id",
+            "enum": null
+          },
+          {
+            "name": "message_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "消息 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](https://open.wps.cn/documents/app-integration-dev/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "update-chat-info",
+      "doc_id": 297,
+      "name": "更新会话信息",
+      "summary": "更新会话信息",
+      "http_method": "POST",
+      "path": "/v7/chats/{chat_id}/update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.chat.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "chat_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "update-dept-chat-owner",
+      "doc_id": 301,
+      "name": "指定部门群群主",
+      "summary": "指定部门群群主",
+      "http_method": "POST",
+      "path": "/v7/chats/update_dept_chat",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.chat_dept.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "dept_id",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "部门ID（chat_id和dept_id必须有一个,如果都有,则以chat_id为准）",
+            "enum": null
+          },
+          {
+            "name": "owner_id",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "群主ID",
+            "enum": null
+          },
+          {
+            "name": "chat_id",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "部门群ID（chat_id和dept_id必须有一个,如果都有,则以chat_id为准）",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "upload-chats-resource",
+      "doc_id": 298,
+      "name": "获取会话文件上传地址",
+      "summary": "获取会话文件上传地址",
+      "http_method": "GET",
+      "path": "/v7/chats/resources/upload",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.chat_message.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "urgent-msg",
+      "doc_id": 311,
+      "name": "发送应用内加急",
+      "summary": "发送应用内加急",
+      "http_method": "GET",
+      "path": "/v7/chats/{chat_id}/messages/{message_id}/urgent_app",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.chat_message.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "chat_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          },
+          {
+            "name": "message_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

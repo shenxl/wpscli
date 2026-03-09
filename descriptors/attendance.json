@@ -1,0 +1,119 @@
+{
+  "service": "attendance",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "batch-get-punches",
+      "doc_id": 106,
+      "name": "批量查询打卡记录",
+      "summary": "批量查询打卡记录",
+      "http_method": "GET",
+      "path": "/v7/attendance/punches/batch_get",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.attendance_punch_record.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "delete-approval-record",
+      "doc_id": 99,
+      "name": "删除假勤审批记录",
+      "summary": "删除假勤审批记录",
+      "http_method": "GET",
+      "path": "/v7/attendance/approval_records/delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.attendance_approval_record.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-group-detail",
+      "doc_id": 103,
+      "name": "获取考勤组详情",
+      "summary": "获取考勤组详情",
+      "http_method": "GET",
+      "path": "/v7/attendance/groups/{group_id}",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.attendance_group.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "group_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "考勤组ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "import-approval-record",
+      "doc_id": 100,
+      "name": "导入假勤审批记录",
+      "summary": "导入假勤审批记录",
+      "http_method": "GET",
+      "path": "/v7/attendance/approval_records/import",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.attendance_approval_record.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

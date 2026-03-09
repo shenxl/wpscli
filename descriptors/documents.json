@@ -1,0 +1,114 @@
+{
+  "service": "documents",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "batch-get-attachment-info",
+      "doc_id": 218,
+      "name": "批量查询附件信息",
+      "summary": "批量查询附件信息",
+      "http_method": "GET",
+      "path": "/v7/documents/{file_id}/attachments/batch_get",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.documents.readwrite",
+        "kso.documents.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "multiupload-1-get-upload-address",
+      "doc_id": 219,
+      "name": "附件多段式上传-申请上传地址",
+      "summary": "附件多段式上传-申请上传地址",
+      "http_method": "GET",
+      "path": "/v7/documents/{file_id}/attachments/upload/address",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.documents.readwrite",
+        "kso.documents.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "multiupload-3-complete-upload",
+      "doc_id": 220,
+      "name": "附件多段式上传-提交上传完成",
+      "summary": "附件多段式上传-提交上传完成",
+      "http_method": "GET",
+      "path": "/v7/documents/{file_id}/attachments/upload/complete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.documents.readwrite",
+        "kso.documents.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "upload-attachment",
+      "doc_id": 221,
+      "name": "上传附件",
+      "summary": "上传附件",
+      "http_method": "GET",
+      "path": "/v7/documents/{file_id}/attachments/upload",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.documents.readwrite",
+        "kso.documents.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    }
+  ]
+}

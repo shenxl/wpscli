@@ -1,0 +1,138 @@
+{
+  "service": "mail_migrations",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "add-migration-member",
+      "doc_id": 243,
+      "name": "在搬家任务中添加成员",
+      "summary": "在搬家任务中添加成员",
+      "http_method": "GET",
+      "path": "/v7/mail_migrations/{migration_id}/tasks",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.mail_migration.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "migration_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "搬家作业ID，填入current获取当前企业正在进行作业的搬家任务",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-migration-list",
+      "doc_id": 244,
+      "name": "获取搬家任务列表",
+      "summary": "获取搬家任务列表",
+      "http_method": "GET",
+      "path": "/v7/mail_migrations/{migration_id}/tasks",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.mail_migration.readwrite",
+        "kso.mail_migration.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "migration_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "搬家作业ID，填入current获取当前企业正在进行作业的搬家任务",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "state",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "搬家任务状态，默认全部",
+            "enum": [
+              "`pending`",
+              "`running`",
+              "`paused`",
+              "`failed`",
+              "`cancelled`",
+              "`success`",
+              "`closed`"
+            ]
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小（范围1-100，默认20）",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "翻页token（第一次请求不传）",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "start-migration",
+      "doc_id": 245,
+      "name": "Exchange管理员为成员启动搬家",
+      "summary": "Exchange管理员为成员启动搬家",
+      "http_method": "GET",
+      "path": "/v7/mail_migrations/{migration_id}/tasks/{task_id}/start",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.mail_migration.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "migration_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "搬家作业ID，填入current获取当前企业正在进行作业的搬家任务",
+            "enum": null
+          },
+          {
+            "name": "task_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "搬家任务ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    }
+  ]
+}

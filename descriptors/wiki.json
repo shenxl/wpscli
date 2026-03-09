@@ -1,0 +1,507 @@
+{
+  "service": "wiki",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "batch-copy-space-file",
+      "doc_id": 426,
+      "name": "批量复制知识库文件（夹）",
+      "summary": "批量复制知识库文件（夹）",
+      "http_method": "GET",
+      "path": "/v7/wiki/spaces/{space_id}/files/batch_copy",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.wiki.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "space_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "知识库id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "batch-create-space-member",
+      "doc_id": 427,
+      "name": "批量添加知识库成员",
+      "summary": "批量添加知识库成员",
+      "http_method": "GET",
+      "path": "/v7/wiki/spaces/{space_id}/members/batch_create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.wiki.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "space_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "知识库id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "batch-delete-space-member",
+      "doc_id": 428,
+      "name": "批量删除知识库成员",
+      "summary": "批量删除知识库成员",
+      "http_method": "GET",
+      "path": "/v7/wiki/spaces/{space_id}/members/batch_delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.wiki.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "space_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "知识库id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "batch-move-space-file",
+      "doc_id": 429,
+      "name": "批量移动知识库文件（夹）",
+      "summary": "批量移动知识库文件（夹）",
+      "http_method": "GET",
+      "path": "/v7/wiki/spaces/{space_id}/files/batch_move",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.wiki.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "space_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "知识库id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "create-space",
+      "doc_id": 431,
+      "name": "创建知识库",
+      "summary": "创建知识库",
+      "http_method": "GET",
+      "path": "/v7/wiki/spaces/create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.wiki.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "create-space-file",
+      "doc_id": 430,
+      "name": "创建知识库节点",
+      "summary": "创建知识库节点",
+      "http_method": "GET",
+      "path": "/v7/wiki/spaces/{space_id}/files/{parent_id}/create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.wiki.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "space_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "知识库id",
+            "enum": null
+          },
+          {
+            "name": "parent_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件夹id（根目录时为0）",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-space",
+      "doc_id": 436,
+      "name": "获取知识库",
+      "summary": "获取知识库",
+      "http_method": "GET",
+      "path": "/v7/wiki/spaces/{space_id}/meta",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.wiki.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "space_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "知识库id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-space-file",
+      "doc_id": 433,
+      "name": "获取知识库节点信息",
+      "summary": "获取知识库节点信息",
+      "http_method": "GET",
+      "path": "/v7/wiki/spaces/{space_id}/files/{file_id}/meta",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.wiki.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "space_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "知识库id",
+            "enum": null
+          },
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-space-file-list",
+      "doc_id": 432,
+      "name": "获取知识库子节点列表",
+      "summary": "获取知识库子节点列表",
+      "http_method": "GET",
+      "path": "/v7/wiki/spaces/{space_id}/files/{file_id}/children",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.wiki.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "space_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "知识库id",
+            "enum": null
+          },
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件夹id",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "filter_exts",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "过滤条件,扩展名以英文逗号分隔，不需要空格，扩展名全部小写,不传或者空字符串表示不过滤",
+            "enum": null
+          },
+          {
+            "name": "filter_type",
+            "location": "query",
+            "ptype": "object",
+            "required": false,
+            "description": "按照文件类型筛选，例如：file、folder、shortcut等",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小，范围1~100，默认30",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页标记",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "get-space-list",
+      "doc_id": 434,
+      "name": "获取知识库列表",
+      "summary": "获取知识库列表",
+      "http_method": "GET",
+      "path": "/v7/wiki/spaces",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.wiki.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小，范围1~100，默认为30",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页标记",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "get-space-member-list",
+      "doc_id": 435,
+      "name": "获取知识库成员列表",
+      "summary": "获取知识库成员列表",
+      "http_method": "GET",
+      "path": "/v7/wiki/spaces/{space_id}/members",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.wiki.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "space_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "知识库id",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小，范围1~100，默认30",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页标记",
+            "enum": null
+          },
+          {
+            "name": "roles",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "成员角色",
+            "enum": [
+              "`readonly`",
+              "`normal`",
+              "`admin`",
+              "`owner`"
+            ]
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "get-task",
+      "doc_id": 437,
+      "name": "获取知识库异步任务信息",
+      "summary": "获取知识库异步任务信息",
+      "http_method": "GET",
+      "path": "/v7/wiki/tasks/{task_id}",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.wiki.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "task_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "任务id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "move-space-file",
+      "doc_id": 438,
+      "name": "移动知识库文件（夹）",
+      "summary": "移动知识库文件（夹）",
+      "http_method": "GET",
+      "path": "/v7/wiki/spaces/{space_id}/files/move",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.wiki.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "space_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "知识库id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "renmae-space-file",
+      "doc_id": 439,
+      "name": "重命名知识库节点",
+      "summary": "重命名知识库节点",
+      "http_method": "GET",
+      "path": "/v7/wiki/spaces/{space_id}/files/{file_id}/rename",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.wiki.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "space_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "知识库id",
+            "enum": null
+          },
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件（夹）id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "search-space",
+      "doc_id": 440,
+      "name": "知识库文件搜索",
+      "summary": "知识库文件搜索",
+      "http_method": "GET",
+      "path": "/v7/wiki/search",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.wiki.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "update-space-seting",
+      "doc_id": 441,
+      "name": "更新知识库设置",
+      "summary": "更新知识库设置",
+      "http_method": "GET",
+      "path": "/v7/wiki/spaces/{space_id}/settings",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.wiki.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "space_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "知识库id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    }
+  ]
+}

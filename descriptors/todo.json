@@ -1,0 +1,853 @@
+{
+  "service": "todo",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "batch-create-task",
+      "doc_id": 414,
+      "name": "批量创建待办任务",
+      "summary": "批量创建待办任务",
+      "http_method": "GET",
+      "path": "/v7/todo/tasks/batch_create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.task.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：'application/json'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: 'Wed, 23 Jan 2013 06:43:08 GMT'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：'Bearer {access_token}'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "ID 类型，可选值为 `internal` 或 `external`，不传默认为`internal`。当值为 `external` 时，开启三方 ID 模式，此时接口请求和响应中的 user_id 和 dept_id 应为三方ID，即 ex_user_id 和 ex_dept_id",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "batch-delete-personal-todo",
+      "doc_id": 415,
+      "name": "删除个人待办",
+      "summary": "删除个人待办",
+      "http_method": "GET",
+      "path": "/v7/todo/personal_tasks/batch_delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.task.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：'application/json'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: 'Wed, 23 Jan 2013 06:43:08 GMT'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：'Bearer {access_token}'",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "batch-update-task",
+      "doc_id": 416,
+      "name": "批量更新待办任务",
+      "summary": "批量更新待办任务",
+      "http_method": "GET",
+      "path": "/v7/todo/tasks/batch_update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.task.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：'application/json'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: 'Wed, 23 Jan 2013 06:43:08 GMT'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：'Bearer {access_token}'",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "create-category",
+      "doc_id": 410,
+      "name": "创建待办分类",
+      "summary": "创建待办分类",
+      "http_method": "POST",
+      "path": "/v7/todo/categories/create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.task.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "create-personal-todo",
+      "doc_id": 417,
+      "name": "创建个人待办",
+      "summary": "创建个人待办",
+      "http_method": "GET",
+      "path": "/v7/todo/personal_tasks",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.task.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：'application/json'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: 'Wed, 23 Jan 2013 06:43:08 GMT'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：'Bearer {access_token}'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "ID 类型，可选值为 `internal` 或 `external`，不传默认为`internal`。当值为 `external` 时，开启三方 ID 模式，此时接口请求和响应中的 user_id 和 dept_id 应为三方ID，即 ex_user_id 和 ex_dept_id",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "create-task",
+      "doc_id": 418,
+      "name": "创建待办任务",
+      "summary": "创建待办任务",
+      "http_method": "POST",
+      "path": "/v7/todo/tasks",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.task.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "ID 类型，可选值为 `internal` 或 `external`，不传默认为`internal`。当值为 `external` 时，开启三方 ID 模式，此时接口请求和响应中的 user_id 和 dept_id 应为三方ID，即 ex_user_id 和 ex_dept_id",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "delete-category",
+      "doc_id": 411,
+      "name": "删除待办分类",
+      "summary": "删除待办分类",
+      "http_method": "POST",
+      "path": "/v7/todo/categories/{category_id}/delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.task.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "category_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "分类 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "delete-task",
+      "doc_id": 419,
+      "name": "删除待办任务",
+      "summary": "删除待办任务",
+      "http_method": "POST",
+      "path": "/v7/todo/tasks/batch_delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.task.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-category",
+      "doc_id": 412,
+      "name": "查询待办分类",
+      "summary": "查询待办分类",
+      "http_method": "GET",
+      "path": "/v7/todo/categories",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.task.readwrite",
+        "kso.task.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-personal-todo",
+      "doc_id": 421,
+      "name": "获取个人待办详情",
+      "summary": "获取个人待办详情",
+      "http_method": "GET",
+      "path": "/v7/todo/personal_tasks/{task_id}",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.task.readwrite",
+        "kso.task.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "task_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "待办ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：'application/json'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: 'Wed, 23 Jan 2013 06:43:08 GMT'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：'Bearer {access_token}'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "ID 类型，可选值为 `internal` 或 `external`，不传默认为`internal`。当值为 `external` 时，开启三方 ID 模式，此时接口请求和响应中的 user_id 和 dept_id 应为三方ID，即 ex_user_id 和 ex_dept_id",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-personal-todo-list",
+      "doc_id": 420,
+      "name": "获取个人待办列表",
+      "summary": "获取个人待办列表",
+      "http_method": "GET",
+      "path": "/v7/todo/personal_tasks/batch_get",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.task.readwrite",
+        "kso.task.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：'application/json'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: 'Wed, 23 Jan 2013 06:43:08 GMT'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：'Bearer {access_token}'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "ID 类型，可选值为 `internal` 或 `external`，不传默认为`internal`。当值为 `external` 时，开启三方 ID 模式，此时接口请求和响应中的 user_id 和 dept_id 应为三方ID，即 ex_user_id 和 ex_dept_id",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "update-category",
+      "doc_id": 413,
+      "name": "更新待办分类",
+      "summary": "更新待办分类",
+      "http_method": "POST",
+      "path": "/v7/todo/categories/{category_id}/update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.task.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "category_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "分类 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "update-personal-todo",
+      "doc_id": 424,
+      "name": "更新个人待办",
+      "summary": "更新个人待办",
+      "http_method": "GET",
+      "path": "/v7/todo/personal_tasks/{task_id}/update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.task.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "task_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "待办ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：'application/json'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: 'Wed, 23 Jan 2013 06:43:08 GMT'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：'Bearer {access_token}'",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "update-personal-todo-status",
+      "doc_id": 423,
+      "name": "更新个人待办状态",
+      "summary": "更新个人待办状态",
+      "http_method": "GET",
+      "path": "/v7/todo/personal_tasks/{task_id}/update_status",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.task.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "task_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "待办ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：'application/json'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: 'Wed, 23 Jan 2013 06:43:08 GMT'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：'Bearer {access_token}'",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "update-task",
+      "doc_id": 425,
+      "name": "更新待办任务",
+      "summary": "更新待办任务",
+      "http_method": "POST",
+      "path": "/v7/todo/tasks/{task_id}/update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.task.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "task_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "待办任务 id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    }
+  ]
+}

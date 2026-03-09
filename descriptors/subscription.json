@@ -1,0 +1,203 @@
+{
+  "service": "subscription",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "get-subscription-account-storage",
+      "doc_id": 406,
+      "name": "获取账号文件下载链接",
+      "summary": "获取账号文件下载链接",
+      "http_method": "GET",
+      "path": "/v7/subscription/accounts/{account_id}/storages/{store_key}",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.subscription_account.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "account_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "账号ID，，由【获取订阅号账号列表】接口id字段返回",
+            "enum": null
+          },
+          {
+            "name": "store_key",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件store_key，由账号相关接口中涉及文件资源的字段返回",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-subscription-accounts",
+      "doc_id": 407,
+      "name": "获取账号列表",
+      "summary": "获取账号列表",
+      "http_method": "GET",
+      "path": "/v7/subscription/accounts",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.subscription_account.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "每页大小，最大为100，默认为20",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页token，首页传空串",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-subscription-content-storage",
+      "doc_id": 408,
+      "name": "获取内容文件下载链接",
+      "summary": "获取内容文件下载链接",
+      "http_method": "GET",
+      "path": "/v7/subscription/contents/{content_id}/storages/{store_key}",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.subscription_content.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "content_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "内容ID，由【获取订阅号账号的已发布内容列表】接口id字段返回",
+            "enum": null
+          },
+          {
+            "name": "store_key",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件store_key，由内容相关接口中涉及文件资源的字段返回",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "version",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "内容版本，由【获取订阅号账号的已发布内容列表】接口version字段返回",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "get-subscription-published-content",
+      "doc_id": 409,
+      "name": "获取已发布内容列表",
+      "summary": "获取已发布内容列表",
+      "http_method": "GET",
+      "path": "/v7/subscription/accounts/{account_id}/published_contents",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.subscription_content.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "account_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "账号ID，由【获取订阅号账号列表】接口id字段返回",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "is_only_public",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否仅返回公开可访问的内容",
+            "enum": null
+          },
+          {
+            "name": "order",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "按发布时间升序/降序，默认降序",
+            "enum": [
+              "`asc`",
+              "`desc`"
+            ]
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "每页大小，最大为100，默认为20",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页token，首页传空串",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

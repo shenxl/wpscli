@@ -1,0 +1,1414 @@
+{
+  "service": "workflow",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "add-sign-approval-task",
+      "doc_id": 466,
+      "name": "审批任务加签",
+      "summary": "审批任务加签",
+      "http_method": "GET",
+      "path": "/v7/workflow/approval_tasks/{id}/add_sign",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_task.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "任务id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "approve-approval-task",
+      "doc_id": 467,
+      "name": "同意审批任务",
+      "summary": "同意审批任务",
+      "http_method": "GET",
+      "path": "/v7/workflow/approval_tasks/{id}/approve",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_task.readwrite",
+        "kso.workflow_approval_task.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "任务id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "comment-approval-instance",
+      "doc_id": 455,
+      "name": "评论",
+      "summary": "评论",
+      "http_method": "GET",
+      "path": "/v7/workflow/approval_instances/{id}/comment",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_instance.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "审批实例id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "create-approval-definition",
+      "doc_id": 447,
+      "name": "创建审批定义",
+      "summary": "创建审批定义",
+      "http_method": "GET",
+      "path": "/v7/workflow/approval_defines",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_define.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "create-approval-instance",
+      "doc_id": 456,
+      "name": "发起审批",
+      "summary": "发起审批",
+      "http_method": "GET",
+      "path": "/v7/workflow/approval_instances",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_instance.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "create-external-approval-define",
+      "doc_id": 472,
+      "name": "创建三方审批定义",
+      "summary": "创建三方审批定义",
+      "http_method": "GET",
+      "path": "/v7/workflow/external_defines",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_define.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "create-external-approval-instance",
+      "doc_id": 474,
+      "name": "同步三方审批实例",
+      "summary": "同步三方审批实例",
+      "http_method": "GET",
+      "path": "/v7/workflow/external_instances",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_instance.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "delete-approval-definition",
+      "doc_id": 448,
+      "name": "删除审批定义",
+      "summary": "删除审批定义",
+      "http_method": "GET",
+      "path": "/v7/workflow/approval_defines/{id}/delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_define.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "审批定义id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-approval-definition",
+      "doc_id": 451,
+      "name": "查询审批定义",
+      "summary": "查询审批定义",
+      "http_method": "GET",
+      "path": "/v7/workflow/approval_defines/{id}",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_define.readwrite",
+        "kso.workflow_approval_define.read",
+        "kso.workflow_approval_define.readwrite",
+        "kso.workflow_approval_define.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "审批定义id",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "operator",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "操作者id，用于接口权限校验。应用授权必传，用户授权使用授权的用户信息，不使用该值",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-approval-definition-list",
+      "doc_id": 450,
+      "name": "分页查询审批定义列表",
+      "summary": "分页查询审批定义列表",
+      "http_method": "GET",
+      "path": "/v7/workflow/approval_defines",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_define.readwrite",
+        "kso.workflow_approval_define.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "offset",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "分页位置",
+            "enum": null
+          },
+          {
+            "name": "limit",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "分页大小",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-approval-definition-list-v2",
+      "doc_id": 449,
+      "name": "查询审批定义列表",
+      "summary": "查询审批定义列表",
+      "http_method": "GET",
+      "path": "/v7/workflow/approval_defines/batch_get",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_define.read",
+        "kso.workflow_approval_define.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小，取值范围10-50，默认为10",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页标记，第一次请求不填，表示从头开始遍历；分页查询结果还有更多项时会同时返回新的 page_token，下次遍历可采用该 page_token 获取查询结果",
+            "enum": null
+          },
+          {
+            "name": "group_id",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "审批分组id，不传查所有审批分组",
+            "enum": null
+          },
+          {
+            "name": "user_id",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "指定用户的可见数据，不传查本租户下所有审批定义",
+            "enum": null
+          },
+          {
+            "name": "get_range_type",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "查询范围，不传查所有审批定义, user_id传入时才可传该值。get_range_type=user_manage:查指定用户管理的审批定义，get_range_type=user_visible:查指定用户的可见审批定义",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-approval-instance",
+      "doc_id": 461,
+      "name": "查询审批实例",
+      "summary": "查询审批实例",
+      "http_method": "GET",
+      "path": "/v7/workflow/approval_instances/{id}",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_instance.read",
+        "kso.workflow_approval_instance.readwrite",
+        "kso.workflow_approval_instance.read",
+        "kso.workflow_approval_instance.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "审批实例id",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "user_id",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "用户id,用来查询该用户的任务",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-approval-instance-brief-list",
+      "doc_id": 457,
+      "name": "批量查询审批实例简要信息",
+      "summary": "批量查询审批实例简要信息",
+      "http_method": "GET",
+      "path": "/v7/workflow/approval_instances/batch_get",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_instance.read",
+        "kso.workflow_approval_instance.readwrite",
+        "kso.workflow_approval_instance.read",
+        "kso.workflow_approval_instance.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小，取值范围10-50，默认为10",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页标记，第一次请求不填，表示从头开始遍历；分页查询结果还有更多项时会同时返回新的 page_token，下次遍历可采用该 page_token 获取查询结果",
+            "enum": null
+          },
+          {
+            "name": "approval_define_id",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "审批定义id，传入该值时查询指定审批定义的审批实例",
+            "enum": null
+          },
+          {
+            "name": "instance_status",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "审批实例状态，不传查所有状态。状态有：auditing：审批中, approved：已审批, refused：已拒绝, returned：已退回, revoked：已撤回, terminated：已终止",
+            "enum": [
+              "`auditing`",
+              "`approved`",
+              "`refused`",
+              "`returned`",
+              "`revoked`",
+              "`deleted`",
+              "`terminated`"
+            ]
+          },
+          {
+            "name": "time_from",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "实例查询开始时间，Unix 秒时间戳。与 time_to 参数构成时间段查询条件，仅会返回在该时间段内的审批实例",
+            "enum": null
+          },
+          {
+            "name": "time_to",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "实例查询结束时间，Unix 秒时间戳。与 time_from 参数构成时间段查询条件，仅会返回在该时间段内的审批实例",
+            "enum": null
+          },
+          {
+            "name": "promoter",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "实例的发起人，不传时默认查本租户下的所有数据。用户授权时传入该参数会取值为授权的用户id",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-approval-instance-cc-list",
+      "doc_id": 458,
+      "name": "查询审批实例抄送列表",
+      "summary": "查询审批实例抄送列表",
+      "http_method": "GET",
+      "path": "/v7/workflow/approval_instances/batch_get_cc",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_instance.read",
+        "kso.workflow_approval_instance.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小，取值范围10-50，默认为10",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页标记，第一次请求不填，表示从头开始遍历；分页查询结果还有更多项时会同时返回新的 page_token，下次遍历可采用该 page_token 获取查询结果",
+            "enum": null
+          },
+          {
+            "name": "approval_define_id",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "审批定义id，传入该值时查询指定审批定义的抄送数据，审批定义id、审批单id、实例的抄送人三者至少传一个",
+            "enum": null
+          },
+          {
+            "name": "instance_id",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "审批单id，传入该值时查询指定审批单的抄送数据，审批定义id、审批单id、实例的抄送人三者至少传一个",
+            "enum": null
+          },
+          {
+            "name": "time_from",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "抄送查询开始时间，Unix 秒时间戳。与 time_to 参数构成时间段查询条件，仅会返回在该时间段内的审批实例",
+            "enum": null
+          },
+          {
+            "name": "time_to",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "实例查询结束时间，Unix 秒时间戳。与 time_from 参数构成时间段查询条件，仅会返回在该时间段内的审批实例",
+            "enum": null
+          },
+          {
+            "name": "cc_user",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "实例的抄送人，不传时默认查本租户下的所有数据，审批定义id、审批单id、实例的抄送人三者至少传一个",
+            "enum": null
+          },
+          {
+            "name": "read_status",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "审批抄送状态。若不设置则查询全部状态，若不在集合中，则报错。状态有：already_read：已读，not_read：未读",
+            "enum": [
+              "`already_read`",
+              "`not_read`"
+            ]
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-approval-instance-list",
+      "doc_id": 459,
+      "name": "批量查询审批实例详情",
+      "summary": "批量查询审批实例详情",
+      "http_method": "GET",
+      "path": "/v7/workflow/approval_instances",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_instance.read",
+        "kso.workflow_approval_instance.readwrite",
+        "kso.workflow_approval_instance.read",
+        "kso.workflow_approval_instance.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "instance_ids",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "审批实例id列表，最多指定20个实例id，查询指定实例id的审批实例详情。指定该参数时，参数promoter有效",
+            "enum": null
+          },
+          {
+            "name": "promoter",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "审批实例发起人，用户授权时传入该参数会取值为授权的用户id。指定该参数和instance_ids参数时，查询该用户可见的审批实例详情。该参数在不指定instance_ids参数时无效",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-approval-instance-timeline-list",
+      "doc_id": 460,
+      "name": "查询审批实例操作记录列表",
+      "summary": "查询审批实例操作记录列表",
+      "http_method": "GET",
+      "path": "/v7/workflow/approval_instances/batch_get_timeline",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_instance.read",
+        "kso.workflow_approval_instance.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小，取值范围10-50，默认为10",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页标记，第一次请求不填，表示从头开始遍历；分页查询结果还有更多项时会同时返回新的 page_token，下次遍历可采用该 page_token 获取查询结果",
+            "enum": null
+          },
+          {
+            "name": "approval_define_id",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "审批定义id，传入该值时查询指定审批定义的操作记录，审批定义id、审批单id、操作的执行人三者至少传一个",
+            "enum": null
+          },
+          {
+            "name": "instance_id",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "审批单id，传入该值时查询指定审批单的操作记录，审批定义id、审批单id、操作的执行人三者至少传一个",
+            "enum": null
+          },
+          {
+            "name": "time_from",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "任务查询开始时间，Unix 秒时间戳。与 time_to 参数构成时间段查询条件，仅会返回在该时间段内的审批实例。",
+            "enum": null
+          },
+          {
+            "name": "time_to",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "任务查询结束时间，Unix 秒时间戳。与 time_from 参数构成时间段查询条件，仅会返回在该时间段内的审批实例。",
+            "enum": null
+          },
+          {
+            "name": "operator",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "操作的执行人，不传时默认查本租户下的所有数据，审批定义id、审批单id、操作的执行人三者至少传一个",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-approval-task-list",
+      "doc_id": 468,
+      "name": "查询审批任务列表",
+      "summary": "查询审批任务列表",
+      "http_method": "GET",
+      "path": "/v7/workflow/approval_tasks/batch_get",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_task.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小，取值范围10-50，默认为10",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页标记，第一次请求不填，表示从头开始遍历；分页查询结果还有更多项时会同时返回新的 page_token，下次遍历可采用该 page_token 获取查询结果",
+            "enum": null
+          },
+          {
+            "name": "approval_define_id",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "审批定义id，传入该值时查询指定审批定义的任务数据，审批定义id、审批单id、任务的执行人三者至少传一个",
+            "enum": null
+          },
+          {
+            "name": "instance_id",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "审批单id，传入该值时查询指定审批单的任务数据，审批定义id、审批单id、任务的执行人三者至少传一个",
+            "enum": null
+          },
+          {
+            "name": "time_from",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "任务查询开始时间，Unix 秒时间戳。与 time_to 参数构成时间段查询条件，仅会返回在该时间段内的审批实例。",
+            "enum": null
+          },
+          {
+            "name": "time_to",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "任务查询结束时间，Unix 秒时间戳。与 time_from 参数构成时间段查询条件，仅会返回在该时间段内的审批实例。",
+            "enum": null
+          },
+          {
+            "name": "user_id",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "任务的执行人，不传时默认查本租户下的所有数据，审批定义id、审批单id、任务的执行人三者至少传一个",
+            "enum": null
+          },
+          {
+            "name": "task_status",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "审批任务状态。若不设置则查询全部状态，若不在集合中，则报错。状态有：pending：审批中, approved：已审批, rejected：已拒绝, transferred：已转交, done：已完成, rollback：已回滚",
+            "enum": [
+              "`pending`",
+              "`approved`",
+              "`rejected`",
+              "`transferred`",
+              "`done`",
+              "`rollback`",
+              "`review`"
+            ]
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-external-approval-define",
+      "doc_id": 473,
+      "name": "获取三方审批定义",
+      "summary": "获取三方审批定义",
+      "http_method": "GET",
+      "path": "/v7/workflow/external_defines/{define_code}",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_define.read",
+        "kso.workflow_approval_define.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "define_code",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "三方审批定义编码",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-external-approval-task-list",
+      "doc_id": 475,
+      "name": "查询三方审批任务状态",
+      "summary": "查询三方审批任务状态",
+      "http_method": "GET",
+      "path": "/v7/workflow/external_tasks",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_task.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "define_codes",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "三方审批定义Code",
+            "enum": null
+          },
+          {
+            "name": "instance_ids",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "三方审批实例id",
+            "enum": null
+          },
+          {
+            "name": "user_ids",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "用户id",
+            "enum": null
+          },
+          {
+            "name": "status",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "任务状态",
+            "enum": [
+              "`pending`",
+              "`approved`",
+              "`rejected`",
+              "`transferred`",
+              "`done`"
+            ]
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小,取值范围10-50，默认为10",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页标记，第一次请求不填，表示从头开始遍历；分页查询结果还有更多项时会同时返回新的 page_token，下次遍历可采用该 page_token 获取查询结果",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-user-manage-approval-definition-list",
+      "doc_id": 452,
+      "name": "分页查询用户管理审批定义列表",
+      "summary": "分页查询用户管理审批定义列表",
+      "http_method": "GET",
+      "path": "/v7/workflow/approval_defines/user_manage",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_define.readwrite",
+        "kso.workflow_approval_define.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "cursor",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "分页游标",
+            "enum": null
+          },
+          {
+            "name": "page",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "分页大小",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "reject-approval-task",
+      "doc_id": 469,
+      "name": "拒绝审批任务",
+      "summary": "拒绝审批任务",
+      "http_method": "GET",
+      "path": "/v7/workflow/approval_tasks/{id}/reject",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_task.readwrite",
+        "kso.workflow_approval_task.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "任务id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "revoke-approval-instance",
+      "doc_id": 462,
+      "name": "撤销审批实例",
+      "summary": "撤销审批实例",
+      "http_method": "GET",
+      "path": "/v7/workflow/approval_instances/{id}/revoke",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_instance.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "审批实例id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "rollback-approval-task",
+      "doc_id": 470,
+      "name": "退回审批任务",
+      "summary": "退回审批任务",
+      "http_method": "GET",
+      "path": "/v7/workflow/approval_tasks/{id}/rollback",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_task.readwrite",
+        "kso.workflow_approval_task.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "任务id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "send-approval-message",
+      "doc_id": 464,
+      "name": "发送审批机器人消息",
+      "summary": "发送审批机器人消息",
+      "http_method": "GET",
+      "path": "/v7/workflow/message/send",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_instance.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "simulate-approval-instance",
+      "doc_id": 463,
+      "name": "模拟审批流程",
+      "summary": "模拟审批流程",
+      "http_method": "GET",
+      "path": "/v7/workflow/approval_instances/simulation",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_instance.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "transfer-approval-task",
+      "doc_id": 471,
+      "name": "转交审批任务",
+      "summary": "转交审批任务",
+      "http_method": "GET",
+      "path": "/v7/workflow/approval_tasks/{id}/transfer",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_task.readwrite",
+        "kso.workflow_approval_task.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "任务id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "update-approval-definition",
+      "doc_id": 454,
+      "name": "更新审批定义",
+      "summary": "更新审批定义",
+      "http_method": "GET",
+      "path": "/v7/workflow/approval_defines/{id}/update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_define.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "审批定义id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "update-approval-definition-setting",
+      "doc_id": 453,
+      "name": "更新审批定义基础设置",
+      "summary": "更新审批定义基础设置",
+      "http_method": "GET",
+      "path": "/v7/workflow/approval_defines/{id}/settings",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_define.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "审批定义id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "update-approval-message",
+      "doc_id": 465,
+      "name": "更新审批机器人消息",
+      "summary": "更新审批机器人消息",
+      "http_method": "GET",
+      "path": "/v7/workflow/message/update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workflow_approval_instance.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

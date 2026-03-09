@@ -1,0 +1,693 @@
+{
+  "service": "dbsheet",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "batch-create-sheet",
+      "doc_id": 205,
+      "name": "批量创建工作表",
+      "summary": "批量创建工作表",
+      "http_method": "GET",
+      "path": "/v7/dbsheet/{file_id}/sheets/batch_create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件 ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "batch-delete-sheet",
+      "doc_id": 206,
+      "name": "批量删除工作表",
+      "summary": "批量删除工作表",
+      "http_method": "GET",
+      "path": "/v7/dbsheet/{file_id}/sheets/batch_delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件 ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "copy-dashboard",
+      "doc_id": 174,
+      "name": "复制仪表盘",
+      "summary": "复制仪表盘",
+      "http_method": "GET",
+      "path": "/v7/dbsheet/{file_id}/dashboards/{dashboard_id}/copy",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件 ID",
+            "enum": null
+          },
+          {
+            "name": "dashboard_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "仪表盘 ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "disable-share",
+      "doc_id": 198,
+      "name": "关闭分享视图",
+      "summary": "关闭分享视图",
+      "http_method": "GET",
+      "path": "/v7/dbsheet/{file_id}/sheets/{sheet_id}/views/{view_id}/sharedlinks/{share_id}/close",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件 ID",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "数据表 ID",
+            "enum": null
+          },
+          {
+            "name": "view_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "视图 ID",
+            "enum": null
+          },
+          {
+            "name": "share_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "分享 ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "enable-share",
+      "doc_id": 199,
+      "name": "打开分享视图",
+      "summary": "打开分享视图",
+      "http_method": "GET",
+      "path": "/v7/dbsheet/{file_id}/sheets/{sheet_id}/views/{view_id}/sharedlinks/open",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件 ID",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "数据表 ID",
+            "enum": null
+          },
+          {
+            "name": "view_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "视图 ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-meta",
+      "doc_id": 179,
+      "name": "获取表单元数据",
+      "summary": "获取表单元数据",
+      "http_method": "GET",
+      "path": "/v7/dbsheet/{file_id}/sheets/{sheet_id}/forms/{view_id}/meta",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read",
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件 ID",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "数据表 ID",
+            "enum": null
+          },
+          {
+            "name": "view_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "表单视图 ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-repeatable",
+      "doc_id": 201,
+      "name": "查询表单视图是否可以重复提交",
+      "summary": "查询表单视图是否可以重复提交",
+      "http_method": "GET",
+      "path": "/v7/dbsheet/{file_id}/sheets/{sheet_id}/views/{view_id}/sharedlinks/{share_id}/settings",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read",
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件 ID",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "数据表 ID",
+            "enum": null
+          },
+          {
+            "name": "view_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "视图 ID",
+            "enum": null
+          },
+          {
+            "name": "share_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "分享 ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-status",
+      "doc_id": 202,
+      "name": "查询视图是否开启分享",
+      "summary": "查询视图是否开启分享",
+      "http_method": "GET",
+      "path": "/v7/dbsheet/{file_id}/sheets/{sheet_id}/views/{view_id}/sharedlinks/status",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read",
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件 ID",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "数据表 ID",
+            "enum": null
+          },
+          {
+            "name": "view_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "视图 ID",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "view_type",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "视图类型，表格: G0，表单: F0，仪表盘: D0",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "get-view",
+      "doc_id": 212,
+      "name": "获取视图",
+      "summary": "获取视图",
+      "http_method": "GET",
+      "path": "/v7/dbsheet/{file_id}/sheets/{sheet_id}/views/{view_id}",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read",
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件 ID",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "数据表 ID",
+            "enum": null
+          },
+          {
+            "name": "view_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "视图 ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "list-dashboard",
+      "doc_id": 175,
+      "name": "列出仪表盘",
+      "summary": "列出仪表盘",
+      "http_method": "GET",
+      "path": "/v7/dbsheet/{file_id}/dashboards",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read",
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件 ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "list-fields",
+      "doc_id": 180,
+      "name": "列出表单问题",
+      "summary": "列出表单问题",
+      "http_method": "GET",
+      "path": "/v7/dbsheet/{file_id}/sheets/{sheet_id}/forms/{view_id}/fields",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read",
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件 ID",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "数据表 ID",
+            "enum": null
+          },
+          {
+            "name": "view_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "表单视图 ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "list-view",
+      "doc_id": 213,
+      "name": "列出视图",
+      "summary": "列出视图",
+      "http_method": "GET",
+      "path": "/v7/dbsheet/{file_id}/sheets/{sheet_id}/views",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read",
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件 ID",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "数据表 ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "set-repeatable",
+      "doc_id": 203,
+      "name": "设置表单视图是否可以重复提交",
+      "summary": "设置表单视图是否可以重复提交",
+      "http_method": "GET",
+      "path": "/v7/dbsheet/{file_id}/sheets/{sheet_id}/views/{view_id}/sharedlinks/{share_id}/settings",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件 ID",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "数据表 ID",
+            "enum": null
+          },
+          {
+            "name": "view_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "视图 ID",
+            "enum": null
+          },
+          {
+            "name": "share_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "分享视图 ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "update-fields",
+      "doc_id": 181,
+      "name": "更新表单问题",
+      "summary": "更新表单问题",
+      "http_method": "GET",
+      "path": "/v7/dbsheet/{file_id}/sheets/{sheet_id}/forms/{view_id}/fields/{field_id}/update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件 ID",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "数据表 ID",
+            "enum": null
+          },
+          {
+            "name": "view_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "表单视图 ID",
+            "enum": null
+          },
+          {
+            "name": "field_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "字段 ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "update-meta",
+      "doc_id": 182,
+      "name": "更新表单元数据",
+      "summary": "更新表单元数据",
+      "http_method": "GET",
+      "path": "/v7/dbsheet/{file_id}/sheets/{sheet_id}/forms/{view_id}/meta",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件 ID",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "数据表 ID",
+            "enum": null
+          },
+          {
+            "name": "view_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "表单视图 ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "update-permission",
+      "doc_id": 204,
+      "name": "修改分享权限",
+      "summary": "修改分享权限",
+      "http_method": "GET",
+      "path": "/v7/dbsheet/{file_id}/sheets/{sheet_id}/views/{view_id}/sharedlinks/{share_id}/update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.dbsheet.readwrite",
+        "kso.dbsheet.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件 ID",
+            "enum": null
+          },
+          {
+            "name": "sheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "数据表 ID",
+            "enum": null
+          },
+          {
+            "name": "view_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "视图 ID",
+            "enum": null
+          },
+          {
+            "name": "share_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "分享 ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    }
+  ]
+}

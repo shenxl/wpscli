@@ -1,0 +1,26 @@
+{
+  "service": "docqa",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "insight-recall-rank",
+      "doc_id": 52,
+      "name": "团队文档片段召回",
+      "summary": "团队文档片段召回",
+      "http_method": "GET",
+      "path": "/v7/docqa/instore/recall/rank",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.docqa.readwrite",
+        "kso.aidocs.readwrite",
+        "kso.docqa.readwrite",
+        "kso.aidocs.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "service": "drive_freq",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "get-frequent-list",
+      "doc_id": 479,
+      "name": "获取常用列表",
+      "summary": "获取常用列表",
+      "http_method": "GET",
+      "path": "/v7/drive_freq/items",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file.readwrite",
+        "kso.file.read",
+        "kso.file.readwrite",
+        "kso.file.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "with_permission",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回文件操作权限",
+            "enum": null
+          },
+          {
+            "name": "with_link",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回文件分享信息",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "请求大小",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "翻页token",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

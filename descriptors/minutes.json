@@ -1,0 +1,184 @@
+{
+  "service": "minutes",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "delete-imported-minute",
+      "doc_id": 363,
+      "name": "删除导入生成的纪要",
+      "summary": "删除导入生成的纪要",
+      "http_method": "POST",
+      "path": "/v7/minutes/{minute_id}/delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting_minutes.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "minute_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "任务ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-imported-minute",
+      "doc_id": 364,
+      "name": "获取导入生成的纪要",
+      "summary": "获取导入生成的纪要",
+      "http_method": "GET",
+      "path": "/v7/minutes/{minute_id}",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting_minutes.read",
+        "kso.meeting_minutes.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "minute_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "任务ID",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "with_content",
+            "location": "query",
+            "ptype": "bool",
+            "required": false,
+            "description": "是否返回内容",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "import-minutes",
+      "doc_id": 368,
+      "name": "导入录制文件生成纪要",
+      "summary": "导入录制文件生成纪要",
+      "http_method": "POST",
+      "path": "/v7/minutes/create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting_minutes.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,215 @@
+{
+  "service": "announce",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "get-announce-cover-url",
+      "doc_id": 66,
+      "name": "获取封面图下载链接",
+      "summary": "获取封面图下载链接",
+      "http_method": "GET",
+      "path": "/v7/announce/announces/{announce_id}/download",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.announce.read",
+        "kso.announce.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "announce_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "公告ID",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "store_key",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "封面图存储标识store_key",
+            "enum": null
+          },
+          {
+            "name": "with_hash",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回校验值,对应响应里的hashes",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "get-announce-detail",
+      "doc_id": 67,
+      "name": "查询公告详情",
+      "summary": "查询公告详情",
+      "http_method": "GET",
+      "path": "/v7/announce/announces/{announce_id}",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.announce.read",
+        "kso.announce.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "announce_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "公告ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-announce-list",
+      "doc_id": 68,
+      "name": "分页查询公告列表",
+      "summary": "分页查询公告列表",
+      "http_method": "GET",
+      "path": "/v7/announce/announces",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.announce.read",
+        "kso.announce.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "is_top",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "置顶标识：true-返回置顶公告，false返回普通公告;查询置顶公告时不需要传分页参数",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小，默认20",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页token（第一次请求不传）",
+            "enum": null
+          },
+          {
+            "name": "with_total",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回总数",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-announce-visibilities",
+      "doc_id": 69,
+      "name": "分页查询公告可见范围",
+      "summary": "分页查询公告可见范围",
+      "http_method": "GET",
+      "path": "/v7/announce/announces/{announce_id}/visibilities",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.announce.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "announce_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "公告ID（字符串格式）",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "分页大小（范围1-100，默认20）",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页token（首次请求不传）",
+            "enum": null
+          },
+          {
+            "name": "with_total",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回总数",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

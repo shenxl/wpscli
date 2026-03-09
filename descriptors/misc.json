@@ -1,0 +1,46 @@
+{
+  "service": "misc",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "signature-description-wps-3",
+      "doc_id": 74,
+      "name": "签名说明（WPS-3）",
+      "summary": "签名说明（WPS-3）",
+      "http_method": "GET",
+      "path": "/api/v1/dosomething?name=xiaoming&age=18",
+      "signature": "",
+      "scopes": [],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "Date",
+            "location": "header",
+            "ptype": "是",
+            "required": false,
+            "description": "RFC1123格式的日期,例如：`Mon, 02 Jan 2006 15:04:05 +0800`",
+            "enum": null
+          },
+          {
+            "name": "Content-Md5",
+            "location": "header",
+            "ptype": "是",
+            "required": false,
+            "description": "当HTTP请求的body有数据时，计算Body的MD5值，否则计算空字符串的MD5值。再将MD5值转为16进制表达式的字符串,即：`Format(\"%x\", md5Byte)`",
+            "enum": null
+          },
+          {
+            "name": "X-Auth",
+            "location": "header",
+            "ptype": "是",
+            "required": false,
+            "description": "\"WPS-3:\" + AppId + \":\" + sign(AppKey + Content-Md5 + URL + Content-Type + Date)",
+            "enum": null
+          }
+        ]
+      }
+    }
+  ]
+}

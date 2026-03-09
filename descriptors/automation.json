@@ -1,0 +1,67 @@
+{
+  "service": "automation",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "list-automation",
+      "doc_id": 107,
+      "name": "列出自动化流程",
+      "summary": "列出自动化流程",
+      "http_method": "GET",
+      "path": "/v7/automation/{file_id}/workflows",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.automation.readwrite",
+        "kso.automation.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件 ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "update-automation-status",
+      "doc_id": 108,
+      "name": "更新自动化流程状态",
+      "summary": "更新自动化流程状态",
+      "http_method": "GET",
+      "path": "/v7/automation/{file_id}/workflows/{workflow_id}/status",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.automation.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件 ID",
+            "enum": null
+          },
+          {
+            "name": "workflow_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "自动化流程 ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    }
+  ]
+}

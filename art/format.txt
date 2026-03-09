@@ -1,0 +1,12 @@
+
+    ╔══════════════════════════════════════════════════╗
+    ║                  Output Formats                  ║
+    ║                                                  ║
+    ║  --output json     pretty json (default)         ║
+    ║  --output compact  one-line json                 ║
+    ║  --output table    compact table-like fallback   ║
+    ║                                                  ║
+    ║  Tip: combine with --dry-run for safe preview    ║
+    ║                                                  ║
+    ╚══════════════════════════════════════════════════╝
+

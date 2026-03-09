@@ -1,0 +1,40 @@
+{
+  "service": "get_workbench_favorite_apps",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "get-workbench-favorites-apps",
+      "doc_id": 444,
+      "name": "获取用户【常用】应用列表",
+      "summary": "获取用户【常用】应用列表",
+      "http_method": "GET",
+      "path": "/v7/get_workbench_favorite_apps",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.app.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "页面起始token",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "列表页面大小",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,209 @@
+{
+  "service": "deleted_files",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "batch-delete-files",
+      "doc_id": 533,
+      "name": "一级回收站批量文件删除",
+      "summary": "一级回收站批量文件删除",
+      "http_method": "GET",
+      "path": "/v7/deleted_files/batch_delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.deleted_file.readwrite",
+        "kso.deleted_file.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "batch-restore-files",
+      "doc_id": 535,
+      "name": "批量还原回收站文件",
+      "summary": "批量还原回收站文件",
+      "http_method": "GET",
+      "path": "/v7/deleted_files/batch_restore",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.deleted_file.readwrite",
+        "kso.deleted_file.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "clear-files",
+      "doc_id": 536,
+      "name": "清空回收站文件",
+      "summary": "清空回收站文件",
+      "http_method": "GET",
+      "path": "/v7/deleted_files/clear",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.deleted_file.readwrite",
+        "kso.deleted_file.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "delete-file",
+      "doc_id": 537,
+      "name": "删除一级回收站文件",
+      "summary": "删除一级回收站文件",
+      "http_method": "GET",
+      "path": "/v7/deleted_files/{file_id}/delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.deleted_file.readwrite",
+        "kso.deleted_file.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-file-meta",
+      "doc_id": 539,
+      "name": "获取回收站文件信息",
+      "summary": "获取回收站文件信息",
+      "http_method": "GET",
+      "path": "/v7/deleted_files/{file_id}/meta",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.deleted_file.read",
+        "kso.deleted_file.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "with_ext_attrs",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否获取扩展属性",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "list-files",
+      "doc_id": 540,
+      "name": "获取回收站文件列表",
+      "summary": "获取回收站文件列表",
+      "http_method": "GET",
+      "path": "/v7/deleted_files",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.deleted_file.read",
+        "kso.deleted_file.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "drive_id",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "",
+            "enum": null
+          },
+          {
+            "name": "with_ext_attrs",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否获取扩展属性",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "分页大小",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页token",
+            "enum": null
+          },
+          {
+            "name": "with_drive",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否获取drive信息",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "restore-file",
+      "doc_id": 541,
+      "name": "还原回收站文件",
+      "summary": "还原回收站文件",
+      "http_method": "GET",
+      "path": "/v7/deleted_files/{file_id}/restore",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.deleted_file.readwrite",
+        "kso.deleted_file.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    }
+  ]
+}

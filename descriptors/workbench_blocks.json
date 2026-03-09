@@ -1,0 +1,44 @@
+{
+  "service": "workbench_blocks",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "update-block-content",
+      "doc_id": 446,
+      "name": "更新小组件内容",
+      "summary": "更新小组件内容",
+      "http_method": "GET",
+      "path": "/v7/workbench_blocks/{block_id}/update_content",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.workbench_block.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "block_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "小组件实例ID（将小组件添加到工作台后，可在小组件右侧配置面板中的通用配置顶部获取block_id。注意：每次添加小组件的实例会拥有不同的实例ID，删除后再次新增同样的小组件也会不同。）",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

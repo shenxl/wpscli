@@ -1,0 +1,81 @@
+{
+  "service": "event",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "get_event_egress_ip",
+      "doc_id": 262,
+      "name": "获取事件出口地址",
+      "summary": "获取事件出口地址",
+      "http_method": "GET",
+      "path": "/v7/event/egress_ip",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.event_egress_ip.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小，默认值：10，最大值：50",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页标记，第一次请求不填，表示从头开始遍历；分页查询结果还有更多项时会同时返回新的 page_token，下次遍历可采用该 page_token 获取查询结果",
+            "enum": null
+          },
+          {
+            "name": "with_total",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回 total 字段，默认不返回",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](https://open.wps.cn/documents/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    }
+  ]
+}

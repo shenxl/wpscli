@@ -1,0 +1,62 @@
+{
+  "service": "meeting_room_bookings",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "batch-get-meeting-room-booking",
+      "doc_id": 326,
+      "name": "批量查询会议室预约",
+      "summary": "批量查询会议室预约",
+      "http_method": "GET",
+      "path": "/v7/meeting_room_bookings/batch_get",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting_rooms.read",
+        "kso.meeting_rooms.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "update-meeting-booking-status",
+      "doc_id": 329,
+      "name": "更新会议室预约状态",
+      "summary": "更新会议室预约状态",
+      "http_method": "GET",
+      "path": "/v7/meeting_room_bookings/{booking_id}/update_status",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting_rooms.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "booking_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "会议室预约id，可以从查询会议室预约列表接口获取",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    }
+  ]
+}

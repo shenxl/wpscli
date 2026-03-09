@@ -1,0 +1,252 @@
+{
+  "service": "partners",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "get-partners",
+      "doc_id": 15,
+      "name": "获取关联组织列表",
+      "summary": "获取关联组织列表",
+      "http_method": "GET",
+      "path": "/v7/partners",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.contact.readwrite",
+        "kso.contact.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "source",
+            "location": "query",
+            "ptype": "array[string]",
+            "required": true,
+            "description": "同步源标记。关联组织来源，多个来源用,分隔，可选值：  `tenant`:来源于多租户；`default`:来源于默认",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小，默认为：10，最大值：50",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页标记，第一次请求不填，表示从头开始遍历；分页查询结果还有更多项时会同时返回新的 page_token，下次遍历可采用该 page_token 获取查询结果",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-partners-dept-list",
+      "doc_id": 13,
+      "name": "获取关联组织下的部门列表",
+      "summary": "获取关联组织下的部门列表",
+      "http_method": "GET",
+      "path": "/v7/partners/{partner_id}/depts/{dept_id}/children",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.contact.readwrite",
+        "kso.contact.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "partner_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "关联组织 id",
+            "enum": null
+          },
+          {
+            "name": "dept_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "关联组织的部门id，查询根部门时传0",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小，默认为：10，最大值：50",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页标记，第一次请求不填，表示从头开始遍历；分页查询结果还有更多项时会同时返回新的 page_token，下次遍历可采用该 page_token 获取查询结果",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-partners-dept-user-list",
+      "doc_id": 14,
+      "name": "获取关联组织的指定部门的用户列表",
+      "summary": "获取关联组织的指定部门的用户列表",
+      "http_method": "GET",
+      "path": "/v7/partners/{partner_id}/depts/{dept_id}/members",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.contact.readwrite",
+        "kso.contact.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "partner_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "关联组织 id",
+            "enum": null
+          },
+          {
+            "name": "dept_id",
+            "location": "path",
+            "ptype": "string",
+            "required": false,
+            "description": "关联组织的部门id。dept_id传0时：若企业共享了根部门，即获取到根部门下用户列表；若企业未共享根部门，则获取到共享范围内的非共享部门下的用户列表",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小，默认为：10，最大值：50",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页标记，第一次请求不填，表示从头开始遍历；分页查询结果还有更多项时会同时返回新的 page_token，下次遍历可采用该 page_token 获取查询结果",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    }
+  ]
+}

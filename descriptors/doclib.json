@@ -1,0 +1,183 @@
+{
+  "service": "doclib",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "create-doclib",
+      "doc_id": 542,
+      "name": "创建团队文档库",
+      "summary": "创建团队文档库",
+      "http_method": "GET",
+      "path": "/v7/doclib/create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.doclib.readwrite",
+        "kso.doclib.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "delete-doclib",
+      "doc_id": 543,
+      "name": "删除团队文档库",
+      "summary": "删除团队文档库",
+      "http_method": "GET",
+      "path": "/v7/doclib/delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.doclib.readwrite",
+        "kso.doclib.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-doclib",
+      "doc_id": 545,
+      "name": "获取文档库信息",
+      "summary": "获取文档库信息",
+      "http_method": "GET",
+      "path": "/v7/doclib/meta",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.doclib.readwrite",
+        "kso.doclib.readwrite",
+        "kso.doclib.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "drive_id",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "文档库驱动盘id",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "search-doclib",
+      "doc_id": 546,
+      "name": "搜索团队文档库",
+      "summary": "搜索团队文档库",
+      "http_method": "GET",
+      "path": "/v7/doclib/search",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.doclib.readwrite",
+        "kso.doclib.read",
+        "kso.doclib.readwrite",
+        "kso.doclib.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "分页大小",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页token",
+            "enum": null
+          },
+          {
+            "name": "company_id",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "企业ID",
+            "enum": null
+          },
+          {
+            "name": "keyword",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "搜索关键字",
+            "enum": null
+          },
+          {
+            "name": "group_type",
+            "location": "query",
+            "ptype": "object",
+            "required": false,
+            "description": "类型",
+            "enum": null
+          },
+          {
+            "name": "group_source",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "来源",
+            "enum": null
+          },
+          {
+            "name": "with_total",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回搜索到的总条数",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

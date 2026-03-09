@@ -1,0 +1,13 @@
+
+    ╔══════════════════════════════════════════════════╗
+    ║                   Feature Roll                   ║
+    ║                                                  ║
+    ║  ✅ Three-layer routing (helper/api/raw)         ║
+    ║  ✅ KSO-1 signing with app/user auth              ║
+    ║  ✅ Structured JSON output for AI agents          ║
+    ║  ✅ Descriptor-driven command generation          ║
+    ║  ✅ Skill docs generation (SKILL.md)             ║
+    ║  ✅ Dry-run mode and retries                     ║
+    ║                                                  ║
+    ╚══════════════════════════════════════════════════╝
+

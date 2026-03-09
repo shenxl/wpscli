@@ -1,0 +1,281 @@
+{
+  "service": "mail_contacts",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "batch-create-mail-contacts",
+      "doc_id": 231,
+      "name": "批量新增邮箱联系人",
+      "summary": "批量新增邮箱联系人",
+      "http_method": "GET",
+      "path": "/v7/mail_contacts/batch_create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.mail_contact.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "batch-create-mail-contacts-members",
+      "doc_id": 230,
+      "name": "批量创建邮箱联系人成员",
+      "summary": "批量创建邮箱联系人成员",
+      "http_method": "GET",
+      "path": "/v7/mail_contacts/{id}/members/batch_create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.mail_contact.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "batch-delete-mail-contacts",
+      "doc_id": 233,
+      "name": "批量删除邮箱联系人",
+      "summary": "批量删除邮箱联系人",
+      "http_method": "GET",
+      "path": "/v7/mail_contacts/batch_delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.mail_contact.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "batch-delete-mail-contacts-members",
+      "doc_id": 232,
+      "name": "批量删除邮箱联系人成员",
+      "summary": "批量删除邮箱联系人成员",
+      "http_method": "GET",
+      "path": "/v7/mail_contacts/{id}/members/batch_delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.mail_contact.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "batch-update-mail-contacts",
+      "doc_id": 234,
+      "name": "批量修改邮箱联系人",
+      "summary": "批量修改邮箱联系人",
+      "http_method": "GET",
+      "path": "/v7/mail_contacts/batch_update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.mail_contact.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "create-mail-contacts",
+      "doc_id": 235,
+      "name": "新增邮箱联系人",
+      "summary": "新增邮箱联系人",
+      "http_method": "GET",
+      "path": "/v7/mail_contacts",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.mail_contact.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "delete-mail-contacts",
+      "doc_id": 236,
+      "name": "删除邮箱联系人",
+      "summary": "删除邮箱联系人",
+      "http_method": "GET",
+      "path": "/v7/mail_contacts/{id}/delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.mail_contact.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-list-mail-contacts",
+      "doc_id": 237,
+      "name": "获取邮箱联系人列表",
+      "summary": "获取邮箱联系人列表",
+      "http_method": "GET",
+      "path": "/v7/mail_contacts",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.mail_contact.readwrite",
+        "kso.mail_contact.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "翻页token,获取首页无需提供",
+            "enum": null
+          },
+          {
+            "name": "with_total",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回total字段,默认不返回",
+            "enum": null
+          },
+          {
+            "name": "contact_ids",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "邮箱联系人ID列表，传入多个时以英文逗号','分隔。指定id获取时会忽略分页参数，且不会进行分页返回。",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "get-mail-contacts-members",
+      "doc_id": 238,
+      "name": "获取邮箱联系人成员列表",
+      "summary": "获取邮箱联系人成员列表",
+      "http_method": "GET",
+      "path": "/v7/mail_contacts/{id}/members",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.mail_contact.readwrite",
+        "kso.mail_contact.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "分页大小，长度范围[1,100]",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "翻页token，获取首页无需提供",
+            "enum": null
+          },
+          {
+            "name": "with_total",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回total字段，默认为false",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "update-mail-contacts",
+      "doc_id": 240,
+      "name": "修改邮箱联系人信息",
+      "summary": "修改邮箱联系人信息",
+      "http_method": "GET",
+      "path": "/v7/mail_contacts/{id}/update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.mail_contact.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    }
+  ]
+}

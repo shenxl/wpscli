@@ -1,0 +1,23 @@
+{
+  "service": "remove_workbench_favorite_app",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "remove-workbench-favorite-app",
+      "doc_id": 445,
+      "name": "取消用户【常用】应用",
+      "summary": "取消用户【常用】应用",
+      "http_method": "GET",
+      "path": "/v7/remove_workbench_favorite_app",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.app.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": []
+      }
+    }
+  ]
+}

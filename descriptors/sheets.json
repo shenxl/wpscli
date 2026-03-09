@@ -1,0 +1,804 @@
+{
+  "service": "sheets",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "add-protection",
+      "doc_id": 385,
+      "name": "（工作表）创建区域权限信息",
+      "summary": "（工作表）创建区域权限信息",
+      "http_method": "GET",
+      "path": "/v7/sheets/{file_id}/protection_ranges",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.sheets.readwrite",
+        "kso.sheets.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "copy-worksheet",
+      "doc_id": 394,
+      "name": "复制工作表",
+      "summary": "复制工作表",
+      "http_method": "GET",
+      "path": "/v7/sheets/{file_id}/worksheets/{worksheet_id}/copy",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.sheets.readwrite",
+        "kso.sheets.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          },
+          {
+            "name": "worksheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "工作表ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "create-datavalidation",
+      "doc_id": 377,
+      "name": "创建数据校验",
+      "summary": "创建数据校验",
+      "http_method": "GET",
+      "path": "/v7/sheets/{file_id}/worksheets/{worksheet_id}/data_validations",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.sheets.readwrite",
+        "kso.sheets.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          },
+          {
+            "name": "worksheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "工作表ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "create-row-data",
+      "doc_id": 389,
+      "name": "（工作表）创建行",
+      "summary": "（工作表）创建行",
+      "http_method": "GET",
+      "path": "/v7/sheets/{file_id}/worksheets/{worksheet_id}/rows",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.sheets.readwrite",
+        "kso.sheets.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          },
+          {
+            "name": "worksheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "工作表ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "create-worksheet",
+      "doc_id": 395,
+      "name": "创建工作表",
+      "summary": "创建工作表",
+      "http_method": "GET",
+      "path": "/v7/sheets/{file_id}/worksheets",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.sheets.readwrite",
+        "kso.sheets.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "delete-datavalidation",
+      "doc_id": 378,
+      "name": "删除数据校验",
+      "summary": "删除数据校验",
+      "http_method": "GET",
+      "path": "/v7/sheets/{file_id}/worksheets/{worksheet_id}/data_validations/batch_delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.sheets.readwrite",
+        "kso.sheets.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          },
+          {
+            "name": "worksheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "工作表ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "delete-filters",
+      "doc_id": 381,
+      "name": "删除筛选",
+      "summary": "删除筛选",
+      "http_method": "GET",
+      "path": "/v7/sheets/{file_id}/worksheets/{worksheet_id}/filters/delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.sheets.readwrite",
+        "kso.sheets.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          },
+          {
+            "name": "worksheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "工作表ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "delete-protection",
+      "doc_id": 386,
+      "name": "（工作表）删除区域权限",
+      "summary": "（工作表）删除区域权限",
+      "http_method": "GET",
+      "path": "/v7/sheets/{file_id}/protection_ranges/batch_delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.sheets.readwrite",
+        "kso.sheets.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "delete-range-data",
+      "doc_id": 390,
+      "name": "删除单元格选区数据",
+      "summary": "删除单元格选区数据",
+      "http_method": "GET",
+      "path": "/v7/sheets/{file_id}/worksheets/{worksheet_id}/range_data/batch_delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.sheets.readwrite",
+        "kso.sheets.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          },
+          {
+            "name": "worksheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "工作表id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "delete-worksheet",
+      "doc_id": 396,
+      "name": "删除工作表",
+      "summary": "删除工作表",
+      "http_method": "GET",
+      "path": "/v7/sheets/{file_id}/worksheets/batch_delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.sheets.readwrite",
+        "kso.sheets.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "find-range-data",
+      "doc_id": 391,
+      "name": "查找单元格",
+      "summary": "查找单元格",
+      "http_method": "GET",
+      "path": "/v7/sheets/{file_id}/worksheets/{worksheet_id}/range_data/find",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.sheets.readwrite",
+        "kso.sheets.read",
+        "kso.sheets.readwrite",
+        "kso.sheets.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          },
+          {
+            "name": "worksheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "工作表ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-datavalidation",
+      "doc_id": 379,
+      "name": "获取数据校验",
+      "summary": "获取数据校验",
+      "http_method": "GET",
+      "path": "/v7/sheets/{file_id}/worksheets/{worksheet_id}/data_validations",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.sheets.readwrite",
+        "kso.sheets.read",
+        "kso.sheets.readwrite",
+        "kso.sheets.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          },
+          {
+            "name": "worksheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "工作表ID",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "col_from",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "列起始索引位置",
+            "enum": null
+          },
+          {
+            "name": "col_to",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "列最后索引位置",
+            "enum": null
+          },
+          {
+            "name": "row_from",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "行起始索引位置",
+            "enum": null
+          },
+          {
+            "name": "row_to",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "行最后索引位置",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "get-filters",
+      "doc_id": 382,
+      "name": "获取筛选",
+      "summary": "获取筛选",
+      "http_method": "GET",
+      "path": "/v7/sheets/{file_id}/worksheets/{worksheet_id}/filters",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.sheets.readwrite",
+        "kso.sheets.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          },
+          {
+            "name": "worksheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "工作表ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-protection",
+      "doc_id": 387,
+      "name": "获取区域权限列表",
+      "summary": "获取区域权限列表",
+      "http_method": "GET",
+      "path": "/v7/sheets/{file_id}/worksheets/{worksheet_id}/protection_ranges",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.sheets.readwrite",
+        "kso.sheets.read",
+        "kso.sheets.readwrite",
+        "kso.sheets.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          },
+          {
+            "name": "worksheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "工作表ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-range-data",
+      "doc_id": 392,
+      "name": "获取单元格选区数据",
+      "summary": "获取单元格选区数据",
+      "http_method": "GET",
+      "path": "/v7/sheets/{file_id}/worksheets/{worksheet_id}/range_data",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.sheets.readwrite",
+        "kso.sheets.read",
+        "kso.sheets.readwrite",
+        "kso.sheets.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          },
+          {
+            "name": "worksheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "工作表ID",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "row_from",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "行起始索引位置",
+            "enum": null
+          },
+          {
+            "name": "row_to",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "行最后索引位置",
+            "enum": null
+          },
+          {
+            "name": "col_from",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "列起始索引位置",
+            "enum": null
+          },
+          {
+            "name": "col_to",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "列最后索引位置",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "get-worksheet",
+      "doc_id": 397,
+      "name": "获取Sheet列表信息",
+      "summary": "获取Sheet列表信息",
+      "http_method": "GET",
+      "path": "/v7/sheets/{file_id}/worksheets",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.sheets.readwrite",
+        "kso.sheets.read",
+        "kso.sheets.readwrite",
+        "kso.sheets.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "open-filters",
+      "doc_id": 383,
+      "name": "开启筛选",
+      "summary": "开启筛选",
+      "http_method": "GET",
+      "path": "/v7/sheets/{file_id}/worksheets/{worksheet_id}/filters",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.sheets.readwrite",
+        "kso.sheets.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          },
+          {
+            "name": "worksheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "工作表ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "update-datavalidation",
+      "doc_id": 380,
+      "name": "更新数据校验",
+      "summary": "更新数据校验",
+      "http_method": "GET",
+      "path": "/v7/sheets/{file_id}/worksheets/{worksheet_id}/data_validations/batch_update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.sheets.readwrite",
+        "kso.sheets.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          },
+          {
+            "name": "worksheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "工作表ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "update-filters",
+      "doc_id": 384,
+      "name": "更新筛选",
+      "summary": "更新筛选",
+      "http_method": "GET",
+      "path": "/v7/sheets/{file_id}/worksheets/{worksheet_id}/filters/update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.sheets.readwrite",
+        "kso.sheets.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          },
+          {
+            "name": "worksheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "工作表ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "update-protection",
+      "doc_id": 388,
+      "name": "（工作表）修改区域权限",
+      "summary": "（工作表）修改区域权限",
+      "http_method": "GET",
+      "path": "/v7/sheets/{file_id}/protection_ranges/batch_update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.sheets.readwrite",
+        "kso.sheets.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "update-range-data",
+      "doc_id": 393,
+      "name": "更新单元格选区数据",
+      "summary": "更新单元格选区数据",
+      "http_method": "GET",
+      "path": "/v7/sheets/{file_id}/worksheets/{worksheet_id}/range_data/batch_update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.sheets.readwrite",
+        "kso.sheets.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          },
+          {
+            "name": "worksheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "工作表ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "update-worksheet",
+      "doc_id": 398,
+      "name": "更新工作表",
+      "summary": "更新工作表",
+      "http_method": "GET",
+      "path": "/v7/sheets/{file_id}/worksheets/{worksheet_id}/update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.sheets.readwrite",
+        "kso.sheets.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件ID",
+            "enum": null
+          },
+          {
+            "name": "worksheet_id",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "工作表ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    }
+  ]
+}

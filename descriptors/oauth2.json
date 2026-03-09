@@ -1,0 +1,206 @@
+{
+  "service": "oauth2",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "flow",
+      "doc_id": 161,
+      "name": "用户授权流程",
+      "summary": "用户授权流程",
+      "http_method": "GET",
+      "path": "/oauth2/auth",
+      "signature": "无",
+      "scopes": [],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "client\\_id",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "应用 APPID",
+            "enum": null
+          },
+          {
+            "name": "response\\_type",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "参数值必须为 `code`",
+            "enum": null
+          },
+          {
+            "name": "redirect\\_uri",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "使用开者后台应用配置的【用户授权回调地址】经过encode后的值",
+            "enum": null
+          },
+          {
+            "name": "scope",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "用户授权的权限，使用英文逗号分隔，如：`scope1,scope2,scope3`",
+            "enum": null
+          },
+          {
+            "name": "state",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "应用自定义数据，授权成功后重定向时会带出",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "get-user-access-token",
+      "doc_id": 153,
+      "name": "获取用户access_token",
+      "summary": "获取用户access_token",
+      "http_method": "POST",
+      "path": "/oauth2/token",
+      "signature": "",
+      "scopes": [],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/x-www-form-urlencoded`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "isvapp-app-access-token",
+      "doc_id": 154,
+      "name": "三方应用获取应用的access_token",
+      "summary": "三方应用获取应用的access_token",
+      "http_method": "POST",
+      "path": "/oauth2/token",
+      "signature": "",
+      "scopes": [],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/x-www-form-urlencoded`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "isvapp-tenant-access-token",
+      "doc_id": 155,
+      "name": "三方应用获取租户的access_token",
+      "summary": "三方应用获取租户的access_token",
+      "http_method": "POST",
+      "path": "/oauth2/token",
+      "signature": "",
+      "scopes": [],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/x-www-form-urlencoded`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "push-app-ticket",
+      "doc_id": 156,
+      "name": "推送app_ticket",
+      "summary": "推送app_ticket",
+      "http_method": "POST",
+      "path": "/oauth2/ticket/active",
+      "signature": "",
+      "scopes": [],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "格式为：`Bearer {access_token}`，使用：[三方应用的 access_token](/app-integration-dev/wps365/server/certification-authorization/get-token/isvapp-app-access-token)",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "refresh-user-access-token",
+      "doc_id": 157,
+      "name": "刷新用户access_token",
+      "summary": "刷新用户access_token",
+      "http_method": "POST",
+      "path": "/oauth2/token",
+      "signature": "",
+      "scopes": [],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/x-www-form-urlencoded`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "selfapp-tenant-access-token",
+      "doc_id": 158,
+      "name": "自建应用获取租户的access_token",
+      "summary": "自建应用获取租户的access_token",
+      "http_method": "POST",
+      "path": "/oauth2/token",
+      "signature": "",
+      "scopes": [],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/x-www-form-urlencoded`",
+            "enum": null
+          }
+        ]
+      }
+    }
+  ]
+}

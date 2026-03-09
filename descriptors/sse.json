@@ -1,0 +1,116 @@
+{
+  "service": "sse",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "chat-create",
+      "doc_id": 40,
+      "name": "开始对话",
+      "summary": "开始对话",
+      "http_method": "GET",
+      "path": "/v7/sse/devhub/apps/{app_id}/chats/create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.devhub_chat.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "app_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：'application/json'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: 'Wed, 23 Jan 2013 06:43:08 GMT'",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：'Bearer {access_token}'",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "search-gpt",
+      "doc_id": 53,
+      "name": "团队文档智能问答",
+      "summary": "团队文档智能问答",
+      "http_method": "POST",
+      "path": "/v7/sse/aidocs/search/gpt",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.aidocs.readwrite",
+        "kso.aidocs.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    }
+  ]
+}

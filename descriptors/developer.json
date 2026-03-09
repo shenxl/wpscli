@@ -1,0 +1,966 @@
+{
+  "service": "developer",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "app-admin-check",
+      "doc_id": 76,
+      "name": "校验应用管理员",
+      "summary": "校验应用管理员",
+      "http_method": "GET",
+      "path": "/v7/developer/app_admins/{user_id}/check",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.app_admin.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "user_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "管理员对应的用户ID，支持user_id或ex_user_id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "app-admin-list",
+      "doc_id": 77,
+      "name": "查询应用管理员列表",
+      "summary": "查询应用管理员列表",
+      "http_method": "GET",
+      "path": "/v7/developer/app_admins",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.app_admin.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "app-admin-scope",
+      "doc_id": 78,
+      "name": "获取应用管理员管理范围",
+      "summary": "获取应用管理员管理范围",
+      "http_method": "GET",
+      "path": "/v7/developer/get_app_admin_scope",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.app_admin.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "user_id",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "管理员对应的用户ID，支持user_id或ex_user_id",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "app-member-change-owner",
+      "doc_id": 80,
+      "name": "转让应用所有者",
+      "summary": "转让应用所有者",
+      "http_method": "GET",
+      "path": "/v7/developer/apps/{app_id}/change_owner",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.apps.readwrite",
+        "kso.apps.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "app_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "应用id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "app-member-list",
+      "doc_id": 81,
+      "name": "获取应用成员列表",
+      "summary": "获取应用成员列表",
+      "http_method": "GET",
+      "path": "/v7/developer/apps/{app_id}/members",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.apps.read",
+        "kso.apps.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "app_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "应用id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "app-member-update",
+      "doc_id": 82,
+      "name": "更新应用成员",
+      "summary": "更新应用成员",
+      "http_method": "GET",
+      "path": "/v7/developer/apps/{app_id}/members/batch_update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.apps.readwrite",
+        "kso.apps.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "app_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "应用id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "app-subject-add",
+      "doc_id": 87,
+      "name": "新增企业应用可用范围",
+      "summary": "新增企业应用可用范围",
+      "http_method": "GET",
+      "path": "/v7/developer/apps/{app_id}/subjects/batch_add",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.app_subject.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "app_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "应用id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "app-subject-remove",
+      "doc_id": 88,
+      "name": "删除企业应用可用范围",
+      "summary": "删除企业应用可用范围",
+      "http_method": "GET",
+      "path": "/v7/developer/apps/{app_id}/subjects/batch_remove",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.app_subject.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "app_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "应用id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "app-version-list",
+      "doc_id": 83,
+      "name": "获取应用版本列表",
+      "summary": "获取应用版本列表",
+      "http_method": "GET",
+      "path": "/v7/developer/apps/{app_id}/versions",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.app_version.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "app_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "应用id",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "页面起始token",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "列表页面大小",
+            "enum": null
+          },
+          {
+            "name": "with_total",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回total",
+            "enum": null
+          },
+          {
+            "name": "with_details",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回详情, 如果为true, 则应用版本详情的apply_permissions、i18n、ability、visibility字段会返回, 否则不返回",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "batch-update",
+      "doc_id": 79,
+      "name": "批量更新应用角标",
+      "summary": "批量更新应用角标",
+      "http_method": "GET",
+      "path": "/v7/developer/app_badges/batch_update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.apps.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "disable-app",
+      "doc_id": 89,
+      "name": "停用应用",
+      "summary": "停用应用",
+      "http_method": "GET",
+      "path": "/v7/developer/apps/{app_id}/disable",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.apps.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "app_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "应用id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "enable-app",
+      "doc_id": 90,
+      "name": "启用应用",
+      "summary": "启用应用",
+      "http_method": "GET",
+      "path": "/v7/developer/apps/{app_id}/enable",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.apps.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "app_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "应用id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-app-contacts-range",
+      "doc_id": 91,
+      "name": "获取应用的通讯录权限范围",
+      "summary": "获取应用的通讯录权限范围",
+      "http_method": "GET",
+      "path": "/v7/developer/apps/{app_id}/contacts_range",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.app_version.read",
+        "kso.app_version.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "app_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "应用id",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "页面起始token",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "列表页面大小",
+            "enum": null
+          },
+          {
+            "name": "with_total",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回 total 字段，默认不返回",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-app-contacts-range-apply",
+      "doc_id": 84,
+      "name": "获取应用版本中开发者申请的通讯录权限范围",
+      "summary": "获取应用版本中开发者申请的通讯录权限范围",
+      "http_method": "GET",
+      "path": "/v7/developer/apps/{app_id}/contacts_range_apply",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.app_version.read",
+        "kso.app_version.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "app_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "应用id",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "version",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "版本号, 使用x.x.x格式",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-app-version-detail",
+      "doc_id": 85,
+      "name": "获取应用版本信息",
+      "summary": "获取应用版本信息",
+      "http_method": "GET",
+      "path": "/v7/developer/apps/{app_id}/versions/{version}",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.app_version.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "app_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "应用id",
+            "enum": null
+          },
+          {
+            "name": "version",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "应用版本号, 如1.0.0",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-detail",
+      "doc_id": 86,
+      "name": "获取指定应用详情",
+      "summary": "获取指定应用详情",
+      "http_method": "GET",
+      "path": "/v7/developer/apps/{app_id}",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.app_version.read",
+        "kso.app_version.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "app_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "lang",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "优先展示语言，指定获取应用在该语言下的信息。            可选值：            * zh-CN: 中文            * en-US: 英文            * ja-JP: 日文            * zh-HK: 繁体中文-香港            * th-TH: 泰文            默认值：zh-CN。            若未配置应用i18n信息，则显示中文。",
+            "enum": [
+              "`zh-CN`",
+              "`en-US`",
+              "`ja-JP`",
+              "`zh-HK`",
+              "`th-TH`"
+            ]
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-info",
+      "doc_id": 95,
+      "name": "获取应用信息",
+      "summary": "获取应用信息",
+      "http_method": "GET",
+      "path": "/v7/developer/applications/current",
+      "signature": "KSO-1",
+      "scopes": [],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-visibility",
+      "doc_id": 98,
+      "name": "获取应用在企业内的可用范围",
+      "summary": "获取应用在企业内的可用范围",
+      "http_method": "GET",
+      "path": "/v7/developer/applications/current/subjects",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.app.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小，默认为：10，最大值：50",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页标记，第一次请求不填，表示从头开始遍历；分页查询结果还有更多项时会同时返回 `next_page_token`，下次遍历可采用该 `page_token` 获取查询结果",
+            "enum": null
+          },
+          {
+            "name": "with_total",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回 total 总数字段，默认不返回",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Date",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "RFC1123 格式的日期，例: `Wed, 23 Jan 2013 06:43:08 GMT`",
+            "enum": null
+          },
+          {
+            "name": "X-Kso-Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "KSO-1 签名值，详见[《签名方法》](/app-integration-dev/wps365/server/api-description/signature-description)",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-visible-apps",
+      "doc_id": 92,
+      "name": "获取用户可用的应用",
+      "summary": "获取用户可用的应用",
+      "http_method": "GET",
+      "path": "/v7/developer/visible_apps",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.apps.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "id",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "主体id",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "分页大小",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页标记",
+            "enum": null
+          },
+          {
+            "name": "with_total",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回total字段 默认不返回",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "list-installed-apps",
+      "doc_id": 93,
+      "name": "获取企业安装应用列表",
+      "summary": "获取企业安装应用列表",
+      "http_method": "GET",
+      "path": "/v7/developer/apps",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.app_version.read",
+        "kso.app_version.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "页面起始token",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "列表页面大小",
+            "enum": null
+          },
+          {
+            "name": "lang",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "优先展示语言，指定获取应用在该语言下的信息。            可选值：            * zh-CN: 中文            * en-US: 英文            * ja-JP: 日文            * zh-HK: 繁体中文-香港            * th-TH: 泰文            默认值：zh-CN。            若未配置应用i18n信息，则显示中文。",
+            "enum": [
+              "`zh-CN`",
+              "`en-US`",
+              "`ja-JP`",
+              "`zh-HK`",
+              "`th-TH`"
+            ]
+          },
+          {
+            "name": "status",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "应用状态",
+            "enum": [
+              "`enable`",
+              "`disable`",
+              "`deleted`"
+            ]
+          },
+          {
+            "name": "approval_status",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "审核状态,可选值：            * reviewing: 待审核            * approved: 已审核            * rejected: 已拒绝            * withdrawn: 已撤回            * auto_approved: 免审",
+            "enum": [
+              "`reviewing`",
+              "`approved`",
+              "`rejected`",
+              "`withdrawn`",
+              "`auto_approved`"
+            ]
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "update-app-approval-status",
+      "doc_id": 94,
+      "name": "更新应用审核状态",
+      "summary": "更新应用审核状态",
+      "http_method": "GET",
+      "path": "/v7/developer/apps/{app_id}/update_approval_status",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.app_version.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "app_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "应用id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

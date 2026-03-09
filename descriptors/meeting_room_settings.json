@@ -1,0 +1,74 @@
+{
+  "service": "meeting_room_settings",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "batch-get-meeting-room-setting",
+      "doc_id": 341,
+      "name": "批量查询会议室设置",
+      "summary": "批量查询会议室设置",
+      "http_method": "GET",
+      "path": "/v7/meeting_room_settings/batch_get",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting_rooms.read",
+        "kso.meeting_rooms.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "update-meeting-room-setting",
+      "doc_id": 343,
+      "name": "更新会议室设置",
+      "summary": "更新会议室设置",
+      "http_method": "GET",
+      "path": "/v7/meeting_room_settings/{room_id}/update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.meeting_rooms.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "room_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "会议室id，可以通过会议室列表查询",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

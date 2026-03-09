@@ -1,0 +1,71 @@
+{
+  "service": "free_busy_list",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "get-main-calendar-freebusy",
+      "doc_id": 142,
+      "name": "查询主日历日程忙闲",
+      "summary": "查询主日历日程忙闲",
+      "http_method": "GET",
+      "path": "/v7/free_busy_list",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.calendar_events.read",
+        "kso.calendar_events.readwrite",
+        "kso.calendar_events.read",
+        "kso.calendar_events.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "start_time",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "开始查询时间，需要url编码，RFC3339格式，例如：2024-01-15T14%3A30%3A00%2B08%3A00",
+            "enum": null
+          },
+          {
+            "name": "end_time",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "结束查询时间，需要url编码，RFC3339格式，例如：2024-01-15T14%3A30%3A00%2B08%3A00",
+            "enum": null
+          },
+          {
+            "name": "user_ids",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "用户id列表，可从通讯录接口获取，用于查询指定用户的忙闲状态",
+            "enum": null
+          },
+          {
+            "name": "room_ids",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "会议室id列表，可从会议室列表接口获取",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

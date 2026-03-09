@@ -1,0 +1,38 @@
+{
+  "service": "id_convert",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "id-convert",
+      "doc_id": 72,
+      "name": "ID转换",
+      "summary": "ID转换",
+      "http_method": "POST",
+      "path": "/v7/id_convert",
+      "signature": "",
+      "scopes": [],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": [
+          {
+            "name": "Content-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "使用：`application/json`",
+            "enum": null
+          },
+          {
+            "name": "Authorization",
+            "location": "header",
+            "ptype": "string",
+            "required": true,
+            "description": "授权凭证，格式为：`Bearer {access_token}`",
+            "enum": null
+          }
+        ]
+      }
+    }
+  ]
+}

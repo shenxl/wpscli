@@ -1,0 +1,23 @@
+{
+  "service": "create_workbench_favorite_app",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "create-workbench-favorite-app",
+      "doc_id": 443,
+      "name": "添加用户【常用】应用",
+      "summary": "添加用户【常用】应用",
+      "http_method": "GET",
+      "path": "/v7/create_workbench_favorite_app",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.app.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": []
+      }
+    }
+  ]
+}

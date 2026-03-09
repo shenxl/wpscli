@@ -1,0 +1,74 @@
+{
+  "service": "multipart_upload_tasks",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "abort-multipart-upload-task",
+      "doc_id": 501,
+      "name": "中止分块上传任务",
+      "summary": "中止分块上传任务",
+      "http_method": "GET",
+      "path": "/v7/multipart_upload_tasks/{upload_id}/abort",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file.readwrite",
+        "kso.appfile.readwrite",
+        "kso.file.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "upload_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "commit-multipart-upload-task",
+      "doc_id": 502,
+      "name": "提交分块上传任务",
+      "summary": "提交分块上传任务",
+      "http_method": "GET",
+      "path": "/v7/multipart_upload_tasks/{upload_id}/commit",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file.readwrite",
+        "kso.appfile.readwrite",
+        "kso.file.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "upload_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "上传标识，初始化分块上传时获取",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

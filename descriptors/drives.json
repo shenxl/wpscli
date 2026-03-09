@@ -1,0 +1,1862 @@
+{
+  "service": "drives",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "batch-copy-file",
+      "doc_id": 511,
+      "name": "批量复制文件（夹）",
+      "summary": "批量复制文件（夹）",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/batch_copy",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file.readwrite",
+        "kso.file.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "batch-create-drive-permissions",
+      "doc_id": 488,
+      "name": "盘批量授权",
+      "summary": "盘批量授权",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/permissions/batch_create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file_permission.readwrite",
+        "kso.file_permission.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "drive_id表示盘id，参考drive.v7_list_drives接口返回的data.items[?].id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "batch-create-fail-permissions",
+      "doc_id": 489,
+      "name": "批量授权（单个文件）",
+      "summary": "批量授权（单个文件）",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/{file_id}/permissions/batch_create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file_permission.readwrite",
+        "kso.file_permission.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "drive_id表示盘id，参考drive.v7_list_drives接口返回的data.items[?].id",
+            "enum": null
+          },
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "file_id表示文件id,参考drive.v7_list_files接口返回的data.items[?].id，支持传0，表示盘的根目录",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "batch-delete-drive-permissions",
+      "doc_id": 490,
+      "name": "盘批量移除授权",
+      "summary": "盘批量移除授权",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/permissions/batch_delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file_permission.readwrite",
+        "kso.file_permission.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "drive_id表示盘id，参考drive.v7_list_drives接口返回的data.items[?].id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "batch-delete-fail-permissions",
+      "doc_id": 491,
+      "name": "批量移除授权（单个文件）",
+      "summary": "批量移除授权（单个文件）",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/{file_id}/permissions/batch_delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file_permission.readwrite",
+        "kso.file_permission.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "drive_id表示盘id，参考drive.v7_list_drives接口返回的data.items[?].id",
+            "enum": null
+          },
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "file_id表示文件id,参考drive.v7_list_files接口返回的data.items[?].id，支持传0，表示盘的根目录",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "batch-delete-files-folders",
+      "doc_id": 512,
+      "name": "批量删除文件(夹)",
+      "summary": "批量删除文件(夹)",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/batch_delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file.readwrite",
+        "kso.file.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "batch-download-files",
+      "doc_id": 513,
+      "name": "批量文件下载",
+      "summary": "批量文件下载",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/batch_download",
+      "signature": "KSO-1",
+      "scopes": [],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "file_ids",
+            "location": "query",
+            "ptype": "array",
+            "required": true,
+            "description": "文件id列表，数量上限根据用户权益限制",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "batch-remove-file",
+      "doc_id": 515,
+      "name": "批量移动文件（夹）",
+      "summary": "批量移动文件（夹）",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/batch_move",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file.readwrite",
+        "kso.file.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "驱动盘id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "check-file-exist",
+      "doc_id": 516,
+      "name": "检查文件名是否已存在",
+      "summary": "检查文件名是否已存在",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/{parent_id}/check_name",
+      "signature": "KSO-1",
+      "scopes": [],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          },
+          {
+            "name": "parent_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "close-drive-link",
+      "doc_id": 480,
+      "name": "取消文件盘分享",
+      "summary": "取消文件盘分享",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/close_link",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.drive.readwrite",
+        "kso.drive.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "close-link",
+      "doc_id": 481,
+      "name": "取消文件分享",
+      "summary": "取消文件分享",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/{file_id}/close_link",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file_link.readwrite",
+        "kso.file_link.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          },
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "complete-upload-file",
+      "doc_id": 503,
+      "name": "提交文件上传完成",
+      "summary": "提交文件上传完成",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/{parent_id}/commit_upload",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file.readwrite",
+        "kso.file.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          },
+          {
+            "name": "parent_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "create-drive",
+      "doc_id": 476,
+      "name": "新建驱动盘",
+      "summary": "新建驱动盘",
+      "http_method": "GET",
+      "path": "/v7/drives/create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.drive.readwrite",
+        "kso.drive.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "create-file",
+      "doc_id": 517,
+      "name": "新建文件（夹）",
+      "summary": "新建文件（夹）",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/{parent_id}/create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file.readwrite",
+        "kso.file.readwrite",
+        "kso.mcp.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "驱动盘id",
+            "enum": null
+          },
+          {
+            "name": "parent_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件夹id（根目录时为0）",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "create-role",
+      "doc_id": 492,
+      "name": "新建文档权限角色",
+      "summary": "新建文档权限角色",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/roles/create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file_permission.readwrite",
+        "kso.file_permission.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "drive_id表示盘id，参考 drive.list_drives接口返回的data.items[?].id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "delete-role",
+      "doc_id": 493,
+      "name": "删除文档权限角色",
+      "summary": "删除文档权限角色",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/roles/{role_id}/delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file_permission.readwrite",
+        "kso.file_permission.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "drive_id表示盘id，参考drive.list_drives接口返回的data.items[?].id",
+            "enum": null
+          },
+          {
+            "name": "role_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "role_id表示权限角色id,参考list_roles接口返回的data.imems[?].id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-drive",
+      "doc_id": 478,
+      "name": "获取盘信息",
+      "summary": "获取盘信息",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/meta",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.drive.readwrite",
+        "kso.drive.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "with_ext_attrs",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否获取盘扩展属性",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "get-drive-list",
+      "doc_id": 477,
+      "name": "获取盘列表",
+      "summary": "获取盘列表",
+      "http_method": "GET",
+      "path": "/v7/drives",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.drive.readwrite",
+        "kso.drive.readwrite",
+        "kso.mcp.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "allotee_type",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "盘归属身份类型，盘归属身份类型：user-获取操作者自己的私有盘列表，group-获取用户组下的盘列表, app-获取应用下的应用盘列表",
+            "enum": [
+              "`user`",
+              "`group`",
+              "`app`"
+            ]
+          },
+          {
+            "name": "allotee_id",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "盘归属身份id,当allotee_type为user时，该参数仅可传操作者id(公网可不传，默认为当前操作者id)，或者可以不传默认为操作者id；当allotee_type为group时，传入group_id;当allotee_type为app时,仅传入操作应用的spid(公网可不传，默认为当前操作应用spid)",
+            "enum": null
+          },
+          {
+            "name": "with_ext_attrs",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否获取盘扩展属性",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "分页大小,公网限制最大为500",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页token",
+            "enum": null
+          },
+          {
+            "name": "sources",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "盘来源，当allotee_type为user时该参数目前可多选           公网：special（我的云文档）、tmp（我的漫游箱）、secret（私密文件夹）、feature（签名团队）          私网：private（我的云文档）、roaming（我的漫游箱）",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-file-content",
+      "doc_id": 519,
+      "name": "文档内容抽取",
+      "summary": "文档内容抽取",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/{file_id}/content",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file.readwrite",
+        "kso.file.read",
+        "kso.file.readwrite",
+        "kso.file.read",
+        "kso.mcp.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          },
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "format",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "文档内容目标格式",
+            "enum": [
+              "`kdc`",
+              "`plain`",
+              "`markdown`"
+            ]
+          },
+          {
+            "name": "include_elements",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "指定抽取元素。默认元素为para，且一定会被导出；其余附加元素根据请求参数选择性导出。",
+            "enum": [
+              "`para`",
+              "`table`",
+              "`component`",
+              "`textbox`",
+              "`all`"
+            ]
+          },
+          {
+            "name": "mode",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "接口模式。sync-同步模式，默认；async-异步模式，启用该模式后，内容抽取转为异步处理；auto-自动模式，启用该模式后，耗时较长的内容抽取任务将自动转为异步处理。",
+            "enum": [
+              "`sync`",
+              "`async`",
+              "`auto`"
+            ]
+          },
+          {
+            "name": "task_id",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "异步任务id，用于内容抽取任务的结果查询，在mode=async/auto时生效。",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "get-file-download",
+      "doc_id": 520,
+      "name": "获取文件下载信息",
+      "summary": "获取文件下载信息",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/{file_id}/download",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file.readwrite",
+        "kso.file.read",
+        "kso.appfile.readwrite",
+        "kso.file.readwrite",
+        "kso.file.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          },
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "with_hash",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回校验值,对应响应里的hashes",
+            "enum": null
+          },
+          {
+            "name": "internal",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回内网下载地址，默认为false。(内部服务支持内网传输请优先走内网)",
+            "enum": null
+          },
+          {
+            "name": "storage_base_domain",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "wps.cn/kdocs.cn/wps365.com(国际化),签发的存储网关地址会根据base_domain优先匹配 \\*.wps.cn/\\*.kdocs.cn/\\*.wps365.com。            为空会根据请求的host优先选择关联的base_domain.(注意目前有些旧文件未被存储网关托管,针对这些文件的下载此参数可能失效)",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "get-file-info-by-id",
+      "doc_id": 521,
+      "name": "根据drive_id和file_id获取文件信息",
+      "summary": "根据drive_id和file_id获取文件信息",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/{file_id}/meta",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file.readwrite",
+        "kso.file.read",
+        "kso.appfile.readwrite",
+        "kso.file.readwrite",
+        "kso.file.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "驱动盘id",
+            "enum": null
+          },
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件（夹）id",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "with_permission",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回文件操作权限",
+            "enum": null
+          },
+          {
+            "name": "with_ext_attrs",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回文件扩展属性",
+            "enum": null
+          },
+          {
+            "name": "with_drive",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返文件所属drive信息",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-file-list",
+      "doc_id": 523,
+      "name": "获取子文件列表",
+      "summary": "获取子文件列表",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/{parent_id}/children",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file.readwrite",
+        "kso.file.read",
+        "kso.file.readwrite",
+        "kso.file.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "驱动盘id",
+            "enum": null
+          },
+          {
+            "name": "parent_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件夹id（根目录时为0）",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "with_permission",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回文件操作权限",
+            "enum": null
+          },
+          {
+            "name": "with_ext_attrs",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回文件扩展属性",
+            "enum": null
+          },
+          {
+            "name": "filter_exts",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "过滤条件,扩展名以英文逗号分隔，不需要空格，扩展名全部小写,不传或者空字符串表示不过滤",
+            "enum": null
+          },
+          {
+            "name": "filter_type",
+            "location": "query",
+            "ptype": "object",
+            "required": false,
+            "description": "按照文件类型筛选，例如：file、folder、shortcut等",
+            "enum": null
+          },
+          {
+            "name": "order",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "排序方式：升序和降序",
+            "enum": [
+              "`desc`",
+              "`asc`"
+            ]
+          },
+          {
+            "name": "order_by",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "排序字段",
+            "enum": [
+              "`ctime`",
+              "`mtime`",
+              "`dtime`",
+              "`fname`",
+              "`fsize`"
+            ]
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "分页大小,公网限制最大为500",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页token",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-file-path",
+      "doc_id": 524,
+      "name": "获取文件路径",
+      "summary": "获取文件路径",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/{file_id}/path",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file.readwrite",
+        "kso.file.read",
+        "kso.file.readwrite",
+        "kso.file.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          },
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-upload-file",
+      "doc_id": 504,
+      "name": "请求文件上传信息",
+      "summary": "请求文件上传信息",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/{parent_id}/request_upload",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file.readwrite",
+        "kso.file.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          },
+          {
+            "name": "parent_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "get-user-file-permissions",
+      "doc_id": 495,
+      "name": "获取用户的文件操作权限",
+      "summary": "获取用户的文件操作权限",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/{file_id}/permissions/acl",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file_permission.readwrite",
+        "kso.file_permission.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "drive_id表示盘id，参考drive.v7_list_drives接口返回的data.items[?].id",
+            "enum": null
+          },
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "file_id表示文件id,参考drive.v7_list_files接口返回的data.items[?].id，支持传0，表示盘的根目录",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "user_ids",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "用户id列表,以','分割",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-version",
+      "doc_id": 509,
+      "name": "获取文件版本信息",
+      "summary": "获取文件版本信息",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/{file_id}/versions/{version_num}/meta",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file_version.readwrite",
+        "kso.file_version.read",
+        "kso.file_version.readwrite",
+        "kso.file_version.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "驱动盘id",
+            "enum": null
+          },
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件id",
+            "enum": null
+          },
+          {
+            "name": "version_num",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "文件版本",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "with_ext_attrs",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否查询版本扩展属性",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-version-download-url",
+      "doc_id": 525,
+      "name": "获取指定文件版本下载地址",
+      "summary": "获取指定文件版本下载地址",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/{file_id}/versions/{version_num}/download",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file_version.readwrite",
+        "kso.file_version.read",
+        "kso.file_version.readwrite",
+        "kso.file_version.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "驱动盘id",
+            "enum": null
+          },
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件id",
+            "enum": null
+          },
+          {
+            "name": "version_num",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "文件版本",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "with_hash",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回校验值",
+            "enum": null
+          },
+          {
+            "name": "internal",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否返回内网下载地址，默认为false。(内部服务支持内网传输请优先走内网)",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "get-version-list",
+      "doc_id": 508,
+      "name": "获取文件版本列表",
+      "summary": "获取文件版本列表",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/{file_id}/versions",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file_version.readwrite",
+        "kso.file_version.read",
+        "kso.file_version.readwrite",
+        "kso.file_version.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "驱动盘id",
+            "enum": null
+          },
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件id",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "分页大小",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页token",
+            "enum": null
+          },
+          {
+            "name": "with_comment",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否查询版本备注",
+            "enum": null
+          },
+          {
+            "name": "with_ext_attrs",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "是否查询版本扩展属性",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "init-multipart-upload-task",
+      "doc_id": 505,
+      "name": "分块上传任务初始化",
+      "summary": "分块上传任务初始化",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/{parent_id}/create_multipart_upload_task",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file.readwrite",
+        "kso.appfile.readwrite",
+        "kso.file.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "驱动盘id",
+            "enum": null
+          },
+          {
+            "name": "parent_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件夹id（根目录时为0）",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "list-file-permissions",
+      "doc_id": 496,
+      "name": "列举文件权限列表",
+      "summary": "列举文件权限列表",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/{file_id}/permissions",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file_permission.readwrite",
+        "kso.file_permission.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "drive_id表示盘id，参考drive.list_drives接口返回的data.items[?].id",
+            "enum": null
+          },
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "file_id表示文件id,参考drive.list_file接口返回的data.items[?].id，支持传0，表示盘的根目录",
+            "enum": null
+          }
+        ],
+        "query": [
+          {
+            "name": "subject_type",
+            "location": "query",
+            "ptype": "object",
+            "required": false,
+            "description": "类型筛选",
+            "enum": null
+          },
+          {
+            "name": "subject_ids",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "传入授权主体id",
+            "enum": null
+          },
+          {
+            "name": "with_subject_tags",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "私有云适用，是否返回授权对象的附属属性标记信息 默认为false",
+            "enum": null
+          }
+        ],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "open-drive-link",
+      "doc_id": 485,
+      "name": "开启文件盘分享",
+      "summary": "开启文件盘分享",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/open_link",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.drive.readwrite",
+        "kso.drive.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "open-link",
+      "doc_id": 486,
+      "name": "开启文件分享",
+      "summary": "开启文件分享",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/{file_id}/open_link",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file_link.readwrite",
+        "kso.file_link.readwrite",
+        "kso.mcp.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          },
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "rapid-upload",
+      "doc_id": 506,
+      "name": "文件秒传",
+      "summary": "文件秒传",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/{parent_id}/rapid_upload",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file.readwrite",
+        "kso.file.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "驱动盘id",
+            "enum": null
+          },
+          {
+            "name": "parent_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件夹id（根目录时为0）",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "rename-file",
+      "doc_id": 527,
+      "name": "重命名文件（夹）",
+      "summary": "重命名文件（夹）",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/{file_id}/rename",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file.readwrite",
+        "kso.file.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          },
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "roles",
+      "doc_id": 498,
+      "name": "获取文档权限角色列表",
+      "summary": "获取文档权限角色列表",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/roles",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file_permission.readwrite",
+        "kso.file_permission.readwrite",
+        "kso.file_permission.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "drive_id表示盘id，参考 drive.list_drives接口返回的data.items[?].id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "save-as-file",
+      "doc_id": 528,
+      "name": "文件另存为",
+      "summary": "文件另存为",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/{file_id}/save_as",
+      "signature": "KSO-1",
+      "scopes": [],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          },
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "transfer-file",
+      "doc_id": 530,
+      "name": "转让文件拥有者",
+      "summary": "转让文件拥有者",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/{file_id}/transfer_owner",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file.readwrite",
+        "kso.file.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "驱动盘id",
+            "enum": null
+          },
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "文件id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "update-file",
+      "doc_id": 531,
+      "name": "修改文件元数据信息",
+      "summary": "修改文件元数据信息",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/{file_id}/update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file.readwrite",
+        "kso.file.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          },
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "update-role",
+      "doc_id": 499,
+      "name": "更新文档权限角色",
+      "summary": "更新文档权限角色",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/roles/{role_id}/update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file_permission.readwrite",
+        "kso.file_permission.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "drive_id表示盘id，参考drive.list_drives接口返回的data.items[?].id",
+            "enum": null
+          },
+          {
+            "name": "role_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "role_id表示权限角色id,参考参考drive.list_roles接口返回的data.imems[?].id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "update-version",
+      "doc_id": 510,
+      "name": "更新文件版本信息",
+      "summary": "更新文件版本信息",
+      "http_method": "GET",
+      "path": "/v7/drives/{drive_id}/files/{file_id}/versions/{version_num}/update",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.file_version.readwrite",
+        "kso.file_version.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "drive_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          },
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          },
+          {
+            "name": "version_num",
+            "location": "path",
+            "ptype": "integer",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    }
+  ]
+}

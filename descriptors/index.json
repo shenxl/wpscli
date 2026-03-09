@@ -1,0 +1,328 @@
+{
+  "version": "1.0.0",
+  "generated_from": "/Users/shen/openclaw_src/googlews/wpsskill/wps-openapi-nav/data/api_index.json",
+  "total_services": 64,
+  "total_endpoints": 488,
+  "services": [
+    {
+      "service": "aidocs",
+      "file": "aidocs.json",
+      "count": 5
+    },
+    {
+      "service": "announce",
+      "file": "announce.json",
+      "count": 4
+    },
+    {
+      "service": "applications",
+      "file": "applications.json",
+      "count": 1
+    },
+    {
+      "service": "attendance",
+      "file": "attendance.json",
+      "count": 4
+    },
+    {
+      "service": "automation",
+      "file": "automation.json",
+      "count": 2
+    },
+    {
+      "service": "calendars",
+      "file": "calendars.json",
+      "count": 32
+    },
+    {
+      "service": "chats",
+      "file": "chats.json",
+      "count": 23
+    },
+    {
+      "service": "companies",
+      "file": "companies.json",
+      "count": 5
+    },
+    {
+      "service": "contacts",
+      "file": "contacts.json",
+      "count": 1
+    },
+    {
+      "service": "coop_dbsheet",
+      "file": "coop_dbsheet.json",
+      "count": 32
+    },
+    {
+      "service": "coop_files",
+      "file": "coop_files.json",
+      "count": 2
+    },
+    {
+      "service": "create_workbench_favorite_app",
+      "file": "create_workbench_favorite_app.json",
+      "count": 1
+    },
+    {
+      "service": "dbsheet",
+      "file": "dbsheet.json",
+      "count": 16
+    },
+    {
+      "service": "deleted_files",
+      "file": "deleted_files.json",
+      "count": 7
+    },
+    {
+      "service": "depts",
+      "file": "depts.json",
+      "count": 11
+    },
+    {
+      "service": "developer",
+      "file": "developer.json",
+      "count": 21
+    },
+    {
+      "service": "devhub",
+      "file": "devhub.json",
+      "count": 7
+    },
+    {
+      "service": "doclib",
+      "file": "doclib.json",
+      "count": 4
+    },
+    {
+      "service": "doclibs",
+      "file": "doclibs.json",
+      "count": 1
+    },
+    {
+      "service": "docqa",
+      "file": "docqa.json",
+      "count": 1
+    },
+    {
+      "service": "documents",
+      "file": "documents.json",
+      "count": 4
+    },
+    {
+      "service": "drive_freq",
+      "file": "drive_freq.json",
+      "count": 1
+    },
+    {
+      "service": "drive_tasks",
+      "file": "drive_tasks.json",
+      "count": 1
+    },
+    {
+      "service": "drives",
+      "file": "drives.json",
+      "count": 40
+    },
+    {
+      "service": "event",
+      "file": "event.json",
+      "count": 1
+    },
+    {
+      "service": "files",
+      "file": "files.json",
+      "count": 6
+    },
+    {
+      "service": "free_busy_list",
+      "file": "free_busy_list.json",
+      "count": 1
+    },
+    {
+      "service": "get_workbench_favorite_apps",
+      "file": "get_workbench_favorite_apps.json",
+      "count": 1
+    },
+    {
+      "service": "groups",
+      "file": "groups.json",
+      "count": 18
+    },
+    {
+      "service": "id_convert",
+      "file": "id_convert.json",
+      "count": 1
+    },
+    {
+      "service": "links",
+      "file": "links.json",
+      "count": 4
+    },
+    {
+      "service": "low_code_app",
+      "file": "low_code_app.json",
+      "count": 8
+    },
+    {
+      "service": "mail_contacts",
+      "file": "mail_contacts.json",
+      "count": 10
+    },
+    {
+      "service": "mail_messages",
+      "file": "mail_messages.json",
+      "count": 1
+    },
+    {
+      "service": "mail_migrations",
+      "file": "mail_migrations.json",
+      "count": 3
+    },
+    {
+      "service": "mail_tasks",
+      "file": "mail_tasks.json",
+      "count": 1
+    },
+    {
+      "service": "mailboxes",
+      "file": "mailboxes.json",
+      "count": 7
+    },
+    {
+      "service": "meeting_room_banned_users",
+      "file": "meeting_room_banned_users.json",
+      "count": 3
+    },
+    {
+      "service": "meeting_room_bookings",
+      "file": "meeting_room_bookings.json",
+      "count": 2
+    },
+    {
+      "service": "meeting_room_levels",
+      "file": "meeting_room_levels.json",
+      "count": 6
+    },
+    {
+      "service": "meeting_room_privileged_users",
+      "file": "meeting_room_privileged_users.json",
+      "count": 3
+    },
+    {
+      "service": "meeting_room_settings",
+      "file": "meeting_room_settings.json",
+      "count": 2
+    },
+    {
+      "service": "meeting_rooms",
+      "file": "meeting_rooms.json",
+      "count": 10
+    },
+    {
+      "service": "meetings",
+      "file": "meetings.json",
+      "count": 16
+    },
+    {
+      "service": "messages",
+      "file": "messages.json",
+      "count": 5
+    },
+    {
+      "service": "minutes",
+      "file": "minutes.json",
+      "count": 3
+    },
+    {
+      "service": "misc",
+      "file": "misc.json",
+      "count": 1
+    },
+    {
+      "service": "multipart_upload_tasks",
+      "file": "multipart_upload_tasks.json",
+      "count": 2
+    },
+    {
+      "service": "oauth2",
+      "file": "oauth2.json",
+      "count": 7
+    },
+    {
+      "service": "partners",
+      "file": "partners.json",
+      "count": 3
+    },
+    {
+      "service": "public_mailboxes",
+      "file": "public_mailboxes.json",
+      "count": 12
+    },
+    {
+      "service": "remove_workbench_favorite_app",
+      "file": "remove_workbench_favorite_app.json",
+      "count": 1
+    },
+    {
+      "service": "second_deleted_files",
+      "file": "second_deleted_files.json",
+      "count": 2
+    },
+    {
+      "service": "service_principals",
+      "file": "service_principals.json",
+      "count": 1
+    },
+    {
+      "service": "sheets",
+      "file": "sheets.json",
+      "count": 22
+    },
+    {
+      "service": "sse",
+      "file": "sse.json",
+      "count": 2
+    },
+    {
+      "service": "store",
+      "file": "store.json",
+      "count": 7
+    },
+    {
+      "service": "subscription",
+      "file": "subscription.json",
+      "count": 4
+    },
+    {
+      "service": "todo",
+      "file": "todo.json",
+      "count": 15
+    },
+    {
+      "service": "user_mailboxes",
+      "file": "user_mailboxes.json",
+      "count": 6
+    },
+    {
+      "service": "users",
+      "file": "users.json",
+      "count": 19
+    },
+    {
+      "service": "wiki",
+      "file": "wiki.json",
+      "count": 16
+    },
+    {
+      "service": "workbench_blocks",
+      "file": "workbench_blocks.json",
+      "count": 1
+    },
+    {
+      "service": "workflow",
+      "file": "workflow.json",
+      "count": 29
+    }
+  ]
+}

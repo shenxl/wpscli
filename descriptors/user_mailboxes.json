@@ -1,0 +1,236 @@
+{
+  "service": "user_mailboxes",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "create-alias",
+      "doc_id": 222,
+      "name": "创建别名邮箱",
+      "summary": "创建别名邮箱",
+      "http_method": "GET",
+      "path": "/v7/user_mailboxes/{user_id}/aliases",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.user_mailbox.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "user_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "用户ID，支持user_id或ex_user_id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "create-user-mailbox",
+      "doc_id": 259,
+      "name": "创建用户邮箱",
+      "summary": "创建用户邮箱",
+      "http_method": "GET",
+      "path": "/v7/user_mailboxes/{user_id}/create",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.user_mailbox.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "user_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "用户ID，支持user_id或ex_user_id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "delete-alias",
+      "doc_id": 223,
+      "name": "删除别名邮箱",
+      "summary": "删除别名邮箱",
+      "http_method": "GET",
+      "path": "/v7/user_mailboxes/{user_id}/delete_alias",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.user_mailbox.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "user_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "用户ID，支持user_id或ex_user_id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "delete-user-mailbox",
+      "doc_id": 260,
+      "name": "删除用户邮箱",
+      "summary": "删除用户邮箱",
+      "http_method": "GET",
+      "path": "/v7/user_mailboxes/{user_id}/delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.user_mailbox.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "user_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "用户ID，支持user_id或ex_user_id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-user-aliases",
+      "doc_id": 224,
+      "name": "获取用户所有别名邮箱",
+      "summary": "获取用户所有别名邮箱",
+      "http_method": "GET",
+      "path": "/v7/user_mailboxes/{user_id}/aliases",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.user_mailbox.readwrite",
+        "kso.user_mailbox.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "user_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "用户ID，支持user_id或ex_user_id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "get-user-mailbox",
+      "doc_id": 261,
+      "name": "根据用户ID获取用户邮箱信息",
+      "summary": "根据用户ID获取用户邮箱信息",
+      "http_method": "GET",
+      "path": "/v7/user_mailboxes/{user_id}",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.user_mailbox.readwrite",
+        "kso.user_mailbox.read"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "user_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "用户ID，支持user_id或ex_user_id",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": [
+          {
+            "name": "X-Kso-Id-Type",
+            "location": "header",
+            "ptype": "string",
+            "required": false,
+            "description": "类型  * **internal** - 内部  * **external** - 外部",
+            "enum": [
+              "`internal`",
+              "`external`"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

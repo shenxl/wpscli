@@ -1,0 +1,164 @@
+{
+  "service": "mail_messages",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "advance-search-mail",
+      "doc_id": 225,
+      "name": "搜索邮件【高级搜索】",
+      "summary": "搜索邮件【高级搜索】",
+      "http_method": "GET",
+      "path": "/v7/mail_messages/search",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.mail.readwrite",
+        "kso.mail.read"
+      ],
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "mailbox_ids",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "多个邮箱账号的id集合,多个账号用,号分割",
+            "enum": null
+          },
+          {
+            "name": "start_time",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "邮件的起始时间戳（单位秒），默认为1",
+            "enum": null
+          },
+          {
+            "name": "end_time",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "邮件的结束时间戳（单位秒），须大于start_time。默认无穷大",
+            "enum": null
+          },
+          {
+            "name": "folders",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "目录ID列表，限制搜索目录范围。默认搜索所有目录，多个目录用英文逗号,分割",
+            "enum": null
+          },
+          {
+            "name": "exclude_folder_names",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "不进行搜索的目录名称列表，当前仅支持指定系统目录[Sent/Drafts]。多个用英文逗号,分割",
+            "enum": null
+          },
+          {
+            "name": "filter",
+            "location": "query",
+            "ptype": "array",
+            "required": false,
+            "description": "邮件筛选条件，默认为all。多个用英文逗号,分割",
+            "enum": [
+              "`unread`",
+              "`flagged`"
+            ]
+          },
+          {
+            "name": "has_attachment",
+            "location": "query",
+            "ptype": "boolean",
+            "required": false,
+            "description": "true筛选包含附件，false筛选不包含附件。默认不筛选",
+            "enum": null
+          },
+          {
+            "name": "category_id",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "标签ID，限制搜索标签范围。默认搜索所有标签",
+            "enum": null
+          },
+          {
+            "name": "from",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "发件人搜索,支持邮箱地址、用户名搜索，默认不筛选，多个使用空格分割",
+            "enum": null
+          },
+          {
+            "name": "to",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "收件人搜索，支持邮箱地址、用户名搜索，默认不筛选，这里包含收件人，抄送，密送人搜索，多个使用空格分割",
+            "enum": null
+          },
+          {
+            "name": "subject",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "邮件主题搜索，默认不搜索",
+            "enum": null
+          },
+          {
+            "name": "body",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "邮件正文搜索，支持模糊搜索，默认不搜索",
+            "enum": null
+          },
+          {
+            "name": "attachment",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "邮件附件名称搜索,支持模糊搜索，默认不搜索",
+            "enum": null
+          },
+          {
+            "name": "keyword",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "关键字搜索,支持模糊搜索",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小，默认取5",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "翻页token，首次无需提供",
+            "enum": null
+          },
+          {
+            "name": "priority",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "优先级字段，空-所有 0-普通 1-高 5-低",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    }
+  ]
+}

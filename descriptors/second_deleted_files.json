@@ -1,0 +1,51 @@
+{
+  "service": "second_deleted_files",
+  "base_url": "https://openapi.wps.cn",
+  "endpoints": [
+    {
+      "id": "batch-delete-second-deleted-files",
+      "doc_id": 534,
+      "name": "二级回收站批量文件删除",
+      "summary": "二级回收站批量文件删除",
+      "http_method": "GET",
+      "path": "/v7/second_deleted_files/batch_delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.deleted_file.readwrite",
+        "kso.deleted_file.readwrite"
+      ],
+      "params": {
+        "path": [],
+        "query": [],
+        "header": []
+      }
+    },
+    {
+      "id": "delete-second-deleted-file",
+      "doc_id": 538,
+      "name": "二级回收站单文件删除",
+      "summary": "二级回收站单文件删除",
+      "http_method": "GET",
+      "path": "/v7/second_deleted_files/{file_id}/delete",
+      "signature": "KSO-1",
+      "scopes": [
+        "kso.deleted_file.readwrite",
+        "kso.deleted_file.readwrite"
+      ],
+      "params": {
+        "path": [
+          {
+            "name": "file_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    }
+  ]
+}

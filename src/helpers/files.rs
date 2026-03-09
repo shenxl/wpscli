@@ -9,6 +9,7 @@ use serde_json::Value;
 use sha2::{Digest, Sha256};
 use tokio::io::AsyncWriteExt;
 
+use crate::auth::{self, AuthType};
 use crate::error::WpsError;
 use crate::executor;
 use crate::skill_runtime::{self, ScopePreflight, SkillStateStore};
@@ -892,6 +893,34 @@ fn sha256_file_hex(local_file: &str) -> Result<String, WpsError> {
     Ok(digest.iter().map(|b| format!("{b:02x}")).collect::<String>())
 }
 
+fn upload_commit_params(headers: &reqwest::header::HeaderMap, upload_url: &str) -> Option<Value> {
+    let etag = headers
+        .get("etag")
+        .or_else(|| headers.get("ETag"))
+        .and_then(|v| v.to_str().ok())
+        .map(|s| s.trim().trim_matches('"').to_string())
+        .filter(|s| !s.is_empty());
+    let key = headers
+        .get("x-oss-key")
+        .or_else(|| headers.get("X-OSS-Key"))
+        .and_then(|v| v.to_str().ok())
+        .map(|s| s.trim().to_string())
+        .filter(|s| !s.is_empty())
+        .or_else(|| {
+            reqwest::Url::parse(upload_url)
+                .ok()
+                .map(|u| u.path().trim_start_matches('/').to_string())
+                .filter(|s| !s.is_empty())
+        });
+    if etag.is_none() && key.is_none() {
+        return None;
+    }
+    Some(serde_json::json!({
+        "etag": etag.unwrap_or_default(),
+        "key": key.unwrap_or_default(),
+    }))
+}
+
 fn phase_ok(
     phase: &str,
     started: Instant,
@@ -1244,9 +1273,23 @@ async fn transfer_upload(s: &ArgMatches) -> Result<Value, WpsError> {
             return Ok(transfer_failure("upload", phases, &e));
         }
     };
+    let access_token = match auth::get_access_token(AuthType::parse(&auth)).await {
+        Ok(v) => v,
+        Err(e) => {
+            phases.push(phase_failed(
+                "upload_to_store",
+                t,
+                true,
+                "获取访问令牌失败，请执行 wpscli auth login --user 后重试",
+                &e,
+            ));
+            return Ok(transfer_failure("upload", phases, &e));
+        }
+    };
     let mut req = reqwest::Client::new()
         .request(method, &upload_url)
-        .header("Content-Type", "application/octet-stream");
+        .header("Content-Type", "application/octet-stream")
+        .header("Authorization", format!("Bearer {access_token}"));
     if let Some(headers) = store_request.get("headers").and_then(|v| v.as_object()) {
         for (k, v) in headers {
             if let Some(vs) = v.as_str() {
@@ -1269,6 +1312,7 @@ async fn transfer_upload(s: &ArgMatches) -> Result<Value, WpsError> {
         }
     };
     let upload_status = upload_resp.status().as_u16();
+    let upload_headers = upload_resp.headers().clone();
     let upload_text = upload_resp.text().await.unwrap_or_default();
     if upload_status >= 400 {
         let e = WpsError::Network(format!(
@@ -1288,15 +1332,22 @@ async fn transfer_upload(s: &ArgMatches) -> Result<Value, WpsError> {
         t,
         false,
         "实体文件上传成功",
-        serde_json::json!({"status": upload_status}),
+        serde_json::json!({
+            "status": upload_status,
+            "commit_params": upload_commit_params(&upload_headers, &upload_url).unwrap_or(Value::Null)
+        }),
     ));
 
     let t = Instant::now();
+    let mut commit_body = serde_json::json!({ "upload_id": upload_id });
+    if let Some(params) = upload_commit_params(&upload_headers, &upload_url) {
+        commit_body["params"] = params;
+    }
     let commit_resp = match execute(
         "POST",
         &format!("/v7/drives/{drive_id}/files/{parent_id}/commit_upload"),
         HashMap::new(),
-        Some(serde_json::json!({ "upload_id": upload_id })),
+        Some(commit_body),
         &auth,
         dry,
         retry,
@@ -1769,13 +1820,15 @@ async fn upload_file(s: &ArgMatches) -> Result<Value, WpsError> {
         .to_uppercase();
     let method = Method::from_bytes(upload_method.as_bytes())
         .map_err(|e| WpsError::Validation(format!("非法上传方法 {upload_method}: {e}")))?;
+    let access_token = auth::get_access_token(AuthType::parse(&auth)).await?;
     let file_bytes = tokio::fs::read(local_file)
         .await
         .map_err(|e| WpsError::Validation(format!("读取本地文件失败 {local_file}: {e}")))?;
 
     let mut req = reqwest::Client::new()
         .request(method, upload_url)
-        .header("Content-Type", "application/octet-stream");
+        .header("Content-Type", "application/octet-stream")
+        .header("Authorization", format!("Bearer {access_token}"));
     if let Some(headers) = store_request.get("headers").and_then(|v| v.as_object()) {
         for (k, v) in headers {
             if let Some(vs) = v.as_str() {
@@ -1784,11 +1837,12 @@ async fn upload_file(s: &ArgMatches) -> Result<Value, WpsError> {
         }
     }
     let upload_resp = req
-        .body(file_bytes.clone())
+        .body(file_bytes)
         .send()
         .await
         .map_err(|e| WpsError::Network(format!("上传实体文件失败: {e}")))?;
     let upload_status = upload_resp.status().as_u16();
+    let upload_headers = upload_resp.headers().clone();
     let upload_text = upload_resp.text().await.unwrap_or_default();
     if upload_status >= 400 {
         return Err(WpsError::Network(format!(
@@ -1796,11 +1850,15 @@ async fn upload_file(s: &ArgMatches) -> Result<Value, WpsError> {
         )));
     }
 
+    let mut commit_body = serde_json::json!({ "upload_id": upload_id });
+    if let Some(params) = upload_commit_params(&upload_headers, upload_url) {
+        commit_body["params"] = params;
+    }
     let commit_resp = execute(
         "POST",
         &format!("/v7/drives/{drive_id}/files/{parent_id}/commit_upload"),
         HashMap::new(),
-        Some(serde_json::json!({ "upload_id": upload_id })),
+        Some(commit_body),
         &auth,
         dry,
         retry,

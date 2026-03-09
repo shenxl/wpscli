@@ -1,7 +1,12 @@
 use std::collections::HashMap;
+use std::io::Read;
+use std::path::Path;
 
 use clap::{Arg, ArgAction, ArgMatches, Command};
+use reqwest::Method;
 use serde_json::Value;
+use sha2::{Digest, Sha256};
+use tokio::io::AsyncWriteExt;
 
 use crate::error::WpsError;
 use crate::executor;
@@ -72,6 +77,45 @@ pub fn command() -> Command {
                 .arg(Arg::new("file").long("file").num_args(1).help("文件名（与 --app 搭配）")),
         )
         .subcommand(
+            with_common_opts(Command::new("upload").about("上传本地文件（请求上传->存储上传->提交完成）"))
+                .arg(
+                    Arg::new("local-file")
+                        .long("local-file")
+                        .required(true)
+                        .num_args(1)
+                        .help("本地文件路径"),
+                )
+                .arg(Arg::new("name").long("name").num_args(1).help("远端文件名（默认取本地文件名）"))
+                .arg(Arg::new("app").long("app").num_args(1).help("目标应用目录（与 --parent-id 二选一，默认根目录）"))
+                .arg(Arg::new("parent-id").long("parent-id").num_args(1).help("目标父目录 ID（优先于 --app）"))
+                .arg(
+                    Arg::new("on-name-conflict")
+                        .long("on-name-conflict")
+                        .default_value("rename")
+                        .value_parser(["fail", "rename", "overwrite", "replace"])
+                        .help("同名冲突策略：fail/rename/overwrite/replace"),
+                )
+                .arg(Arg::new("internal").long("internal").action(ArgAction::SetTrue).help("优先请求内网上传地址"))
+                .arg(Arg::new("drive-id").long("drive-id").num_args(1).help("网盘 ID（不传则自动探测）")),
+        )
+        .subcommand(
+            with_common_opts(Command::new("download").about("下载文件到本地"))
+                .arg(Arg::new("drive-id").long("drive-id").num_args(1).help("网盘 ID"))
+                .arg(Arg::new("file-id").long("file-id").num_args(1).help("文件 ID（优先）"))
+                .arg(Arg::new("app").long("app").num_args(1).help("应用目录名称（与 --file 搭配）"))
+                .arg(Arg::new("file").long("file").num_args(1).help("文件名（与 --app 搭配）"))
+                .arg(Arg::new("output").long("output").num_args(1).help("本地输出路径（可为目录或文件路径）"))
+                .arg(Arg::new("overwrite").long("overwrite").action(ArgAction::SetTrue).help("允许覆盖本地已存在文件"))
+                .arg(Arg::new("with-hash").long("with-hash").action(ArgAction::SetTrue).help("请求下载信息时附带 hashes"))
+                .arg(Arg::new("internal").long("internal").action(ArgAction::SetTrue).help("优先请求内网下载地址"))
+                .arg(
+                    Arg::new("storage-base-domain")
+                        .long("storage-base-domain")
+                        .num_args(1)
+                        .help("下载域名偏好：wps.cn/kdocs.cn/wps365.com"),
+                ),
+        )
+        .subcommand(
             with_common_opts(Command::new("state").about("查看本地状态仓库（registry/log）"))
                 .arg(
                     Arg::new("limit")
@@ -96,6 +140,8 @@ pub async fn handle(args: &[String]) -> Result<serde_json::Value, WpsError> {
         Some(("create", s)) | Some(("add-file", s)) => ("create", create_file(s).await),
         Some(("list-files", s)) => ("list-files", list_files(s).await),
         Some(("get", s)) => ("get", get_file(s).await),
+        Some(("upload", s)) => ("upload", upload_file(s).await),
+        Some(("download", s)) => ("download", download_file(s).await),
         Some(("state", s)) => ("state", read_state(s).await),
         _ => {
             return Err(WpsError::Validation(
@@ -697,34 +743,7 @@ async fn get_file(s: &ArgMatches) -> Result<Value, WpsError> {
     let dry = s.get_flag("dry-run");
     let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
     let _scope = preflight(&auth, dry).await?;
-    let mut drive_id = s.get_one::<String>("drive-id").cloned().unwrap_or_default();
-    let mut file_id = s.get_one::<String>("file-id").cloned().unwrap_or_default();
-
-    if file_id.is_empty() {
-        let app = s
-            .get_one::<String>("app")
-            .ok_or_else(|| WpsError::Validation("缺少 --file-id 或 (--app + --file)".to_string()))?;
-        let file = s
-            .get_one::<String>("file")
-            .ok_or_else(|| WpsError::Validation("缺少 --file-id 或 (--app + --file)".to_string()))?;
-        drive_id = get_default_drive_id(&auth, dry, retry, if drive_id.is_empty() { None } else { Some(drive_id) }).await?;
-        let app_folder = ensure_app_folder(&drive_id, app, &auth, dry, retry).await?;
-        let app_folder_id = app_folder
-            .get("id")
-            .and_then(|v| v.as_str())
-            .unwrap_or("0")
-            .to_string();
-        let items = list_all_children(&drive_id, &app_folder_id, &auth, dry, retry).await?;
-        let found = items.iter().find(|x| x.get("name").and_then(|v| v.as_str()) == Some(file));
-        if let Some(v) = found {
-            file_id = v.get("id").and_then(|x| x.as_str()).unwrap_or("").to_string();
-        }
-        if file_id.is_empty() {
-            return Err(WpsError::Validation(format!("未找到文件: {file}")));
-        }
-    } else if drive_id.is_empty() {
-        drive_id = get_default_drive_id(&auth, dry, retry, None).await?;
-    }
+    let (drive_id, file_id) = resolve_drive_file(s, &auth, dry, retry).await?;
 
     execute(
         "GET",
@@ -736,4 +755,422 @@ async fn get_file(s: &ArgMatches) -> Result<Value, WpsError> {
         retry,
     )
     .await
+}
+
+async fn resolve_drive_file(
+    s: &ArgMatches,
+    auth: &str,
+    dry: bool,
+    retry: u32,
+) -> Result<(String, String), WpsError> {
+    let mut drive_id = s.get_one::<String>("drive-id").cloned().unwrap_or_default();
+    let mut file_id = s.get_one::<String>("file-id").cloned().unwrap_or_default();
+
+    if file_id.is_empty() {
+        let app = s
+            .get_one::<String>("app")
+            .ok_or_else(|| WpsError::Validation("缺少 --file-id 或 (--app + --file)".to_string()))?;
+        let file = s
+            .get_one::<String>("file")
+            .ok_or_else(|| WpsError::Validation("缺少 --file-id 或 (--app + --file)".to_string()))?;
+        drive_id = get_default_drive_id(
+            auth,
+            dry,
+            retry,
+            if drive_id.is_empty() { None } else { Some(drive_id) },
+        )
+        .await?;
+        let app_folder = ensure_app_folder(&drive_id, app, auth, dry, retry).await?;
+        let app_folder_id = app_folder
+            .get("id")
+            .and_then(|v| v.as_str())
+            .unwrap_or("0")
+            .to_string();
+        let items = list_all_children(&drive_id, &app_folder_id, auth, dry, retry).await?;
+        let found = items.iter().find(|x| x.get("name").and_then(|v| v.as_str()) == Some(file));
+        if let Some(v) = found {
+            file_id = v.get("id").and_then(|x| x.as_str()).unwrap_or("").to_string();
+        }
+        if file_id.is_empty() {
+            return Err(WpsError::Validation(format!("未找到文件: {file}")));
+        }
+    } else if drive_id.is_empty() {
+        drive_id = get_default_drive_id(auth, dry, retry, None).await?;
+    }
+    Ok((drive_id, file_id))
+}
+
+fn file_name_from_path(local_file: &str) -> Result<String, WpsError> {
+    Path::new(local_file)
+        .file_name()
+        .and_then(|v| v.to_str())
+        .filter(|v| !v.trim().is_empty())
+        .map(|v| v.to_string())
+        .ok_or_else(|| WpsError::Validation(format!("无法从路径推断文件名: {local_file}")))
+}
+
+fn sha256_file_hex(local_file: &str) -> Result<String, WpsError> {
+    let mut f = std::fs::File::open(local_file)
+        .map_err(|e| WpsError::Validation(format!("读取本地文件失败 {local_file}: {e}")))?;
+    let mut hasher = Sha256::new();
+    let mut buf = [0u8; 1024 * 64];
+    loop {
+        let n = f
+            .read(&mut buf)
+            .map_err(|e| WpsError::Validation(format!("读取本地文件失败 {local_file}: {e}")))?;
+        if n == 0 {
+            break;
+        }
+        hasher.update(&buf[..n]);
+    }
+    let digest = hasher.finalize();
+    Ok(digest.iter().map(|b| format!("{b:02x}")).collect::<String>())
+}
+
+async fn upload_file(s: &ArgMatches) -> Result<Value, WpsError> {
+    let auth = effective_auth_type(s);
+    let dry = s.get_flag("dry-run");
+    let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
+    let scope = preflight(&auth, dry).await?;
+    let local_file = s.get_one::<String>("local-file").expect("required");
+    let meta = std::fs::metadata(local_file)
+        .map_err(|e| WpsError::Validation(format!("读取本地文件元信息失败 {local_file}: {e}")))?;
+    if !meta.is_file() {
+        return Err(WpsError::Validation(format!("不是有效文件: {local_file}")));
+    }
+    let size = meta.len();
+    let file_name = s
+        .get_one::<String>("name")
+        .cloned()
+        .unwrap_or(file_name_from_path(local_file)?);
+    let on_name_conflict = s
+        .get_one::<String>("on-name-conflict")
+        .cloned()
+        .unwrap_or_else(|| "rename".to_string());
+    let drive_id = get_default_drive_id(
+        &auth,
+        dry,
+        retry,
+        s.get_one::<String>("drive-id").cloned(),
+    )
+    .await?;
+    let app = s.get_one::<String>("app").cloned();
+    let parent_id = if let Some(pid) = s.get_one::<String>("parent-id").cloned() {
+        pid
+    } else if let Some(app_name) = &app {
+        ensure_app_folder(&drive_id, app_name, &auth, dry, retry)
+            .await?
+            .get("id")
+            .and_then(|v| v.as_str())
+            .unwrap_or("0")
+            .to_string()
+    } else {
+        "0".to_string()
+    };
+    let sha256 = sha256_file_hex(local_file)?;
+    let mut req_body = serde_json::json!({
+        "name": file_name,
+        "size": size,
+        "on_name_conflict": on_name_conflict,
+        "hashes": [{"type":"sha256","sum": sha256}],
+    });
+    if s.get_flag("internal") {
+        req_body["internal"] = Value::Bool(true);
+    }
+
+    let request_resp = execute(
+        "POST",
+        &format!("/v7/drives/{drive_id}/files/{parent_id}/request_upload"),
+        HashMap::new(),
+        Some(req_body),
+        &auth,
+        dry,
+        retry,
+    )
+    .await?;
+    if dry {
+        return Ok(serde_json::json!({
+            "ok": true,
+            "data": {
+                "code": 0,
+                "msg": "dry-run",
+                "data": {
+                    "drive_id": drive_id,
+                    "parent_id": parent_id,
+                    "file_name": file_name,
+                    "size": size,
+                    "sha256": sha256,
+                    "request_upload": request_resp,
+                    "workflow": ["request_upload", "put_to_store_request.url", "commit_upload"],
+                    "scope_preflight": scope.to_json()
+                }
+            }
+        }));
+    }
+    if !api_ok(&request_resp) {
+        return Err(WpsError::Network(format!("请求文件上传信息失败: {request_resp}")));
+    }
+    let request_payload = api_payload(&request_resp);
+    let upload_id = request_payload
+        .get("upload_id")
+        .and_then(|v| v.as_str())
+        .ok_or_else(|| WpsError::Network(format!("上传响应缺少 upload_id: {request_resp}")))?;
+    let store_request = request_payload
+        .get("store_request")
+        .cloned()
+        .unwrap_or(Value::Null);
+    let upload_url = store_request
+        .get("url")
+        .and_then(|v| v.as_str())
+        .ok_or_else(|| WpsError::Network(format!("上传响应缺少 store_request.url: {request_resp}")))?;
+    let upload_method = store_request
+        .get("method")
+        .and_then(|v| v.as_str())
+        .unwrap_or("PUT")
+        .to_uppercase();
+    let method = Method::from_bytes(upload_method.as_bytes())
+        .map_err(|e| WpsError::Validation(format!("非法上传方法 {upload_method}: {e}")))?;
+    let file_bytes = tokio::fs::read(local_file)
+        .await
+        .map_err(|e| WpsError::Validation(format!("读取本地文件失败 {local_file}: {e}")))?;
+
+    let mut req = reqwest::Client::new()
+        .request(method, upload_url)
+        .header("Content-Type", "application/octet-stream");
+    if let Some(headers) = store_request.get("headers").and_then(|v| v.as_object()) {
+        for (k, v) in headers {
+            if let Some(vs) = v.as_str() {
+                req = req.header(k, vs);
+            }
+        }
+    }
+    let upload_resp = req
+        .body(file_bytes.clone())
+        .send()
+        .await
+        .map_err(|e| WpsError::Network(format!("上传实体文件失败: {e}")))?;
+    let upload_status = upload_resp.status().as_u16();
+    let upload_text = upload_resp.text().await.unwrap_or_default();
+    if upload_status >= 400 {
+        return Err(WpsError::Network(format!(
+            "上传实体文件失败(status={upload_status}): {upload_text}"
+        )));
+    }
+
+    let commit_resp = execute(
+        "POST",
+        &format!("/v7/drives/{drive_id}/files/{parent_id}/commit_upload"),
+        HashMap::new(),
+        Some(serde_json::json!({ "upload_id": upload_id })),
+        &auth,
+        dry,
+        retry,
+    )
+    .await?;
+    if !api_ok(&commit_resp) {
+        return Err(WpsError::Network(format!("提交上传完成失败: {commit_resp}")));
+    }
+    let created = api_payload(&commit_resp);
+    if let Some(app_name) = &app {
+        register_file_if_possible(app_name, &drive_id, &parent_id, &created);
+    }
+
+    Ok(serde_json::json!({
+        "ok": true,
+        "data": {
+            "code": 0,
+            "msg": "ok",
+            "data": {
+                "drive_id": drive_id,
+                "parent_id": parent_id,
+                "app": app,
+                "file_name": file_name,
+                "size": size,
+                "sha256": sha256,
+                "upload_id": upload_id,
+                "store_request": {
+                    "method": upload_method,
+                    "host": reqwest::Url::parse(upload_url).ok().and_then(|u| u.host_str().map(|s| s.to_string())),
+                    "status": upload_status
+                },
+                "created": created,
+                "scope_preflight": scope.to_json(),
+                "workflow": ["request_upload", "upload_to_store", "commit_upload", "persist_registry"]
+            }
+        }
+    }))
+}
+
+async fn fetch_file_meta(
+    drive_id: &str,
+    file_id: &str,
+    auth: &str,
+    dry: bool,
+    retry: u32,
+) -> Result<Value, WpsError> {
+    execute(
+        "GET",
+        &format!("/v7/drives/{drive_id}/files/{file_id}/meta"),
+        HashMap::new(),
+        None,
+        auth,
+        dry,
+        retry,
+    )
+    .await
+}
+
+fn output_path_for_download(
+    output: Option<&String>,
+    default_name: &str,
+    overwrite: bool,
+) -> Result<std::path::PathBuf, WpsError> {
+    let mut path = if let Some(out) = output {
+        let p = std::path::PathBuf::from(out);
+        if p.exists() && p.is_dir() {
+            p.join(default_name)
+        } else {
+            p
+        }
+    } else {
+        std::env::current_dir()
+            .map_err(|e| WpsError::Validation(format!("获取当前目录失败: {e}")))?
+            .join(default_name)
+    };
+    if path.is_dir() {
+        path = path.join(default_name);
+    }
+    if path.exists() && !overwrite {
+        return Err(WpsError::Validation(format!(
+            "目标文件已存在: {}（可加 --overwrite）",
+            path.display()
+        )));
+    }
+    if let Some(parent) = path.parent() {
+        if !parent.as_os_str().is_empty() {
+            std::fs::create_dir_all(parent).map_err(|e| {
+                WpsError::Validation(format!("创建下载目录失败 {}: {e}", parent.display()))
+            })?;
+        }
+    }
+    Ok(path)
+}
+
+async fn download_file(s: &ArgMatches) -> Result<Value, WpsError> {
+    let auth = effective_auth_type(s);
+    let dry = s.get_flag("dry-run");
+    let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
+    let scope = preflight(&auth, dry).await?;
+    let (drive_id, file_id) = resolve_drive_file(s, &auth, dry, retry).await?;
+
+    let mut query = HashMap::new();
+    if s.get_flag("with-hash") {
+        query.insert("with_hash".to_string(), "true".to_string());
+    }
+    if s.get_flag("internal") {
+        query.insert("internal".to_string(), "true".to_string());
+    }
+    if let Some(base_domain) = s.get_one::<String>("storage-base-domain") {
+        query.insert("storage_base_domain".to_string(), base_domain.clone());
+    }
+
+    let info_resp = execute(
+        "GET",
+        &format!("/v7/drives/{drive_id}/files/{file_id}/download"),
+        query,
+        None,
+        &auth,
+        dry,
+        retry,
+    )
+    .await?;
+    if dry {
+        return Ok(serde_json::json!({
+            "ok": true,
+            "data": {
+                "code": 0,
+                "msg": "dry-run",
+                "data": {
+                    "drive_id": drive_id,
+                    "file_id": file_id,
+                    "request_download_info": info_resp,
+                    "workflow": ["get_download_info", "http_get_download_url", "save_local_file"],
+                    "scope_preflight": scope.to_json()
+                }
+            }
+        }));
+    }
+    if !api_ok(&info_resp) {
+        return Err(WpsError::Network(format!("获取下载信息失败: {info_resp}")));
+    }
+    let payload = api_payload(&info_resp);
+    let download_url = payload
+        .get("url")
+        .and_then(|v| v.as_str())
+        .ok_or_else(|| WpsError::Network(format!("下载响应缺少 url: {info_resp}")))?;
+
+    let meta_resp = fetch_file_meta(&drive_id, &file_id, &auth, dry, retry).await?;
+    let default_name = api_payload(&meta_resp)
+        .get("name")
+        .and_then(|v| v.as_str())
+        .filter(|v| !v.trim().is_empty())
+        .unwrap_or("download.bin")
+        .to_string();
+    let output_path = output_path_for_download(
+        s.get_one::<String>("output"),
+        &default_name,
+        s.get_flag("overwrite"),
+    )?;
+
+    let client = reqwest::Client::new();
+    let mut resp = client
+        .get(download_url)
+        .send()
+        .await
+        .map_err(|e| WpsError::Network(format!("下载文件失败: {e}")))?;
+    let status = resp.status().as_u16();
+    if status >= 400 {
+        let txt = resp.text().await.unwrap_or_default();
+        return Err(WpsError::Network(format!(
+            "下载文件失败(status={status}): {txt}"
+        )));
+    }
+    let mut file = tokio::fs::File::create(&output_path).await.map_err(|e| {
+        WpsError::Validation(format!(
+            "创建本地文件失败 {}: {e}",
+            output_path.display()
+        ))
+    })?;
+    let mut bytes: u64 = 0;
+    while let Some(chunk) = resp
+        .chunk()
+        .await
+        .map_err(|e| WpsError::Network(format!("读取下载数据块失败: {e}")))?
+    {
+        file.write_all(&chunk).await.map_err(|e| {
+            WpsError::Network(format!("写入本地文件失败 {}: {e}", output_path.display()))
+        })?;
+        bytes += chunk.len() as u64;
+    }
+    file.flush().await.map_err(|e| {
+        WpsError::Network(format!("刷新本地文件失败 {}: {e}", output_path.display()))
+    })?;
+
+    Ok(serde_json::json!({
+        "ok": true,
+        "data": {
+            "code": 0,
+            "msg": "ok",
+            "data": {
+                "drive_id": drive_id,
+                "file_id": file_id,
+                "download_url_host": reqwest::Url::parse(download_url).ok().and_then(|u| u.host_str().map(|s| s.to_string())),
+                "saved_file": output_path.display().to_string(),
+                "bytes": bytes,
+                "hashes": payload.get("hashes").cloned().unwrap_or(Value::Array(vec![])),
+                "scope_preflight": scope.to_json(),
+                "workflow": ["get_download_info", "download_file", "write_local_file"]
+            }
+        }
+    }))
 }

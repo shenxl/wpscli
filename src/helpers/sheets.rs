@@ -282,9 +282,12 @@ pub async fn read_xlsx_via_sheets(
     auth_type: &str,
     dry_run: bool,
     retry: u32,
-    max_sheets: u32,
-    max_rows: u32,
-    max_cols: u32,
+    sheet_offset: u32,
+    sheet_head: u32,
+    row_offset: u32,
+    row_head: u32,
+    col_offset: u32,
+    col_head: u32,
     file_meta_resp: Value,
     read_mode: &str,
     trigger_response: Option<Value>,
@@ -296,7 +299,11 @@ pub async fn read_xlsx_via_sheets(
     let sheet_items = sheet_items_from_resp(&sheets_resp);
 
     let mut sheets_out = Vec::new();
-    for sheet in sheet_items.into_iter().take(max_sheets as usize) {
+    for sheet in sheet_items
+        .into_iter()
+        .skip(sheet_offset as usize)
+        .take(sheet_head as usize)
+    {
         let sheet_id = sheet.get("sheet_id").and_then(|v| v.as_i64());
         let name = sheet
             .get("name")
@@ -324,16 +331,27 @@ pub async fn read_xlsx_via_sheets(
             .and_then(|v| v.as_i64())
             .unwrap_or(col_from)
             .max(col_from);
-        let capped_row_to = std::cmp::min(row_to, row_from + max_rows.saturating_sub(1) as i64);
-        let capped_col_to = std::cmp::min(col_to, col_from + max_cols.saturating_sub(1) as i64);
+        let read_row_from = std::cmp::min(row_to, row_from + row_offset as i64);
+        let read_col_from = std::cmp::min(col_to, col_from + col_offset as i64);
+        let read_row_to = if row_head == 0 || read_row_from > row_to {
+            read_row_from - 1
+        } else {
+            std::cmp::min(row_to, read_row_from + row_head.saturating_sub(1) as i64)
+        };
+        let read_col_to = if col_head == 0 || read_col_from > col_to {
+            read_col_from - 1
+        } else {
+            std::cmp::min(col_to, read_col_from + col_head.saturating_sub(1) as i64)
+        };
 
-        let mut query = HashMap::new();
-        query.insert("row_from".to_string(), row_from.to_string());
-        query.insert("row_to".to_string(), capped_row_to.to_string());
-        query.insert("col_from".to_string(), col_from.to_string());
-        query.insert("col_to".to_string(), capped_col_to.to_string());
-
-        let range_resp = if let Some(id) = sheet_id {
+        let range_resp = if read_row_to < read_row_from || read_col_to < read_col_from {
+            serde_json::json!({"ok": true, "status": 200, "data": {"code": 0, "msg": "", "data": {"range_data": []}}})
+        } else if let Some(id) = sheet_id {
+            let mut query = HashMap::new();
+            query.insert("row_from".to_string(), read_row_from.to_string());
+            query.insert("row_to".to_string(), read_row_to.to_string());
+            query.insert("col_from".to_string(), read_col_from.to_string());
+            query.insert("col_to".to_string(), read_col_to.to_string());
             executor::execute_raw(
                 "GET",
                 &format!("/v7/sheets/{file_id}/worksheets/{id}/range_data"),
@@ -358,10 +376,10 @@ pub async fn read_xlsx_via_sheets(
             .unwrap_or_default();
         let table = build_table_from_range_data(
             &range_data,
-            row_from,
-            capped_row_to,
-            col_from,
-            capped_col_to,
+            read_row_from,
+            read_row_to,
+            read_col_from,
+            read_col_to,
         );
 
         sheets_out.push(serde_json::json!({
@@ -369,10 +387,10 @@ pub async fn read_xlsx_via_sheets(
             "name": name,
             "active_area": area,
             "read_area": {
-                "row_from": row_from,
-                "row_to": capped_row_to,
-                "col_from": col_from,
-                "col_to": capped_col_to
+                "row_from": read_row_from,
+                "row_to": read_row_to,
+                "col_from": read_col_from,
+                "col_to": read_col_to
             },
             "table": table,
             "range_data": range_data,
@@ -391,6 +409,14 @@ pub async fn read_xlsx_via_sheets(
                 "read_mode": read_mode,
                 "file_id": file_id,
                 "drive_id": drive_id,
+                "paging": {
+                    "sheet_offset": sheet_offset,
+                    "sheet_head": sheet_head,
+                    "row_offset": row_offset,
+                    "row_head": row_head,
+                    "col_offset": col_offset,
+                    "col_head": col_head
+                },
                 "file_meta": file_meta_resp.get("data").and_then(|v| v.get("data")).cloned().unwrap_or(Value::Null),
                 "sheets": sheets_out
             }

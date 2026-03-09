@@ -45,7 +45,8 @@ pub fn command() -> Command {
                 .after_help(
                     "示例：\n  \
                      wpscli doc read-doc --url \"https://365.kdocs.cn/l/xxxx\" --format markdown --mode auto --user-token\n  \
-                     wpscli doc read-doc --drive-id <drive_id> --file-id <file_id> --user-token",
+                     wpscli doc read-doc --drive-id <drive_id> --file-id <file_id> --user-token\n  \
+                     wpscli doc read-doc --url \"https://365.kdocs.cn/l/xxxx\" --xlsx-row-offset 500 --xlsx-row-head 200 --output-file /tmp/xlsx_page_3.json --user-token",
                 )
                 .arg(Arg::new("url").long("url").num_args(1).help("文档分享链接"))
                 .arg(Arg::new("drive-id").long("drive-id").num_args(1).help("网盘 ID（与 --file-id 搭配）"))
@@ -105,21 +106,72 @@ pub fn command() -> Command {
                         .long("xlsx-max-sheets")
                         .default_value("10")
                         .value_parser(clap::value_parser!(u32))
-                        .help("xlsx 最多读取工作表数量"),
+                        .help("xlsx 最多读取工作表数量（兼容参数，等价于 --xlsx-sheet-head）"),
                 )
                 .arg(
                     Arg::new("xlsx-max-rows")
                         .long("xlsx-max-rows")
                         .default_value("200")
                         .value_parser(clap::value_parser!(u32))
-                        .help("xlsx 每个工作表最多读取行数"),
+                        .help("xlsx 每个工作表最多读取行数（兼容参数，等价于 --xlsx-row-head）"),
                 )
                 .arg(
                     Arg::new("xlsx-max-cols")
                         .long("xlsx-max-cols")
                         .default_value("50")
                         .value_parser(clap::value_parser!(u32))
-                        .help("xlsx 每个工作表最多读取列数"),
+                        .help("xlsx 每个工作表最多读取列数（兼容参数，等价于 --xlsx-col-head）"),
+                )
+                .arg(
+                    Arg::new("xlsx-sheet-offset")
+                        .long("xlsx-sheet-offset")
+                        .default_value("0")
+                        .value_parser(clap::value_parser!(u32))
+                        .help("xlsx 读取工作表偏移量（从第几个工作表开始）"),
+                )
+                .arg(
+                    Arg::new("xlsx-sheet-head")
+                        .long("xlsx-sheet-head")
+                        .value_parser(clap::value_parser!(u32))
+                        .help("xlsx 读取工作表数量上限（优先于 --xlsx-max-sheets）"),
+                )
+                .arg(
+                    Arg::new("xlsx-row-offset")
+                        .long("xlsx-row-offset")
+                        .default_value("0")
+                        .value_parser(clap::value_parser!(u32))
+                        .help("xlsx 每个工作表行偏移量（从 active_area 的第几行开始）"),
+                )
+                .arg(
+                    Arg::new("xlsx-row-head")
+                        .long("xlsx-row-head")
+                        .value_parser(clap::value_parser!(u32))
+                        .help("xlsx 每个工作表读取行数上限（优先于 --xlsx-max-rows）"),
+                )
+                .arg(
+                    Arg::new("xlsx-col-offset")
+                        .long("xlsx-col-offset")
+                        .default_value("0")
+                        .value_parser(clap::value_parser!(u32))
+                        .help("xlsx 每个工作表列偏移量（从 active_area 的第几列开始）"),
+                )
+                .arg(
+                    Arg::new("xlsx-col-head")
+                        .long("xlsx-col-head")
+                        .value_parser(clap::value_parser!(u32))
+                        .help("xlsx 每个工作表读取列数上限（优先于 --xlsx-max-cols）"),
+                )
+                .arg(
+                    Arg::new("output-file")
+                        .long("output-file")
+                        .num_args(1)
+                        .help("将 read-doc 结果写入指定 JSON 文件（大数据推荐）"),
+                )
+                .arg(
+                    Arg::new("output-stdout")
+                        .long("output-stdout")
+                        .action(ArgAction::SetTrue)
+                        .help("配合 --output-file 使用：写文件后仍输出完整结果到 stdout"),
                 )
                 .arg(Arg::new("dbsheet-sheet-id").long("dbsheet-sheet-id").num_args(1).help("dbt 读取时指定 sheet_id（可选）"))
                 .arg(Arg::new("dbsheet-where").long("dbsheet-where").num_args(1).help("dbt 读取过滤条件（SQL-like）"))
@@ -321,9 +373,21 @@ pub async fn handle(args: &[String]) -> Result<serde_json::Value, WpsError> {
             let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
             let poll_interval_ms = *s.get_one::<u64>("poll-interval-ms").unwrap_or(&1500);
             let max_wait_seconds = *s.get_one::<u64>("max-wait-seconds").unwrap_or(&120);
-            let max_sheets = *s.get_one::<u32>("xlsx-max-sheets").unwrap_or(&10);
-            let max_rows = *s.get_one::<u32>("xlsx-max-rows").unwrap_or(&200);
-            let max_cols = *s.get_one::<u32>("xlsx-max-cols").unwrap_or(&50);
+            let xlsx_sheet_offset = *s.get_one::<u32>("xlsx-sheet-offset").unwrap_or(&0);
+            let xlsx_sheet_head = s
+                .get_one::<u32>("xlsx-sheet-head")
+                .copied()
+                .unwrap_or_else(|| *s.get_one::<u32>("xlsx-max-sheets").unwrap_or(&10));
+            let xlsx_row_offset = *s.get_one::<u32>("xlsx-row-offset").unwrap_or(&0);
+            let xlsx_row_head = s
+                .get_one::<u32>("xlsx-row-head")
+                .copied()
+                .unwrap_or_else(|| *s.get_one::<u32>("xlsx-max-rows").unwrap_or(&200));
+            let xlsx_col_offset = *s.get_one::<u32>("xlsx-col-offset").unwrap_or(&0);
+            let xlsx_col_head = s
+                .get_one::<u32>("xlsx-col-head")
+                .copied()
+                .unwrap_or_else(|| *s.get_one::<u32>("xlsx-max-cols").unwrap_or(&50));
             let (drive_id, file_id) = resolve_doc_ids(s, &auth, dry, retry).await?;
             let file_meta = if dry {
                 None
@@ -337,20 +401,24 @@ pub async fn handle(args: &[String]) -> Result<serde_json::Value, WpsError> {
 
             if let Some(meta) = &file_meta {
                 if is_xlsx_file(meta) {
-                    return sheets::read_xlsx_via_sheets(
+                    let resp = sheets::read_xlsx_via_sheets(
                         &drive_id,
                         &file_id,
                         &auth,
                         dry,
                         retry,
-                        max_sheets,
-                        max_rows,
-                        max_cols,
+                        xlsx_sheet_offset,
+                        xlsx_sheet_head,
+                        xlsx_row_offset,
+                        xlsx_row_head,
+                        xlsx_col_offset,
+                        xlsx_col_head,
                         meta.clone(),
                         "sheets_range_data_primary",
                         None,
                     )
-                    .await;
+                    .await?;
+                    return finalize_read_output(s, resp);
                 }
                 if is_ppt_extension(&ext) {
                     let aidocs_resp = read_via_aidocs_extract(
@@ -365,7 +433,7 @@ pub async fn handle(args: &[String]) -> Result<serde_json::Value, WpsError> {
                     )
                     .await?;
                     // PPT family should never go through drives /content path.
-                    return Ok(aidocs_resp);
+                    return finalize_read_output(s, aidocs_resp);
                 }
                 if ext == "dbt" {
                     let sheet_id = if let Some(v) = s.get_one::<String>("dbsheet-sheet-id") {
@@ -404,7 +472,7 @@ pub async fn handle(args: &[String]) -> Result<serde_json::Value, WpsError> {
                             }
                         }
                     });
-                    return Ok(attach_read_mode(dbt_resp, "dbsheet_sql_like_primary"));
+                    return finalize_read_output(s, attach_read_mode(dbt_resp, "dbsheet_sql_like_primary"));
                 }
             }
 
@@ -444,16 +512,19 @@ pub async fn handle(args: &[String]) -> Result<serde_json::Value, WpsError> {
                 &auth,
                 dry,
                 retry,
-                max_sheets,
-                max_rows,
-                max_cols,
+                xlsx_sheet_offset,
+                xlsx_sheet_head,
+                xlsx_row_offset,
+                xlsx_row_head,
+                xlsx_col_offset,
+                xlsx_col_head,
                 file_meta.as_ref(),
             )
             .await?
             {
-                return Ok(fallback);
+                return finalize_read_output(s, fallback);
             }
-            Ok(attach_read_mode(content_resp, "drives_content"))
+            finalize_read_output(s, attach_read_mode(content_resp, "drives_content"))
         }
         Some(("write-doc", s)) => {
             let auth = effective_auth_type(s);
@@ -914,9 +985,12 @@ async fn maybe_fallback_read_xlsx(
     auth_type: &str,
     dry_run: bool,
     retry: u32,
-    max_sheets: u32,
-    max_rows: u32,
-    max_cols: u32,
+    xlsx_sheet_offset: u32,
+    xlsx_sheet_head: u32,
+    xlsx_row_offset: u32,
+    xlsx_row_head: u32,
+    xlsx_col_offset: u32,
+    xlsx_col_head: u32,
     file_meta_cached: Option<&Value>,
 ) -> Result<Option<Value>, WpsError> {
     if api_status_ok(content_resp) {
@@ -942,9 +1016,12 @@ async fn maybe_fallback_read_xlsx(
         auth_type,
         dry_run,
         retry,
-        max_sheets,
-        max_rows,
-        max_cols,
+        xlsx_sheet_offset,
+        xlsx_sheet_head,
+        xlsx_row_offset,
+        xlsx_row_head,
+        xlsx_col_offset,
+        xlsx_col_head,
         file_meta,
         "sheets_range_data_fallback",
         Some(content_resp.clone()),
@@ -994,6 +1071,65 @@ fn effective_auth_type(m: &clap::ArgMatches) -> String {
             .cloned()
             .unwrap_or_else(|| "user".to_string())
     }
+}
+
+fn finalize_read_output(m: &clap::ArgMatches, value: Value) -> Result<Value, WpsError> {
+    let Some(path) = m.get_one::<String>("output-file") else {
+        return Ok(value);
+    };
+
+    let output_path = std::path::Path::new(path);
+    if let Some(parent) = output_path.parent() {
+        if !parent.as_os_str().is_empty() {
+            std::fs::create_dir_all(parent).map_err(|e| {
+                WpsError::Validation(format!(
+                    "failed to create output directory {}: {e}",
+                    parent.display()
+                ))
+            })?;
+        }
+    }
+    let bytes = serde_json::to_vec_pretty(&value)
+        .map_err(|e| WpsError::Validation(format!("failed to serialize read result: {e}")))?;
+    std::fs::write(output_path, &bytes).map_err(|e| {
+        WpsError::Validation(format!(
+            "failed to write output file {}: {e}",
+            output_path.display()
+        ))
+    })?;
+
+    if m.get_flag("output-stdout") {
+        let mut with_meta = value;
+        if let Some(obj) = with_meta
+            .get_mut("data")
+            .and_then(|v| v.get_mut("data"))
+            .and_then(|v| v.as_object_mut())
+        {
+            obj.insert(
+                "persisted".to_string(),
+                serde_json::json!({
+                    "output_file": output_path.display().to_string(),
+                    "bytes": bytes.len()
+                }),
+            );
+        }
+        return Ok(with_meta);
+    }
+
+    Ok(serde_json::json!({
+        "ok": true,
+        "status": 200,
+        "data": {
+            "code": 0,
+            "msg": "ok",
+            "data": {
+                "persisted_only": true,
+                "output_file": output_path.display().to_string(),
+                "bytes": bytes.len(),
+                "hint": "使用 --output-stdout 可在写文件同时输出完整结果"
+            }
+        }
+    }))
 }
 
 fn read_text_content(m: &clap::ArgMatches, inline_key: &str, file_key: &str) -> Result<String, WpsError> {

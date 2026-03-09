@@ -74,11 +74,27 @@ Options:
       --max-wait-seconds <max-wait-seconds>
           异步任务最大等待时长（秒） [default: 120]
       --xlsx-max-sheets <xlsx-max-sheets>
-          xlsx 最多读取工作表数量 [default: 10]
+          xlsx 最多读取工作表数量（兼容参数，等价于 --xlsx-sheet-head） [default: 10]
       --xlsx-max-rows <xlsx-max-rows>
-          xlsx 每个工作表最多读取行数 [default: 200]
+          xlsx 每个工作表最多读取行数（兼容参数，等价于 --xlsx-row-head） [default: 200]
       --xlsx-max-cols <xlsx-max-cols>
-          xlsx 每个工作表最多读取列数 [default: 50]
+          xlsx 每个工作表最多读取列数（兼容参数，等价于 --xlsx-col-head） [default: 50]
+      --xlsx-sheet-offset <xlsx-sheet-offset>
+          xlsx 读取工作表偏移量（从第几个工作表开始） [default: 0]
+      --xlsx-sheet-head <xlsx-sheet-head>
+          xlsx 读取工作表数量上限（优先于 --xlsx-max-sheets）
+      --xlsx-row-offset <xlsx-row-offset>
+          xlsx 每个工作表行偏移量（从 active_area 的第几行开始） [default: 0]
+      --xlsx-row-head <xlsx-row-head>
+          xlsx 每个工作表读取行数上限（优先于 --xlsx-max-rows）
+      --xlsx-col-offset <xlsx-col-offset>
+          xlsx 每个工作表列偏移量（从 active_area 的第几列开始） [default: 0]
+      --xlsx-col-head <xlsx-col-head>
+          xlsx 每个工作表读取列数上限（优先于 --xlsx-max-cols）
+      --output-file <output-file>
+          将 read-doc 结果写入指定 JSON 文件（大数据推荐）
+      --output-stdout
+          配合 --output-file 使用：写文件后仍输出完整结果到 stdout
       --dbsheet-sheet-id <dbsheet-sheet-id>
           dbt 读取时指定 sheet_id（可选）
       --dbsheet-where <dbsheet-where>
@@ -95,6 +111,7 @@ Options:
 示例：
   wpscli doc read-doc --url "https://365.kdocs.cn/l/xxxx" --format markdown --mode auto --user-token
   wpscli doc read-doc --drive-id <drive_id> --file-id <file_id> --user-token
+  wpscli doc read-doc --url "https://365.kdocs.cn/l/xxxx" --xlsx-row-offset 500 --xlsx-row-head 200 --output-file /tmp/xlsx_page_3.json --user-token
 ```
 
 ## doc write-doc

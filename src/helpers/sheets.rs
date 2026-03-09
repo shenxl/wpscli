@@ -64,6 +64,165 @@ fn to_formula_text(v: &Value) -> String {
     }
 }
 
+fn excel_col_label(mut col_zero_based: i64) -> String {
+    if col_zero_based < 0 {
+        return "".to_string();
+    }
+    let mut s = String::new();
+    loop {
+        let rem = (col_zero_based % 26) as u8;
+        s.insert(0, (b'A' + rem) as char);
+        col_zero_based = (col_zero_based / 26) - 1;
+        if col_zero_based < 0 {
+            break;
+        }
+    }
+    s
+}
+
+fn cell_value_for_table(cell: &Value) -> Value {
+    if let Some(v) = cell.get("original_cell_value") {
+        if !v.is_null() {
+            return v.clone();
+        }
+    }
+    if let Some(v) = cell.get("cell_text") {
+        return v.clone();
+    }
+    Value::Null
+}
+
+fn value_to_non_empty_header(v: &Value) -> Option<String> {
+    match v {
+        Value::String(s) => {
+            let x = s.trim();
+            if x.is_empty() {
+                None
+            } else {
+                Some(x.to_string())
+            }
+        }
+        Value::Number(n) => Some(n.to_string()),
+        Value::Bool(b) => Some(if *b { "true".to_string() } else { "false".to_string() }),
+        _ => None,
+    }
+}
+
+fn build_table_from_range_data(
+    range_data: &[Value],
+    row_from: i64,
+    row_to: i64,
+    col_from: i64,
+    col_to: i64,
+) -> Value {
+    if row_to < row_from || col_to < col_from {
+        return serde_json::json!({
+            "row_count": 0,
+            "col_count": 0,
+            "rows": [],
+            "records": []
+        });
+    }
+
+    let row_count = (row_to - row_from + 1) as usize;
+    let col_count = (col_to - col_from + 1) as usize;
+    let mut rows = vec![vec![Value::Null; col_count]; row_count];
+    let mut non_empty_cells = 0usize;
+
+    for cell in range_data {
+        let r1 = cell.get("row_from").and_then(|v| v.as_i64()).unwrap_or(row_from);
+        let r2 = cell.get("row_to").and_then(|v| v.as_i64()).unwrap_or(r1);
+        let c1 = cell.get("col_from").and_then(|v| v.as_i64()).unwrap_or(col_from);
+        let c2 = cell.get("col_to").and_then(|v| v.as_i64()).unwrap_or(c1);
+        let value = cell_value_for_table(cell);
+        for r in r1..=r2 {
+            for c in c1..=c2 {
+                if r < row_from || r > row_to || c < col_from || c > col_to {
+                    continue;
+                }
+                let rr = (r - row_from) as usize;
+                let cc = (c - col_from) as usize;
+                if rows[rr][cc].is_null() && !value.is_null() {
+                    non_empty_cells += 1;
+                }
+                rows[rr][cc] = value.clone();
+            }
+        }
+    }
+
+    let mut columns = Vec::with_capacity(col_count);
+    for c in col_from..=col_to {
+        columns.push(serde_json::json!({
+            "col_index": c,
+            "col_key": format!("col_{c}"),
+            "col_label": excel_col_label(c)
+        }));
+    }
+
+    let mut records = Vec::with_capacity(row_count);
+    for row in &rows {
+        let mut obj = serde_json::Map::new();
+        for (idx, v) in row.iter().enumerate() {
+            obj.insert(format!("col_{}", col_from + idx as i64), v.clone());
+        }
+        records.push(Value::Object(obj));
+    }
+
+    let header_row_candidate = rows.first().cloned().unwrap_or_default();
+    let header_non_empty = header_row_candidate
+        .iter()
+        .filter_map(value_to_non_empty_header)
+        .count();
+    let header_inferred = header_non_empty >= 2;
+
+    let mut header_keys = Vec::new();
+    let mut seen = HashMap::<String, usize>::new();
+    for (idx, col) in header_row_candidate.iter().enumerate() {
+        let fallback = format!("col_{}", col_from + idx as i64);
+        let base = value_to_non_empty_header(col).unwrap_or(fallback);
+        let count = seen.entry(base.clone()).or_insert(0);
+        *count += 1;
+        let key = if *count == 1 {
+            base
+        } else {
+            format!("{}_{}", base, count)
+        };
+        header_keys.push(key);
+    }
+
+    let mut records_with_header = Vec::new();
+    if header_inferred && rows.len() > 1 {
+        for row in rows.iter().skip(1) {
+            let mut obj = serde_json::Map::new();
+            for (idx, v) in row.iter().enumerate() {
+                let k = header_keys
+                    .get(idx)
+                    .cloned()
+                    .unwrap_or_else(|| format!("col_{}", col_from + idx as i64));
+                obj.insert(k, v.clone());
+            }
+            records_with_header.push(Value::Object(obj));
+        }
+    }
+
+    serde_json::json!({
+        "row_from": row_from,
+        "row_to": row_to,
+        "col_from": col_from,
+        "col_to": col_to,
+        "row_count": row_count,
+        "col_count": col_count,
+        "non_empty_cells": non_empty_cells,
+        "columns": columns,
+        "rows": rows,
+        "records": records,
+        "header_row_candidate": header_row_candidate,
+        "header_inferred": header_inferred,
+        "header_keys": header_keys,
+        "records_with_header": records_with_header
+    })
+}
+
 fn extract_value_rows(input: Value) -> Result<Vec<Vec<Value>>, WpsError> {
     match input {
         Value::Array(arr) => {
@@ -190,6 +349,21 @@ pub async fn read_xlsx_via_sheets(
             serde_json::json!({"ok": false, "error": {"message":"sheet_id missing"}})
         };
 
+        let range_data = range_resp
+            .get("data")
+            .and_then(|v| v.get("data"))
+            .and_then(|v| v.get("range_data"))
+            .and_then(|v| v.as_array())
+            .cloned()
+            .unwrap_or_default();
+        let table = build_table_from_range_data(
+            &range_data,
+            row_from,
+            capped_row_to,
+            col_from,
+            capped_col_to,
+        );
+
         sheets_out.push(serde_json::json!({
             "sheet_id": sheet_id,
             "name": name,
@@ -200,7 +374,8 @@ pub async fn read_xlsx_via_sheets(
                 "col_from": col_from,
                 "col_to": capped_col_to
             },
-            "range_data": range_resp.get("data").and_then(|v| v.get("data")).and_then(|v| v.get("range_data")).cloned().unwrap_or(Value::Array(vec![])),
+            "table": table,
+            "range_data": range_data,
             "raw": range_resp
         }));
     }

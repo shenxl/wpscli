@@ -4,6 +4,8 @@ Generate command docs for wpscli from live `--help` outputs.
 
 Usage:
   python3 scripts/generate_docs.py
+  python3 scripts/generate_docs.py --changed-only
+  python3 scripts/generate_docs.py --full
   python3 scripts/generate_docs.py --check
 """
 
@@ -14,7 +16,7 @@ import shlex
 import subprocess
 import sys
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Set
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -96,6 +98,101 @@ DOC_SPECS: List[Dict] = [
     },
 ]
 
+ALL_DOC_FILES = [spec["file"] for spec in DOC_SPECS]
+
+
+def _run_git_lines(args: List[str]) -> List[str]:
+    proc = subprocess.run(
+        ["git"] + args,
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode != 0:
+        return []
+    return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+
+
+def detect_changed_files() -> Set[str]:
+    # Includes staged + unstaged changes against HEAD.
+    changed = set(_run_git_lines(["diff", "--name-only", "HEAD"]))
+    # Include untracked files as well.
+    changed.update(_run_git_lines(["ls-files", "--others", "--exclude-standard"]))
+    return changed
+
+
+def map_changed_files_to_docs(changed_files: Set[str]) -> Set[str]:
+    if not changed_files:
+        return set()
+
+    affected: Set[str] = set()
+    full_rebuild = False
+
+    for path in changed_files:
+        p = path.replace("\\", "/")
+        if p.startswith("docs/commands/"):
+            # Generated targets themselves should not trigger rebuild scope.
+            continue
+
+        if p == "scripts/generate_docs.py" or p in {"src/main.rs", "src/commands.rs"}:
+            full_rebuild = True
+            continue
+
+        if p in {"src/auth.rs", "src/auth_commands.rs"}:
+            affected.add("docs/commands/02-auth.md")
+            continue
+        if p in {"src/helpers/doc.rs", "src/link_resolver.rs"}:
+            affected.add("docs/commands/03-doc.md")
+            continue
+        if p in {"src/helpers/files.rs", "src/helpers/users.rs"}:
+            affected.add("docs/commands/04-files-users.md")
+            continue
+        if p in {"src/helpers/dbsheet.rs", "src/helpers/dbt.rs"}:
+            affected.add("docs/commands/05-dbsheet.md")
+            continue
+        if p in {
+            "src/helpers/calendar.rs",
+            "src/helpers/chat.rs",
+            "src/helpers/meeting.rs",
+            "src/helpers/airpage.rs",
+        }:
+            affected.add("docs/commands/06-integrations.md")
+            continue
+        if p in {"src/schema.rs", "src/skill_gen.rs", "src/doctor.rs", "src/ui.rs"}:
+            affected.add("docs/commands/07-system.md")
+            continue
+        if p == "src/helpers/mod.rs":
+            affected.update(
+                {
+                    "docs/commands/03-doc.md",
+                    "docs/commands/04-files-users.md",
+                    "docs/commands/05-dbsheet.md",
+                    "docs/commands/06-integrations.md",
+                }
+            )
+            continue
+
+        # If a source file changed but is not mapped, fall back to full for safety.
+        if p.startswith("src/"):
+            full_rebuild = True
+
+    if full_rebuild:
+        return set(ALL_DOC_FILES)
+    return affected
+
+
+def select_specs(changed_only: bool, full: bool) -> List[Dict]:
+    if full:
+        return DOC_SPECS
+    if not changed_only:
+        return DOC_SPECS
+
+    changed = detect_changed_files()
+    affected_docs = map_changed_files_to_docs(changed)
+    if not affected_docs:
+        return []
+    return [spec for spec in DOC_SPECS if spec["file"] in affected_docs]
+
 
 def run_help(cmd: str) -> str:
     args = shlex.split(cmd)
@@ -171,18 +268,38 @@ def upsert(path: Path, content: str, check: bool) -> bool:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--check", action="store_true", help="Only check whether docs are up-to-date.")
+    parser.add_argument(
+        "--changed-only",
+        action="store_true",
+        help="Only generate docs affected by current git changed files.",
+    )
+    parser.add_argument(
+        "--full",
+        action="store_true",
+        help="Force full generation for all command docs.",
+    )
     args = parser.parse_args()
 
+    # Default behavior is incremental unless explicitly forcing full.
+    changed_only = args.changed_only or (not args.full)
+    specs = select_specs(changed_only=changed_only, full=args.full)
+    if changed_only and not specs:
+        if not args.check:
+            print("No affected command docs detected; skipped.")
+        return 0
+
     changed_files: List[str] = []
-    for spec in DOC_SPECS:
+    for spec in specs:
         out = render_page(spec)
         target = REPO_ROOT / spec["file"]
         if upsert(target, out, args.check):
             changed_files.append(str(target.relative_to(REPO_ROOT)))
 
-    index_target = REPO_ROOT / "docs/commands/README.md"
-    if upsert(index_target, render_index(), args.check):
-        changed_files.append(str(index_target.relative_to(REPO_ROOT)))
+    # Index is static, only refresh during full generation.
+    if args.full or not changed_only:
+        index_target = REPO_ROOT / "docs/commands/README.md"
+        if upsert(index_target, render_index(), args.check):
+            changed_files.append(str(index_target.relative_to(REPO_ROOT)))
 
     if args.check and changed_files:
         print("Command docs are out of date. Regenerate with:")
@@ -194,9 +311,10 @@ def main() -> int:
 
     if not args.check:
         print("Docs generated:")
-        for spec in DOC_SPECS:
+        for spec in specs:
             print(f"- {spec['file']}")
-        print("- docs/commands/README.md")
+        if args.full or not changed_only:
+            print("- docs/commands/README.md")
     return 0
 
 

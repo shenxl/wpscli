@@ -228,10 +228,24 @@ fn preview_json(v: &Value, max_len: usize) -> Value {
     if s.len() <= max_len {
         v.clone()
     } else {
+        let mut cut = 0usize;
+        for (idx, _) in s.char_indices() {
+            if idx > max_len {
+                break;
+            }
+            cut = idx;
+        }
+        if cut == 0 && !s.is_empty() {
+            cut = s
+                .char_indices()
+                .nth(1)
+                .map(|(i, _)| i)
+                .unwrap_or(s.len());
+        }
         serde_json::json!({
             "truncated": true,
             "size": s.len(),
-            "head": &s[..max_len]
+            "head": &s[..cut]
         })
     }
 }

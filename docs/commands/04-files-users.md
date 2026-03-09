@@ -26,6 +26,7 @@ Commands:
   get         查询文件信息
   upload      上传本地文件（请求上传->存储上传->提交完成）
   download    下载文件到本地
+  transfer    统一传输视图（带阶段耗时与恢复建议）
   state       查看本地状态仓库（registry/log）
   help        Print this message or the help of the given subcommand(s)
 

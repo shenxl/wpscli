@@ -80,6 +80,7 @@ pub async fn dispatch(first: &str, args: &[String]) -> Option<Result<serde_json:
                         | "list-files"
                         | "upload"
                         | "download"
+                        | "transfer"
                         | "state"
                         | "get"
                         | "-h"

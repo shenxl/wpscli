@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use std::io::Read;
 use std::path::Path;
+use std::time::Instant;
 
 use clap::{Arg, ArgAction, ArgMatches, Command};
 use reqwest::Method;
@@ -116,6 +117,46 @@ pub fn command() -> Command {
                 ),
         )
         .subcommand(
+            with_common_opts(Command::new("transfer").about("统一传输视图（带阶段耗时与恢复建议）"))
+                .arg(
+                    Arg::new("mode")
+                        .long("mode")
+                        .required(true)
+                        .value_parser(["upload", "download"])
+                        .help("传输模式：upload/download"),
+                )
+                .arg(
+                    Arg::new("local-file")
+                        .long("local-file")
+                        .num_args(1)
+                        .required_if_eq("mode", "upload")
+                        .help("upload 模式：本地文件路径"),
+                )
+                .arg(Arg::new("name").long("name").num_args(1).help("upload 模式：远端文件名（默认本地文件名）"))
+                .arg(Arg::new("app").long("app").num_args(1).help("应用目录（与 --parent-id 或 --file-id 组合）"))
+                .arg(Arg::new("parent-id").long("parent-id").num_args(1).help("upload 模式：目标父目录 ID（优先于 --app）"))
+                .arg(
+                    Arg::new("on-name-conflict")
+                        .long("on-name-conflict")
+                        .default_value("rename")
+                        .value_parser(["fail", "rename", "overwrite", "replace"])
+                        .help("upload 模式：同名冲突策略"),
+                )
+                .arg(Arg::new("drive-id").long("drive-id").num_args(1).help("网盘 ID（不传则自动探测）"))
+                .arg(Arg::new("file-id").long("file-id").num_args(1).help("download 模式：文件 ID（优先）"))
+                .arg(Arg::new("file").long("file").num_args(1).help("download 模式：文件名（与 --app 搭配）"))
+                .arg(Arg::new("output").long("output").num_args(1).help("download 模式：本地输出路径"))
+                .arg(Arg::new("overwrite").long("overwrite").action(ArgAction::SetTrue).help("download 模式：允许覆盖本地文件"))
+                .arg(Arg::new("with-hash").long("with-hash").action(ArgAction::SetTrue).help("download 模式：返回 hash 校验值"))
+                .arg(Arg::new("internal").long("internal").action(ArgAction::SetTrue).help("优先请求内网传输地址"))
+                .arg(
+                    Arg::new("storage-base-domain")
+                        .long("storage-base-domain")
+                        .num_args(1)
+                        .help("download 模式：下载域名偏好 wps.cn/kdocs.cn/wps365.com"),
+                ),
+        )
+        .subcommand(
             with_common_opts(Command::new("state").about("查看本地状态仓库（registry/log）"))
                 .arg(
                     Arg::new("limit")
@@ -142,6 +183,7 @@ pub async fn handle(args: &[String]) -> Result<serde_json::Value, WpsError> {
         Some(("get", s)) => ("get", get_file(s).await),
         Some(("upload", s)) => ("upload", upload_file(s).await),
         Some(("download", s)) => ("download", download_file(s).await),
+        Some(("transfer", s)) => ("transfer", transfer(s).await),
         Some(("state", s)) => ("state", read_state(s).await),
         _ => {
             return Err(WpsError::Validation(
@@ -168,7 +210,16 @@ fn persist_operation_log(action: &str, args: &[String], result: &Result<Value, W
             "error_message": e.to_string(),
         }),
     };
-    let status = if result.is_ok() { "ok" } else { "error" };
+    let status = match result {
+        Ok(v) => {
+            if v.get("ok").and_then(|x| x.as_bool()) == Some(false) {
+                "error"
+            } else {
+                "ok"
+            }
+        }
+        Err(_) => "error",
+    };
     let _ = store.append_operation_log(action, status, detail);
 }
 
@@ -825,6 +876,780 @@ fn sha256_file_hex(local_file: &str) -> Result<String, WpsError> {
     }
     let digest = hasher.finalize();
     Ok(digest.iter().map(|b| format!("{b:02x}")).collect::<String>())
+}
+
+fn phase_ok(
+    phase: &str,
+    started: Instant,
+    retryable: bool,
+    suggested_action: &str,
+    detail: Value,
+) -> Value {
+    serde_json::json!({
+        "phase": phase,
+        "status": "ok",
+        "duration_ms": started.elapsed().as_millis() as u64,
+        "retryable": retryable,
+        "suggested_action": suggested_action,
+        "detail": detail
+    })
+}
+
+fn phase_failed(
+    phase: &str,
+    started: Instant,
+    retryable: bool,
+    suggested_action: &str,
+    error: &WpsError,
+) -> Value {
+    serde_json::json!({
+        "phase": phase,
+        "status": "failed",
+        "duration_ms": started.elapsed().as_millis() as u64,
+        "retryable": retryable,
+        "suggested_action": suggested_action,
+        "error": {
+            "code": error.code(),
+            "message": error.to_string(),
+        }
+    })
+}
+
+fn transfer_summary(phases: &[Value]) -> Value {
+    let failed = phases
+        .iter()
+        .find(|p| p.get("status").and_then(|v| v.as_str()) == Some("failed"))
+        .and_then(|p| p.get("phase").and_then(|v| v.as_str()))
+        .map(|s| s.to_string());
+    serde_json::json!({
+        "phase_count": phases.len(),
+        "has_failed_phase": failed.is_some(),
+        "failed_phase": failed,
+    })
+}
+
+fn transfer_failure(mode: &str, phases: Vec<Value>, error: &WpsError) -> Value {
+    serde_json::json!({
+        "ok": false,
+        "data": {
+            "code": 1,
+            "msg": "transfer_failed",
+            "data": {
+                "mode": mode,
+                "summary": transfer_summary(&phases),
+                "phases": phases,
+                "error": {
+                    "code": error.code(),
+                    "message": error.to_string()
+                }
+            }
+        }
+    })
+}
+
+async fn transfer(s: &ArgMatches) -> Result<Value, WpsError> {
+    let mode = s
+        .get_one::<String>("mode")
+        .cloned()
+        .unwrap_or_else(|| "upload".to_string());
+    match mode.as_str() {
+        "upload" => transfer_upload(s).await,
+        "download" => transfer_download(s).await,
+        _ => Err(WpsError::Validation(format!("不支持的 transfer mode: {mode}"))),
+    }
+}
+
+async fn transfer_upload(s: &ArgMatches) -> Result<Value, WpsError> {
+    let mut phases = Vec::new();
+    let auth = effective_auth_type(s);
+    let dry = s.get_flag("dry-run");
+    let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
+
+    let t = Instant::now();
+    let scope = match preflight(&auth, dry).await {
+        Ok(v) => {
+            phases.push(phase_ok(
+                "scope_preflight",
+                t,
+                false,
+                "若缺少 scope，请执行 wpscli auth login --user 并补齐 kso.file.readwrite",
+                v.to_json(),
+            ));
+            v
+        }
+        Err(e) => {
+            phases.push(phase_failed(
+                "scope_preflight",
+                t,
+                false,
+                "执行 wpscli auth status / auth login 检查授权",
+                &e,
+            ));
+            return Ok(transfer_failure("upload", phases, &e));
+        }
+    };
+
+    let local_file = s.get_one::<String>("local-file").expect("required");
+    let t = Instant::now();
+    let meta = match std::fs::metadata(local_file) {
+        Ok(m) if m.is_file() => {
+            phases.push(phase_ok(
+                "local_file_check",
+                t,
+                false,
+                "确认本地路径存在且可读",
+                serde_json::json!({"local_file": local_file, "size": m.len()}),
+            ));
+            m
+        }
+        Ok(_) => {
+            let e = WpsError::Validation(format!("不是有效文件: {local_file}"));
+            phases.push(phase_failed(
+                "local_file_check",
+                t,
+                false,
+                "传入可读文件路径，例如 --local-file /path/a.txt",
+                &e,
+            ));
+            return Ok(transfer_failure("upload", phases, &e));
+        }
+        Err(err) => {
+            let e = WpsError::Validation(format!("读取本地文件元信息失败 {local_file}: {err}"));
+            phases.push(phase_failed(
+                "local_file_check",
+                t,
+                false,
+                "检查文件路径和权限",
+                &e,
+            ));
+            return Ok(transfer_failure("upload", phases, &e));
+        }
+    };
+    let size = meta.len();
+
+    let file_name = s
+        .get_one::<String>("name")
+        .cloned()
+        .unwrap_or(file_name_from_path(local_file)?);
+    let on_name_conflict = s
+        .get_one::<String>("on-name-conflict")
+        .cloned()
+        .unwrap_or_else(|| "rename".to_string());
+
+    let t = Instant::now();
+    let drive_id = match get_default_drive_id(
+        &auth,
+        dry,
+        retry,
+        s.get_one::<String>("drive-id").cloned(),
+    )
+    .await
+    {
+        Ok(v) => {
+            phases.push(phase_ok(
+                "resolve_drive",
+                t,
+                true,
+                "若失败可重试，或显式传 --drive-id",
+                serde_json::json!({"drive_id": v}),
+            ));
+            v
+        }
+        Err(e) => {
+            phases.push(phase_failed(
+                "resolve_drive",
+                t,
+                true,
+                "重试或手动指定 --drive-id",
+                &e,
+            ));
+            return Ok(transfer_failure("upload", phases, &e));
+        }
+    };
+
+    let app = s.get_one::<String>("app").cloned();
+    let t = Instant::now();
+    let parent_id = if let Some(pid) = s.get_one::<String>("parent-id").cloned() {
+        phases.push(phase_ok(
+            "resolve_parent",
+            t,
+            false,
+            "已使用显式 parent-id",
+            serde_json::json!({"parent_id": pid}),
+        ));
+        pid
+    } else if let Some(app_name) = &app {
+        match ensure_app_folder(&drive_id, app_name, &auth, dry, retry).await {
+            Ok(folder) => {
+                let pid = folder
+                    .get("id")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("0")
+                    .to_string();
+                phases.push(phase_ok(
+                    "resolve_parent",
+                    t,
+                    true,
+                    "应用目录不存在时会自动创建",
+                    serde_json::json!({"app": app_name, "parent_id": pid, "folder": folder}),
+                ));
+                pid
+            }
+            Err(e) => {
+                phases.push(phase_failed(
+                    "resolve_parent",
+                    t,
+                    true,
+                    "检查目录权限，或改用 --parent-id",
+                    &e,
+                ));
+                return Ok(transfer_failure("upload", phases, &e));
+            }
+        }
+    } else {
+        phases.push(phase_ok(
+            "resolve_parent",
+            t,
+            false,
+            "默认上传到根目录 parent_id=0",
+            serde_json::json!({"parent_id":"0"}),
+        ));
+        "0".to_string()
+    };
+
+    let sha256 = sha256_file_hex(local_file)?;
+    let mut req_body = serde_json::json!({
+        "name": file_name,
+        "size": size,
+        "on_name_conflict": on_name_conflict,
+        "hashes": [{"type":"sha256","sum": sha256}],
+    });
+    if s.get_flag("internal") {
+        req_body["internal"] = Value::Bool(true);
+    }
+
+    let t = Instant::now();
+    let request_resp = match execute(
+        "POST",
+        &format!("/v7/drives/{drive_id}/files/{parent_id}/request_upload"),
+        HashMap::new(),
+        Some(req_body),
+        &auth,
+        dry,
+        retry,
+    )
+    .await
+    {
+        Ok(v) => {
+            phases.push(phase_ok(
+                "request_upload",
+                t,
+                true,
+                "若报 scope 或参数错误，请检查鉴权与上传参数",
+                serde_json::json!({"status_ok": api_ok(&v)}),
+            ));
+            v
+        }
+        Err(e) => {
+            phases.push(phase_failed(
+                "request_upload",
+                t,
+                true,
+                "重试；若持续失败请检查 scope/parent_id/name/size",
+                &e,
+            ));
+            return Ok(transfer_failure("upload", phases, &e));
+        }
+    };
+    if dry {
+        return Ok(serde_json::json!({
+            "ok": true,
+            "data": {
+                "code": 0,
+                "msg": "dry-run",
+                "data": {
+                    "mode": "upload",
+                    "summary": transfer_summary(&phases),
+                    "phases": phases,
+                    "scope_preflight": scope.to_json(),
+                    "request_upload": request_resp,
+                    "workflow": ["request_upload", "upload_to_store", "commit_upload"]
+                }
+            }
+        }));
+    }
+    if !api_ok(&request_resp) {
+        let e = WpsError::Network(format!("请求文件上传信息失败: {request_resp}"));
+        return Ok(transfer_failure("upload", phases, &e));
+    }
+
+    let request_payload = api_payload(&request_resp);
+    let upload_id = match request_payload.get("upload_id").and_then(|v| v.as_str()) {
+        Some(v) => v.to_string(),
+        None => {
+            let e = WpsError::Network(format!("上传响应缺少 upload_id: {request_resp}"));
+            return Ok(transfer_failure("upload", phases, &e));
+        }
+    };
+    let store_request = request_payload
+        .get("store_request")
+        .cloned()
+        .unwrap_or(Value::Null);
+    let upload_url = match store_request.get("url").and_then(|v| v.as_str()) {
+        Some(v) => v.to_string(),
+        None => {
+            let e = WpsError::Network(format!("上传响应缺少 store_request.url: {request_resp}"));
+            return Ok(transfer_failure("upload", phases, &e));
+        }
+    };
+    let upload_method = store_request
+        .get("method")
+        .and_then(|v| v.as_str())
+        .unwrap_or("PUT")
+        .to_uppercase();
+    let method = match Method::from_bytes(upload_method.as_bytes()) {
+        Ok(v) => v,
+        Err(err) => {
+            let e = WpsError::Validation(format!("非法上传方法 {upload_method}: {err}"));
+            return Ok(transfer_failure("upload", phases, &e));
+        }
+    };
+
+    let t = Instant::now();
+    let file_bytes = match tokio::fs::read(local_file).await {
+        Ok(v) => v,
+        Err(err) => {
+            let e = WpsError::Validation(format!("读取本地文件失败 {local_file}: {err}"));
+            phases.push(phase_failed(
+                "upload_to_store",
+                t,
+                false,
+                "检查本地文件权限",
+                &e,
+            ));
+            return Ok(transfer_failure("upload", phases, &e));
+        }
+    };
+    let mut req = reqwest::Client::new()
+        .request(method, &upload_url)
+        .header("Content-Type", "application/octet-stream");
+    if let Some(headers) = store_request.get("headers").and_then(|v| v.as_object()) {
+        for (k, v) in headers {
+            if let Some(vs) = v.as_str() {
+                req = req.header(k, vs);
+            }
+        }
+    }
+    let upload_resp = match req.body(file_bytes).send().await {
+        Ok(v) => v,
+        Err(err) => {
+            let e = WpsError::Network(format!("上传实体文件失败: {err}"));
+            phases.push(phase_failed(
+                "upload_to_store",
+                t,
+                true,
+                "可重试；检查上传地址是否过期，必要时重新 request_upload",
+                &e,
+            ));
+            return Ok(transfer_failure("upload", phases, &e));
+        }
+    };
+    let upload_status = upload_resp.status().as_u16();
+    let upload_text = upload_resp.text().await.unwrap_or_default();
+    if upload_status >= 400 {
+        let e = WpsError::Network(format!(
+            "上传实体文件失败(status={upload_status}): {upload_text}"
+        ));
+        phases.push(phase_failed(
+            "upload_to_store",
+            t,
+            true,
+            "重试；若地址失效请重新执行 request_upload",
+            &e,
+        ));
+        return Ok(transfer_failure("upload", phases, &e));
+    }
+    phases.push(phase_ok(
+        "upload_to_store",
+        t,
+        false,
+        "实体文件上传成功",
+        serde_json::json!({"status": upload_status}),
+    ));
+
+    let t = Instant::now();
+    let commit_resp = match execute(
+        "POST",
+        &format!("/v7/drives/{drive_id}/files/{parent_id}/commit_upload"),
+        HashMap::new(),
+        Some(serde_json::json!({ "upload_id": upload_id })),
+        &auth,
+        dry,
+        retry,
+    )
+    .await
+    {
+        Ok(v) => v,
+        Err(e) => {
+            phases.push(phase_failed(
+                "commit_upload",
+                t,
+                true,
+                "可重试 commit_upload（upload_id 短时间内有效）",
+                &e,
+            ));
+            return Ok(transfer_failure("upload", phases, &e));
+        }
+    };
+    if !api_ok(&commit_resp) {
+        let e = WpsError::Network(format!("提交上传完成失败: {commit_resp}"));
+        phases.push(phase_failed(
+            "commit_upload",
+            t,
+            true,
+            "检查 upload_id 或重新执行上传流程",
+            &e,
+        ));
+        return Ok(transfer_failure("upload", phases, &e));
+    }
+    phases.push(phase_ok(
+        "commit_upload",
+        t,
+        false,
+        "上传已完成并生成文件元信息",
+        serde_json::json!({"status_ok": true}),
+    ));
+
+    let created = api_payload(&commit_resp);
+    if let Some(app_name) = &app {
+        register_file_if_possible(app_name, &drive_id, &parent_id, &created);
+    }
+    Ok(serde_json::json!({
+        "ok": true,
+        "data": {
+            "code": 0,
+            "msg": "ok",
+            "data": {
+                "mode": "upload",
+                "summary": transfer_summary(&phases),
+                "phases": phases,
+                "scope_preflight": scope.to_json(),
+                "result": {
+                    "drive_id": drive_id,
+                    "parent_id": parent_id,
+                    "app": app,
+                    "file_name": file_name,
+                    "size": size,
+                    "sha256": sha256,
+                    "upload_id": upload_id,
+                    "store_request_host": reqwest::Url::parse(&upload_url).ok().and_then(|u| u.host_str().map(|s| s.to_string())),
+                    "created": created,
+                }
+            }
+        }
+    }))
+}
+
+async fn transfer_download(s: &ArgMatches) -> Result<Value, WpsError> {
+    let mut phases = Vec::new();
+    let auth = effective_auth_type(s);
+    let dry = s.get_flag("dry-run");
+    let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
+
+    let t = Instant::now();
+    let scope = match preflight(&auth, dry).await {
+        Ok(v) => {
+            phases.push(phase_ok(
+                "scope_preflight",
+                t,
+                false,
+                "若缺少 scope，请执行 wpscli auth login --user 并补齐 kso.file.read",
+                v.to_json(),
+            ));
+            v
+        }
+        Err(e) => {
+            phases.push(phase_failed(
+                "scope_preflight",
+                t,
+                false,
+                "执行 wpscli auth status / auth login 检查授权",
+                &e,
+            ));
+            return Ok(transfer_failure("download", phases, &e));
+        }
+    };
+
+    let t = Instant::now();
+    let (drive_id, file_id) = match resolve_drive_file(s, &auth, dry, retry).await {
+        Ok(v) => {
+            phases.push(phase_ok(
+                "resolve_target",
+                t,
+                true,
+                "可重试，或显式传 --drive-id --file-id",
+                serde_json::json!({"drive_id": v.0, "file_id": v.1}),
+            ));
+            v
+        }
+        Err(e) => {
+            phases.push(phase_failed(
+                "resolve_target",
+                t,
+                false,
+                "检查 --file-id 或 --app + --file 参数",
+                &e,
+            ));
+            return Ok(transfer_failure("download", phases, &e));
+        }
+    };
+
+    let mut query = HashMap::new();
+    if s.get_flag("with-hash") {
+        query.insert("with_hash".to_string(), "true".to_string());
+    }
+    if s.get_flag("internal") {
+        query.insert("internal".to_string(), "true".to_string());
+    }
+    if let Some(base_domain) = s.get_one::<String>("storage-base-domain") {
+        query.insert("storage_base_domain".to_string(), base_domain.clone());
+    }
+
+    let t = Instant::now();
+    let info_resp = match execute(
+        "GET",
+        &format!("/v7/drives/{drive_id}/files/{file_id}/download"),
+        query,
+        None,
+        &auth,
+        dry,
+        retry,
+    )
+    .await
+    {
+        Ok(v) => {
+            phases.push(phase_ok(
+                "get_download_info",
+                t,
+                true,
+                "若失败可重试，或检查文件权限",
+                serde_json::json!({"status_ok": api_ok(&v)}),
+            ));
+            v
+        }
+        Err(e) => {
+            phases.push(phase_failed(
+                "get_download_info",
+                t,
+                true,
+                "重试；若 403 请检查文件访问权限",
+                &e,
+            ));
+            return Ok(transfer_failure("download", phases, &e));
+        }
+    };
+    if dry {
+        return Ok(serde_json::json!({
+            "ok": true,
+            "data": {
+                "code": 0,
+                "msg": "dry-run",
+                "data": {
+                    "mode": "download",
+                    "summary": transfer_summary(&phases),
+                    "phases": phases,
+                    "scope_preflight": scope.to_json(),
+                    "request_download_info": info_resp
+                }
+            }
+        }));
+    }
+    if !api_ok(&info_resp) {
+        let e = WpsError::Network(format!("获取下载信息失败: {info_resp}"));
+        return Ok(transfer_failure("download", phases, &e));
+    }
+    let payload = api_payload(&info_resp);
+    let download_url = match payload.get("url").and_then(|v| v.as_str()) {
+        Some(v) => v.to_string(),
+        None => {
+            let e = WpsError::Network(format!("下载响应缺少 url: {info_resp}"));
+            return Ok(transfer_failure("download", phases, &e));
+        }
+    };
+
+    let t = Instant::now();
+    let meta_resp = match fetch_file_meta(&drive_id, &file_id, &auth, dry, retry).await {
+        Ok(v) => {
+            phases.push(phase_ok(
+                "fetch_meta",
+                t,
+                true,
+                "获取文件名用于落盘",
+                serde_json::json!({"status_ok": api_ok(&v)}),
+            ));
+            v
+        }
+        Err(e) => {
+            phases.push(phase_failed(
+                "fetch_meta",
+                t,
+                true,
+                "可重试；失败时可通过 --output 显式给出文件名",
+                &e,
+            ));
+            return Ok(transfer_failure("download", phases, &e));
+        }
+    };
+    let payload_meta = api_payload(&meta_resp);
+    let default_name = payload_meta
+        .get("name")
+        .and_then(|v| v.as_str())
+        .filter(|v| !v.trim().is_empty())
+        .unwrap_or("download.bin")
+        .to_string();
+
+    let t = Instant::now();
+    let output_path = match output_path_for_download(
+        s.get_one::<String>("output"),
+        &default_name,
+        s.get_flag("overwrite"),
+    ) {
+        Ok(v) => {
+            phases.push(phase_ok(
+                "resolve_output",
+                t,
+                false,
+                "已生成本地保存路径",
+                serde_json::json!({"output": v.display().to_string()}),
+            ));
+            v
+        }
+        Err(e) => {
+            phases.push(phase_failed(
+                "resolve_output",
+                t,
+                false,
+                "检查本地路径权限或使用 --overwrite",
+                &e,
+            ));
+            return Ok(transfer_failure("download", phases, &e));
+        }
+    };
+
+    let t = Instant::now();
+    let client = reqwest::Client::new();
+    let mut resp = match client.get(&download_url).send().await {
+        Ok(v) => v,
+        Err(err) => {
+            let e = WpsError::Network(format!("下载文件失败: {err}"));
+            phases.push(phase_failed(
+                "download_stream",
+                t,
+                true,
+                "可重试；若下载地址过期请重新获取 download 信息",
+                &e,
+            ));
+            return Ok(transfer_failure("download", phases, &e));
+        }
+    };
+    let status = resp.status().as_u16();
+    if status >= 400 {
+        let txt = resp.text().await.unwrap_or_default();
+        let e = WpsError::Network(format!("下载文件失败(status={status}): {txt}"));
+        phases.push(phase_failed(
+            "download_stream",
+            t,
+            true,
+            "可重试；若失败持续请重新获取下载地址",
+            &e,
+        ));
+        return Ok(transfer_failure("download", phases, &e));
+    }
+    let mut file = match tokio::fs::File::create(&output_path).await {
+        Ok(v) => v,
+        Err(err) => {
+            let e = WpsError::Validation(format!(
+                "创建本地文件失败 {}: {err}",
+                output_path.display()
+            ));
+            phases.push(phase_failed(
+                "download_stream",
+                t,
+                false,
+                "检查输出目录权限",
+                &e,
+            ));
+            return Ok(transfer_failure("download", phases, &e));
+        }
+    };
+    let mut bytes: u64 = 0;
+    while let Some(chunk) = match resp.chunk().await {
+        Ok(v) => v,
+        Err(err) => {
+            let e = WpsError::Network(format!("读取下载数据块失败: {err}"));
+            phases.push(phase_failed(
+                "download_stream",
+                t,
+                true,
+                "可重试下载，或重新获取下载地址",
+                &e,
+            ));
+            return Ok(transfer_failure("download", phases, &e));
+        }
+    } {
+        if let Err(err) = file.write_all(&chunk).await {
+            let e = WpsError::Network(format!("写入本地文件失败 {}: {err}", output_path.display()));
+            phases.push(phase_failed(
+                "download_stream",
+                t,
+                false,
+                "检查磁盘空间和写权限",
+                &e,
+            ));
+            return Ok(transfer_failure("download", phases, &e));
+        }
+        bytes += chunk.len() as u64;
+    }
+    if let Err(err) = file.flush().await {
+        let e = WpsError::Network(format!("刷新本地文件失败 {}: {err}", output_path.display()));
+        phases.push(phase_failed(
+            "download_stream",
+            t,
+            false,
+            "检查磁盘写入状态",
+            &e,
+        ));
+        return Ok(transfer_failure("download", phases, &e));
+    }
+    phases.push(phase_ok(
+        "download_stream",
+        t,
+        false,
+        "下载并写入本地完成",
+        serde_json::json!({"bytes": bytes, "saved_file": output_path.display().to_string()}),
+    ));
+
+    Ok(serde_json::json!({
+        "ok": true,
+        "data": {
+            "code": 0,
+            "msg": "ok",
+            "data": {
+                "mode": "download",
+                "summary": transfer_summary(&phases),
+                "phases": phases,
+                "scope_preflight": scope.to_json(),
+                "result": {
+                    "drive_id": drive_id,
+                    "file_id": file_id,
+                    "download_url_host": reqwest::Url::parse(&download_url).ok().and_then(|u| u.host_str().map(|s| s.to_string())),
+                    "saved_file": output_path.display().to_string(),
+                    "bytes": bytes,
+                    "hashes": payload.get("hashes").cloned().unwrap_or(Value::Array(vec![])),
+                }
+            }
+        }
+    }))
 }
 
 async fn upload_file(s: &ArgMatches) -> Result<Value, WpsError> {

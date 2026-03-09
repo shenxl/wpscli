@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{BTreeSet, HashMap};
 use std::time::Duration;
 
 use clap::{Arg, ArgAction, Command};
@@ -46,7 +46,8 @@ pub fn command() -> Command {
                     "示例：\n  \
                      wpscli doc read-doc --url \"https://365.kdocs.cn/l/xxxx\" --format markdown --mode auto --user-token\n  \
                      wpscli doc read-doc --drive-id <drive_id> --file-id <file_id> --user-token\n  \
-                     wpscli doc read-doc --url \"https://365.kdocs.cn/l/xxxx\" --xlsx-row-offset 500 --xlsx-row-head 200 --output-file /tmp/xlsx_page_3.json --user-token",
+                     wpscli doc read-doc --url \"https://365.kdocs.cn/l/xxxx\" --xlsx-row-offset 500 --xlsx-row-head 200 --output-file /tmp/xlsx_page_3.json --user-token\n  \
+                     wpscli doc read-doc --url \"https://365.kdocs.cn/l/xxxx\" --xlsx-row-head 1000 --export-parquet /tmp/xlsx.parquet --user-token",
                 )
                 .arg(Arg::new("url").long("url").num_args(1).help("文档分享链接"))
                 .arg(Arg::new("drive-id").long("drive-id").num_args(1).help("网盘 ID（与 --file-id 搭配）"))
@@ -166,6 +167,13 @@ pub fn command() -> Command {
                         .long("output-file")
                         .num_args(1)
                         .help("将 read-doc 结果写入指定 JSON 文件（大数据推荐）"),
+                )
+                .arg(
+                    Arg::new("export-parquet")
+                        .long("export-parquet")
+                        .num_args(0..=1)
+                        .default_missing_value("auto")
+                        .help("将表格结果导出为 Parquet（可选路径；不传值则写入系统临时目录）"),
                 )
                 .arg(
                     Arg::new("output-stdout")
@@ -1073,7 +1081,18 @@ fn effective_auth_type(m: &clap::ArgMatches) -> String {
     }
 }
 
-fn finalize_read_output(m: &clap::ArgMatches, value: Value) -> Result<Value, WpsError> {
+fn finalize_read_output(m: &clap::ArgMatches, mut value: Value) -> Result<Value, WpsError> {
+    let parquet_meta = maybe_export_parquet(m, &value)?;
+    if let Some(meta) = parquet_meta.clone() {
+        if let Some(obj) = value
+            .get_mut("data")
+            .and_then(|v| v.get_mut("data"))
+            .and_then(|v| v.as_object_mut())
+        {
+            obj.insert("parquet_export".to_string(), meta);
+        }
+    }
+
     let Some(path) = m.get_one::<String>("output-file") else {
         return Ok(value);
     };
@@ -1126,10 +1145,173 @@ fn finalize_read_output(m: &clap::ArgMatches, value: Value) -> Result<Value, Wps
                 "persisted_only": true,
                 "output_file": output_path.display().to_string(),
                 "bytes": bytes.len(),
+                "parquet_export": parquet_meta,
                 "hint": "使用 --output-stdout 可在写文件同时输出完整结果"
             }
         }
     }))
+}
+
+fn maybe_export_parquet(m: &clap::ArgMatches, value: &Value) -> Result<Option<Value>, WpsError> {
+    let Some(export_arg) = m.get_one::<String>("export-parquet") else {
+        return Ok(None);
+    };
+    let parquet_path = if export_arg == "auto" {
+        let ts = chrono::Local::now().format("%Y%m%d_%H%M%S");
+        std::env::temp_dir().join(format!("wpscli_read_{ts}.parquet"))
+    } else {
+        std::path::PathBuf::from(export_arg)
+    };
+    let stats = export_read_result_to_parquet(value, &parquet_path)?;
+    Ok(Some(serde_json::json!({
+        "output_file": parquet_path.display().to_string(),
+        "rows": stats.0,
+        "columns": stats.1,
+        "engine": "polars"
+    })))
+}
+
+fn export_read_result_to_parquet(value: &Value, output_path: &std::path::Path) -> Result<(usize, usize), WpsError> {
+    use polars::prelude::{DataFrame, NamedFrom, ParquetWriter, Series};
+
+    let rows = collect_tabular_rows_for_parquet(value)?;
+    if rows.is_empty() {
+        return Err(WpsError::Validation(
+            "当前结果没有可导出的表格数据".to_string(),
+        ));
+    }
+
+    let mut keys = BTreeSet::new();
+    for row in &rows {
+        for key in row.keys() {
+            keys.insert(key.clone());
+        }
+    }
+    if keys.is_empty() {
+        return Err(WpsError::Validation(
+            "当前结果没有可导出的列".to_string(),
+        ));
+    }
+
+    let mut columns = Vec::new();
+    for key in &keys {
+        let vals: Vec<Option<String>> = rows
+            .iter()
+            .map(|row| row.get(key).and_then(json_value_to_string))
+            .collect();
+        let series = Series::new(key.as_str().into(), vals);
+        columns.push(series.into());
+    }
+    let mut df = DataFrame::new(columns)
+        .map_err(|e| WpsError::Execution(format!("polars build dataframe failed: {e}")))?;
+    let row_count = df.height();
+    let col_count = df.width();
+
+    if let Some(parent) = output_path.parent() {
+        if !parent.as_os_str().is_empty() {
+            std::fs::create_dir_all(parent).map_err(|e| {
+                WpsError::Validation(format!(
+                    "failed to create parquet directory {}: {e}",
+                    parent.display()
+                ))
+            })?;
+        }
+    }
+
+    let mut file = std::fs::File::create(output_path).map_err(|e| {
+        WpsError::Validation(format!(
+            "failed to create parquet file {}: {e}",
+            output_path.display()
+        ))
+    })?;
+    ParquetWriter::new(&mut file)
+        .finish(&mut df)
+        .map_err(|e| WpsError::Execution(format!("polars write parquet failed: {e}")))?;
+    Ok((row_count, col_count))
+}
+
+fn collect_tabular_rows_for_parquet(value: &Value) -> Result<Vec<serde_json::Map<String, Value>>, WpsError> {
+    let data = value
+        .get("data")
+        .and_then(|v| v.get("data"))
+        .unwrap_or(&Value::Null);
+    let src_format = data
+        .get("src_format")
+        .and_then(|v| v.as_str())
+        .unwrap_or_default()
+        .to_ascii_lowercase();
+
+    let mut out: Vec<serde_json::Map<String, Value>> = Vec::new();
+    if matches!(src_format.as_str(), "xlsx" | "xls" | "et") {
+        let sheets = data
+            .get("sheets")
+            .and_then(|v| v.as_array())
+            .cloned()
+            .unwrap_or_default();
+        for sheet in sheets {
+            let sheet_id = sheet.get("sheet_id").cloned().unwrap_or(Value::Null);
+            let sheet_name = sheet.get("name").cloned().unwrap_or(Value::Null);
+            let table = sheet.get("table").cloned().unwrap_or(Value::Null);
+            let header_inferred = table
+                .get("header_inferred")
+                .and_then(|v| v.as_bool())
+                .unwrap_or(false);
+            let header_records = table
+                .get("records_with_header")
+                .and_then(|v| v.as_array())
+                .cloned()
+                .unwrap_or_default();
+            let records = table
+                .get("records")
+                .and_then(|v| v.as_array())
+                .cloned()
+                .unwrap_or_default();
+            let selected = if header_inferred && !header_records.is_empty() {
+                header_records
+            } else {
+                records
+            };
+            for (idx, rec) in selected.into_iter().enumerate() {
+                if let Some(obj) = rec.as_object() {
+                    let mut row = obj.clone();
+                    row.insert("__sheet_id".to_string(), sheet_id.clone());
+                    row.insert("__sheet_name".to_string(), sheet_name.clone());
+                    row.insert("__row_ordinal".to_string(), serde_json::json!(idx));
+                    out.push(row);
+                }
+            }
+        }
+    } else if src_format == "dbt" {
+        let records = data
+            .get("records")
+            .and_then(|v| v.as_array())
+            .cloned()
+            .unwrap_or_default();
+        for (idx, rec) in records.into_iter().enumerate() {
+            if let Some(obj) = rec.as_object() {
+                let mut row = obj.clone();
+                row.insert("__row_ordinal".to_string(), serde_json::json!(idx));
+                out.push(row);
+            }
+        }
+    }
+
+    if out.is_empty() {
+        return Err(WpsError::Validation(
+            "--export-parquet 当前仅支持 xlsx/dbt 的表格化读取结果".to_string(),
+        ));
+    }
+    Ok(out)
+}
+
+fn json_value_to_string(v: &Value) -> Option<String> {
+    match v {
+        Value::Null => None,
+        Value::String(s) => Some(s.clone()),
+        Value::Number(n) => Some(n.to_string()),
+        Value::Bool(b) => Some(b.to_string()),
+        Value::Array(_) | Value::Object(_) => serde_json::to_string(v).ok(),
+    }
 }
 
 fn read_text_content(m: &clap::ArgMatches, inline_key: &str, file_key: &str) -> Result<String, WpsError> {

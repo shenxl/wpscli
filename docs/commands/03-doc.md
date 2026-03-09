@@ -93,6 +93,8 @@ Options:
           xlsx 每个工作表读取列数上限（优先于 --xlsx-max-cols）
       --output-file <output-file>
           将 read-doc 结果写入指定 JSON 文件（大数据推荐）
+      --export-parquet [<export-parquet>]
+          将表格结果导出为 Parquet（可选路径；不传值则写入系统临时目录）
       --output-stdout
           配合 --output-file 使用：写文件后仍输出完整结果到 stdout
       --dbsheet-sheet-id <dbsheet-sheet-id>
@@ -112,6 +114,7 @@ Options:
   wpscli doc read-doc --url "https://365.kdocs.cn/l/xxxx" --format markdown --mode auto --user-token
   wpscli doc read-doc --drive-id <drive_id> --file-id <file_id> --user-token
   wpscli doc read-doc --url "https://365.kdocs.cn/l/xxxx" --xlsx-row-offset 500 --xlsx-row-head 200 --output-file /tmp/xlsx_page_3.json --user-token
+  wpscli doc read-doc --url "https://365.kdocs.cn/l/xxxx" --xlsx-row-head 1000 --export-parquet /tmp/xlsx.parquet --user-token
 ```
 
 ## doc write-doc

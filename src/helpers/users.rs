@@ -24,16 +24,28 @@ const USERS_REQUIRED_APP_ROLE_SCOPES: [&str; 2] = ["kso.contact.read", "kso.cont
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 struct OrgCache {
+    #[serde(default)]
     generated_at: String,
+    #[serde(default)]
     generated_ts: u64,
+    #[serde(default)]
     ttl_seconds: u64,
+    #[serde(default)]
     scope_mode: String,
+    #[serde(default)]
     scope_error: Option<String>,
+    #[serde(default)]
     scope_guidance: Option<Value>,
+    #[serde(default)]
     roots: Vec<String>,
+    #[serde(default)]
     depts: Vec<Value>,
+    #[serde(default)]
     members_by_dept: HashMap<String, Vec<Value>>,
+    #[serde(default)]
     users_by_id: HashMap<String, Value>,
+    #[serde(default)]
+    user_scan_warnings: Vec<Value>,
 }
 
 #[derive(Debug, Clone, Default)]
@@ -387,6 +399,107 @@ fn user_obj_from_member(item: &Value) -> Option<Value> {
     None
 }
 
+fn extract_user_dept_ids(user: &Value) -> Vec<String> {
+    let mut out = Vec::<String>::new();
+    if let Some(s) = user.get("dept_id").and_then(|v| v.as_str()) {
+        if !s.trim().is_empty() {
+            out.push(s.to_string());
+        }
+    }
+    if let Some(arr) = user.get("dept_ids").and_then(|v| v.as_array()) {
+        for v in arr {
+            if let Some(s) = v.as_str() {
+                if !s.trim().is_empty() {
+                    out.push(s.to_string());
+                }
+            }
+        }
+    }
+    if let Some(arr) = user.get("depts").and_then(|v| v.as_array()) {
+        for v in arr {
+            if let Some(s) = v.as_str() {
+                if !s.trim().is_empty() {
+                    out.push(s.to_string());
+                }
+                continue;
+            }
+            if let Some(id) = v.get("id").and_then(|x| x.as_str()) {
+                if !id.trim().is_empty() {
+                    out.push(id.to_string());
+                }
+            }
+        }
+    }
+    out.sort();
+    out.dedup();
+    out
+}
+
+fn merge_users_into_member_index(
+    users_by_id: &HashMap<String, Value>,
+    members_by_dept: &mut HashMap<String, Vec<Value>>,
+) {
+    for (uid, user) in users_by_id {
+        let dept_ids = extract_user_dept_ids(user);
+        if dept_ids.is_empty() {
+            continue;
+        }
+        let status = user
+            .get("status")
+            .and_then(|v| v.as_str())
+            .unwrap_or("active")
+            .to_string();
+        for did in dept_ids {
+            let entry = members_by_dept.entry(did).or_default();
+            let exists = entry
+                .iter()
+                .any(|m| user_id_from_member(m).as_deref() == Some(uid.as_str()));
+            if exists {
+                continue;
+            }
+            entry.push(serde_json::json!({
+                "user_id": uid,
+                "status": status,
+                "user": user
+            }));
+        }
+    }
+}
+
+fn enrich_member_with_user(
+    cache: &OrgCache,
+    did: &str,
+    member: &Value,
+    with_user_detail: bool,
+) -> Value {
+    let st = member_status(member);
+    let uid = user_id_from_member(member).unwrap_or_default();
+    if !with_user_detail {
+        if uid.is_empty() {
+            return member.clone();
+        }
+        return serde_json::json!({
+            "user_id": uid,
+            "status": st,
+            "dept_id": did
+        });
+    }
+    if member.get("user").is_some() {
+        return member.clone();
+    }
+    if !uid.is_empty() {
+        if let Some(user) = cache.users_by_id.get(&uid) {
+            return serde_json::json!({
+                "user_id": uid,
+                "status": st,
+                "dept_id": did,
+                "user": user
+            });
+        }
+    }
+    member.clone()
+}
+
 fn value_as_str(v: &Value, key: &str) -> Option<String> {
     v.get(key).and_then(|x| x.as_str()).map(|s| s.to_string())
 }
@@ -525,7 +638,8 @@ fn cache_meta(cache: &OrgCache, path: &PathBuf) -> Value {
         "scope_guidance": cache.scope_guidance,
         "cache_age_seconds": now_ts().saturating_sub(cache.generated_ts),
         "dept_count": cache.depts.len(),
-        "user_count": cache.users_by_id.len()
+        "user_count": cache.users_by_id.len(),
+        "user_scan_warnings": cache.user_scan_warnings
     })
 }
 
@@ -795,6 +909,16 @@ async fn build_org_cache(
         }
     }
 
+    // 强制补齐用户明细：即使部门成员接口未返回 user 详情，也通过全量用户扫描填充 users_by_id。
+    let scan = fetch_all_users_remote(auth, false, retry).await?;
+    for u in scan.users {
+        let uid = value_as_str(&u, "id").unwrap_or_else(|| serde_json::to_string(&u).unwrap_or_default());
+        if !uid.is_empty() {
+            users_by_id.insert(uid, u);
+        }
+    }
+    merge_users_into_member_index(&users_by_id, &mut members_by_dept);
+
     let mut depts = dept_map.into_values().collect::<Vec<_>>();
     depts.sort_by(|a, b| {
         let na = a.get("name").and_then(|v| v.as_str()).unwrap_or_default();
@@ -813,6 +937,7 @@ async fn build_org_cache(
         depts,
         members_by_dept,
         users_by_id,
+        user_scan_warnings: scan.warnings,
     })
 }
 
@@ -953,16 +1078,7 @@ async fn get_members(s: &ArgMatches) -> Result<Value, WpsError> {
                         }
                     }
                 }
-                let mut item = m.clone();
-                if !with_user_detail {
-                    if let Some(uid) = user_id_from_member(&m) {
-                        item = serde_json::json!({
-                            "user_id": uid,
-                            "status": st,
-                            "dept_id": did
-                        });
-                    }
-                }
+                let item = enrich_member_with_user(&cache, &did, &m, with_user_detail);
                 all.push(item);
             }
         }
@@ -1284,6 +1400,7 @@ async fn sync_cache(s: &ArgMatches) -> Result<Value, WpsError> {
         "dept_count": cache.depts.len(),
         "user_count": cache.users_by_id.len(),
         "member_relation_count": cache.members_by_dept.values().map(|v| v.len()).sum::<usize>(),
+        "user_scan_warnings": cache.user_scan_warnings,
         "query_strategy": "后续 users 查询优先走本地缓存，缓存过期会自动刷新"
     })))
 }
@@ -1313,7 +1430,8 @@ async fn cache_status(s: &ArgMatches) -> Result<Value, WpsError> {
             "fresh_by_default_ttl": cache_is_fresh(&cache, cache.ttl_seconds),
             "dept_count": cache.depts.len(),
             "user_count": cache.users_by_id.len(),
-            "member_relation_count": cache.members_by_dept.values().map(|v| v.len()).sum::<usize>()
+            "member_relation_count": cache.members_by_dept.values().map(|v| v.len()).sum::<usize>(),
+            "user_scan_warnings": cache.user_scan_warnings
         })));
     }
     Ok(ok_data(serde_json::json!({

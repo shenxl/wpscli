@@ -57,7 +57,18 @@ pub async fn dispatch(first: &str, args: &[String]) -> Option<Result<serde_json:
             if args.is_empty()
                 || matches!(
                     args[0].as_str(),
-                    "scope" | "depts" | "members" | "user" | "list" | "find" | "sync" | "-h" | "--help" | "help"
+                    "scope"
+                        | "depts"
+                        | "members"
+                        | "user"
+                        | "list"
+                        | "find"
+                        | "sync"
+                        | "cache-status"
+                        | "cache-clear"
+                        | "-h"
+                        | "--help"
+                        | "help"
                 )
             {
                 Some(users::handle(args).await)

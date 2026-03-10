@@ -51,21 +51,23 @@ wpscli users --help
 Usage: users [COMMAND]
 
 Commands:
-  scope    查看通讯录权限范围（org）
-  depts    列出指定部门的子部门
-  members  列出部门成员
-  user     查询指定用户详情
-  list     按条件查询用户列表
-  find     按姓名关键字搜索用户
-  sync     同步组织架构摘要（轻量版）
-  help     Print this message or the help of the given subcommand(s)
+  scope         查看通讯录权限范围（org）
+  depts         列出指定部门的子部门（优先缓存）
+  members       列出部门成员（优先缓存）
+  user          查询指定用户详情（优先缓存）
+  list          按条件查询用户列表（优先缓存）
+  find          按姓名关键字搜索用户（优先缓存）
+  sync          同步并刷新用户/部门缓存
+  cache-status  查看本地 users 缓存状态
+  cache-clear   清空本地 users 缓存
+  help          Print this message or the help of the given subcommand(s)
 
 Options:
   -h, --help  Print help
 
 示例：
-  wpscli users scope --user-token
-  wpscli users depts --dept-id root --user-token
-  wpscli users members --dept-id 123 --recursive true --user-token
+  wpscli users sync --user-token --max-depts 300
+  wpscli users cache-status
   wpscli users find --name 张三 --user-token
+  wpscli users members --dept-id root --recursive true --user-token
 ```

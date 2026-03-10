@@ -18,7 +18,6 @@ const DEFAULT_QUERY_MAX_DEPTS: u32 = 500;
 const USER_LIST_STATUSES: [&str; 3] = ["active", "notactive", "disabled"];
 const REMOTE_SCAN_MAX_PAGES_PER_STATUS: u32 = 80;
 const SYNC_MAX_CHILD_PAGES_PER_DEPT: u32 = 60;
-const SYNC_MAX_MEMBER_PAGES_PER_DEPT: u32 = 60;
 const USERS_REQUIRED_DELEGATED_SCOPES: [&str; 2] = ["kso.contact.read", "kso.contact.readwrite"];
 const USERS_REQUIRED_APP_ROLE_SCOPES: [&str; 2] = ["kso.contact.read", "kso.contact.readwrite"];
 
@@ -51,6 +50,12 @@ struct OrgCache {
 #[derive(Debug, Clone, Default)]
 struct RemoteUserScanResult {
     users: Vec<Value>,
+    warnings: Vec<Value>,
+}
+
+#[derive(Debug, Clone, Default)]
+struct RemoteMemberScanResult {
+    members: Vec<Value>,
     warnings: Vec<Value>,
 }
 
@@ -343,7 +348,7 @@ fn paginate(items: &[Value], page_size: u32, page_token: Option<&String>) -> (Ve
 }
 
 fn extract_next_page_token(payload: &Value) -> Option<String> {
-    payload
+    let token = payload
         .get("page_token")
         .and_then(|v| v.as_str())
         .map(|s| s.to_string())
@@ -352,7 +357,15 @@ fn extract_next_page_token(payload: &Value) -> Option<String> {
                 .get("next_page_token")
                 .and_then(|v| v.as_str())
                 .map(|s| s.to_string())
-        })
+        });
+    token.and_then(|s| {
+        let t = s.trim().to_string();
+        if t.is_empty() {
+            None
+        } else {
+            Some(t)
+        }
+    })
 }
 
 fn extract_roots(scope_payload: &Value) -> Vec<String> {
@@ -393,10 +406,28 @@ fn user_obj_from_member(item: &Value) -> Option<Value> {
     if let Some(v) = item.get("user") {
         return Some(v.clone());
     }
+    if let Some(v) = item.get("user_info") {
+        let mut user = v.clone();
+        if user.get("id").and_then(|x| x.as_str()).unwrap_or_default().is_empty() {
+            if let Some(uid) = item.get("user_id").and_then(|x| x.as_str()) {
+                user["id"] = Value::String(uid.to_string());
+            }
+        }
+        return Some(user);
+    }
     if item.is_object() {
         return Some(item.clone());
     }
     None
+}
+
+fn normalize_member_item(mut item: Value) -> Value {
+    if item.get("user").is_none() {
+        if let Some(v) = item.get("user_info") {
+            item["user"] = v.clone();
+        }
+    }
+    item
 }
 
 fn extract_user_dept_ids(user: &Value) -> Vec<String> {
@@ -484,8 +515,8 @@ fn enrich_member_with_user(
             "dept_id": did
         });
     }
-    if member.get("user").is_some() {
-        return member.clone();
+    if member.get("user").is_some() || member.get("user_info").is_some() {
+        return normalize_member_item(member.clone());
     }
     if !uid.is_empty() {
         if let Some(user) = cache.users_by_id.get(&uid) {
@@ -511,9 +542,34 @@ fn normalize_status_set(raw: &str) -> HashSet<String> {
         .collect()
 }
 
+fn normalize_status_list(raw: &str) -> Vec<String> {
+    let mut out = Vec::<String>::new();
+    for s in raw.split(',').map(|x| x.trim().to_ascii_lowercase()).filter(|x| !x.is_empty()) {
+        if USER_LIST_STATUSES.contains(&s.as_str()) && !out.contains(&s) {
+            out.push(s);
+        }
+    }
+    if out.is_empty() {
+        out = USER_LIST_STATUSES.iter().map(|s| s.to_string()).collect();
+    }
+    out
+}
+
+fn member_dedupe_key(item: &Value) -> String {
+    let uid = user_id_from_member(item).unwrap_or_default();
+    let st = member_status(item);
+    let did = item
+        .get("dept_id")
+        .and_then(|v| v.as_str())
+        .unwrap_or_default()
+        .to_string();
+    format!("{did}|{uid}|{st}")
+}
+
 fn member_status(item: &Value) -> String {
     value_as_str(item, "status")
         .or_else(|| item.get("user").and_then(|u| value_as_str(u, "status")))
+        .or_else(|| item.get("user_info").and_then(|u| value_as_str(u, "status")))
         .unwrap_or_else(|| "active".to_string())
         .to_ascii_lowercase()
 }
@@ -525,6 +581,7 @@ fn user_match_keyword(user: &Value, keyword: &str) -> bool {
     let kw_lower = keyword.to_ascii_lowercase();
     let mut fields = vec![
         "name",
+        "user_name",
         "nickname",
         "email",
         "mobile",
@@ -756,6 +813,7 @@ async fn build_org_cache(
     let mut dept_map: HashMap<String, Value> = HashMap::new();
     let mut members_by_dept: HashMap<String, Vec<Value>> = HashMap::new();
     let mut users_by_id: HashMap<String, Value> = HashMap::new();
+    let mut member_scan_warnings: Vec<Value> = Vec::new();
 
     dept_map.insert(
         "root".to_string(),
@@ -839,82 +897,32 @@ async fn build_org_cache(
             }
         }
 
-        // members with pagination
+        // 部门成员必须按 status 单值分别请求并合并，不能传 "a,b,c"（OpenAPI 定义为 array[string] 重复参数）。
         let mut dept_members: Vec<Value> = Vec::new();
-        let mut member_page_token: Option<String> = None;
-        let mut member_pages = 0u32;
-        let mut member_empty_streak = 0u32;
-        loop {
-            member_pages += 1;
-            if member_pages > SYNC_MAX_MEMBER_PAGES_PER_DEPT {
-                break;
-            }
-            let mut q_member = HashMap::new();
-            q_member.insert("status".to_string(), DEFAULT_MEMBER_STATUS.to_string());
-            q_member.insert("page_size".to_string(), "50".to_string());
-            q_member.insert("recursive".to_string(), "false".to_string());
-            q_member.insert("with_user_detail".to_string(), "true".to_string());
-            if let Some(tk) = &member_page_token {
-                q_member.insert("page_token".to_string(), tk.clone());
-            }
-            let members_resp = execute(
-                "GET",
-                &format!("/v7/depts/{dept_id}/members"),
-                q_member,
-                None,
-                auth,
-                false,
-                retry,
-            )
-            .await;
-            let Ok(members_resp) = members_resp else {
-                break;
-            };
-            if !api_ok(&members_resp) {
-                break;
-            }
-            let payload = api_payload(&members_resp);
-            let items = payload
-                .get("items")
-                .and_then(|v| v.as_array())
-                .cloned()
-                .unwrap_or_default();
-            if items.is_empty() {
-                member_empty_streak += 1;
-            } else {
-                member_empty_streak = 0;
-            }
-            for it in items.clone() {
-                if let Some(uid) = user_id_from_member(&it) {
-                    if let Some(uobj) = user_obj_from_member(&it) {
-                        users_by_id.entry(uid).or_insert(uobj);
-                    }
+        let statuses = normalize_status_list(DEFAULT_MEMBER_STATUS);
+        let mut member_scan = fetch_dept_members_remote(
+            auth,
+            false,
+            retry,
+            &dept_id,
+            false,
+            true,
+            &statuses,
+        )
+        .await?;
+        if !member_scan.warnings.is_empty() {
+            member_scan_warnings.append(&mut member_scan.warnings);
+        }
+        for it in member_scan.members {
+            if let Some(uid) = user_id_from_member(&it) {
+                if let Some(uobj) = user_obj_from_member(&it) {
+                    users_by_id.entry(uid).or_insert(uobj);
                 }
             }
-            dept_members.extend(items);
-            let next_member_token = extract_next_page_token(&payload);
-            if next_member_token.is_some() && next_member_token == member_page_token {
-                break;
-            }
-            if member_empty_streak >= 2 && next_member_token.is_some() {
-                break;
-            }
-            member_page_token = next_member_token;
-            if member_page_token.is_none() {
-                break;
-            }
+            dept_members.push(it);
         }
         if !dept_members.is_empty() {
             members_by_dept.insert(dept_id.clone(), dept_members);
-        }
-    }
-
-    // 强制补齐用户明细：即使部门成员接口未返回 user 详情，也通过全量用户扫描填充 users_by_id。
-    let scan = fetch_all_users_remote(auth, false, retry).await?;
-    for u in scan.users {
-        let uid = value_as_str(&u, "id").unwrap_or_else(|| serde_json::to_string(&u).unwrap_or_default());
-        if !uid.is_empty() {
-            users_by_id.insert(uid, u);
         }
     }
     merge_users_into_member_index(&users_by_id, &mut members_by_dept);
@@ -937,7 +945,7 @@ async fn build_org_cache(
         depts,
         members_by_dept,
         users_by_id,
-        user_scan_warnings: scan.warnings,
+        user_scan_warnings: member_scan_warnings,
     })
 }
 
@@ -1092,27 +1100,35 @@ async fn get_members(s: &ArgMatches) -> Result<Value, WpsError> {
         })));
     }
 
-    let mut q = HashMap::new();
-    q.insert("status".to_string(), status_raw);
-    q.insert("page_size".to_string(), page_size.to_string());
-    q.insert("recursive".to_string(), if recursive { "true" } else { "false" }.to_string());
-    q.insert(
-        "with_user_detail".to_string(),
-        if with_user_detail { "true" } else { "false" }.to_string(),
-    );
-    if let Some(v) = page_token {
-        q.insert("page_token".to_string(), v.clone());
-    }
-    execute(
-        "GET",
-        &format!("/v7/depts/{dept_id}/members"),
-        q,
-        None,
+    let statuses = normalize_status_list(&status_raw);
+    let scan = fetch_dept_members_remote(
         &auth,
         dry,
         retry,
+        dept_id,
+        recursive,
+        with_user_detail,
+        &statuses,
     )
-    .await
+    .await?;
+    let mut items = scan.members;
+    items.sort_by(|a, b| {
+        let ua = user_id_from_member(a).unwrap_or_default();
+        let ub = user_id_from_member(b).unwrap_or_default();
+        ua.cmp(&ub)
+    });
+    let (page_items, next_token) = paginate(&items, page_size, page_token);
+    Ok(ok_data(serde_json::json!({
+        "items": page_items,
+        "page_token": next_token,
+        "has_more": next_token.is_some(),
+        "meta": {
+            "source": "remote_members_scan",
+            "dept_id": dept_id,
+            "statuses": statuses,
+            "warnings": scan.warnings
+        }
+    })))
 }
 
 async fn get_user(s: &ArgMatches) -> Result<Value, WpsError> {
@@ -1154,8 +1170,16 @@ async fn get_user(s: &ArgMatches) -> Result<Value, WpsError> {
 fn sorted_cache_users(cache: &OrgCache) -> Vec<Value> {
     let mut users = cache.users_by_id.values().cloned().collect::<Vec<_>>();
     users.sort_by(|a, b| {
-        let na = a.get("name").and_then(|v| v.as_str()).unwrap_or_default();
-        let nb = b.get("name").and_then(|v| v.as_str()).unwrap_or_default();
+        let na = a
+            .get("name")
+            .or_else(|| a.get("user_name"))
+            .and_then(|v| v.as_str())
+            .unwrap_or_default();
+        let nb = b
+            .get("name")
+            .or_else(|| b.get("user_name"))
+            .and_then(|v| v.as_str())
+            .unwrap_or_default();
         if na == nb {
             let ia = a.get("id").and_then(|v| v.as_str()).unwrap_or_default();
             let ib = b.get("id").and_then(|v| v.as_str()).unwrap_or_default();
@@ -1165,6 +1189,127 @@ fn sorted_cache_users(cache: &OrgCache) -> Vec<Value> {
         }
     });
     users
+}
+
+async fn fetch_dept_members_remote(
+    auth: &str,
+    dry: bool,
+    retry: u32,
+    dept_id: &str,
+    recursive: bool,
+    with_user_detail: bool,
+    statuses: &[String],
+) -> Result<RemoteMemberScanResult, WpsError> {
+    let mut result = RemoteMemberScanResult::default();
+    let mut seen = HashSet::<String>::new();
+    for status in statuses {
+        let mut token: Option<String> = None;
+        let mut empty_page_streak = 0u32;
+        let mut rounds = 0u32;
+        loop {
+            rounds += 1;
+            if rounds > REMOTE_SCAN_MAX_PAGES_PER_STATUS {
+                result.warnings.push(serde_json::json!({
+                    "dept_id": dept_id,
+                    "status": status,
+                    "kind": "page_guard_break",
+                    "message": format!("扫描页数超过上限({REMOTE_SCAN_MAX_PAGES_PER_STATUS})，提前结束该状态扫描")
+                }));
+                break;
+            }
+            let mut q = HashMap::new();
+            q.insert("status".to_string(), status.to_string());
+            q.insert("page_size".to_string(), "50".to_string());
+            q.insert("recursive".to_string(), if recursive { "true" } else { "false" }.to_string());
+            q.insert(
+                "with_user_detail".to_string(),
+                if with_user_detail { "true" } else { "false" }.to_string(),
+            );
+            if let Some(tk) = &token {
+                q.insert("page_token".to_string(), tk.clone());
+            }
+            let resp = match execute(
+                "GET",
+                &format!("/v7/depts/{dept_id}/members"),
+                q,
+                None,
+                auth,
+                dry,
+                retry,
+            )
+            .await
+            {
+                Ok(v) => v,
+                Err(e) => {
+                    result.warnings.push(serde_json::json!({
+                        "dept_id": dept_id,
+                        "status": status,
+                        "page_token": token,
+                        "kind": "network_error",
+                        "message": e.to_string()
+                    }));
+                    break;
+                }
+            };
+            if !api_ok(&resp) {
+                result.warnings.push(serde_json::json!({
+                    "dept_id": dept_id,
+                    "status": status,
+                    "page_token": token,
+                    "kind": "api_not_ok",
+                    "response": resp
+                }));
+                break;
+            }
+            let payload = api_payload(&resp);
+            let items = payload
+                .get("items")
+                .and_then(|v| v.as_array())
+                .cloned()
+                .unwrap_or_default();
+            if items.is_empty() {
+                empty_page_streak += 1;
+            } else {
+                empty_page_streak = 0;
+            }
+            for mut m in items {
+                if m.get("dept_id").and_then(|v| v.as_str()).unwrap_or_default().is_empty() {
+                    m["dept_id"] = Value::String(dept_id.to_string());
+                }
+                m = normalize_member_item(m);
+                let key = member_dedupe_key(&m);
+                if !key.is_empty() && seen.insert(key) {
+                    result.members.push(m);
+                }
+            }
+            let next_token = extract_next_page_token(&payload);
+            if next_token.is_some() && next_token == token {
+                result.warnings.push(serde_json::json!({
+                    "dept_id": dept_id,
+                    "status": status,
+                    "kind": "stagnant_page_token",
+                    "page_token": token,
+                    "message": "分页游标未推进，提前结束该状态扫描"
+                }));
+                break;
+            }
+            if empty_page_streak >= 2 && next_token.is_some() {
+                result.warnings.push(serde_json::json!({
+                    "dept_id": dept_id,
+                    "status": status,
+                    "kind": "consecutive_empty_pages",
+                    "page_token": next_token,
+                    "message": "连续空页，提前结束该状态扫描"
+                }));
+                break;
+            }
+            token = next_token;
+            if token.is_none() {
+                break;
+            }
+        }
+    }
+    Ok(result)
 }
 
 async fn fetch_all_users_remote(

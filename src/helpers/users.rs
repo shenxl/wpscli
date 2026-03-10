@@ -16,6 +16,8 @@ const DEFAULT_CACHE_TTL_SECONDS: u64 = 60 * 60 * 6;
 const DEFAULT_QUERY_MAX_DEPTS: u32 = 500;
 const USER_LIST_STATUSES: [&str; 3] = ["active", "notactive", "disabled"];
 const REMOTE_SCAN_MAX_PAGES_PER_STATUS: u32 = 80;
+const USERS_REQUIRED_DELEGATED_SCOPES: [&str; 2] = ["kso.contact.read", "kso.contact.readwrite"];
+const USERS_REQUIRED_APP_ROLE_SCOPES: [&str; 2] = ["kso.contact.read", "kso.contact.readwrite"];
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 struct OrgCache {
@@ -24,6 +26,7 @@ struct OrgCache {
     ttl_seconds: u64,
     scope_mode: String,
     scope_error: Option<String>,
+    scope_guidance: Option<Value>,
     roots: Vec<String>,
     depts: Vec<Value>,
     members_by_dept: HashMap<String, Vec<Value>>,
@@ -487,9 +490,146 @@ fn cache_meta(cache: &OrgCache, path: &PathBuf) -> Value {
         "cache_ttl_seconds": cache.ttl_seconds,
         "scope_mode": cache.scope_mode,
         "scope_error": cache.scope_error,
+        "scope_guidance": cache.scope_guidance,
         "cache_age_seconds": now_ts().saturating_sub(cache.generated_ts),
         "dept_count": cache.depts.len(),
         "user_count": cache.users_by_id.len()
+    })
+}
+
+fn candidate_scope_catalog_paths() -> Vec<PathBuf> {
+    let mut paths = Vec::new();
+    if let Ok(v) = std::env::var("WPSCLI_SCOPE_CATALOG_PATH") {
+        if !v.trim().is_empty() {
+            paths.push(PathBuf::from(v));
+        }
+    }
+    if let Ok(cwd) = std::env::current_dir() {
+        paths.push(cwd.join("mock").join("scope").join("data.json"));
+        paths.push(cwd.join("wps-cli").join("mock").join("scope").join("data.json"));
+    }
+    // compile-time project path fallback (for local development / install from this repo)
+    paths.push(PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("mock").join("scope").join("data.json"));
+    paths
+}
+
+fn load_scope_catalog() -> (Option<PathBuf>, Vec<Value>) {
+    for path in candidate_scope_catalog_paths() {
+        if !path.exists() {
+            continue;
+        }
+        let Ok(raw) = std::fs::read_to_string(&path) else {
+            continue;
+        };
+        let Ok(v) = serde_json::from_str::<Value>(&raw) else {
+            continue;
+        };
+        let items = v
+            .get("data")
+            .and_then(|d| d.get("items"))
+            .and_then(|arr| arr.as_array())
+            .cloned()
+            .unwrap_or_default();
+        return (Some(path), items);
+    }
+    (None, vec![])
+}
+
+fn available_scopes_by_type(items: &[Value], scope_type: &str) -> HashSet<String> {
+    let mut out = HashSet::new();
+    for it in items {
+        let tp = it.get("scope_type").and_then(|v| v.as_str()).unwrap_or_default();
+        if tp != scope_type {
+            continue;
+        }
+        let status_ok = it
+            .get("status")
+            .and_then(|v| v.as_str())
+            .map(|s| s.eq_ignore_ascii_case("approved"))
+            .unwrap_or(true);
+        let available = it.get("available").and_then(|v| v.as_bool()).unwrap_or(true);
+        if !status_ok || !available {
+            continue;
+        }
+        if let Some(name) = it.get("scope_name").and_then(|v| v.as_str()) {
+            out.insert(name.to_string());
+        }
+    }
+    out
+}
+
+fn scope_guidance_for_permissions_scope_error(auth: &str, scope_error: &str) -> Value {
+    let (catalog_path, items) = load_scope_catalog();
+    let delegated_set = available_scopes_by_type(&items, "delegated");
+    let app_role_set = available_scopes_by_type(&items, "app_role");
+
+    let required_delegated = USERS_REQUIRED_DELEGATED_SCOPES
+        .iter()
+        .map(|s| s.to_string())
+        .collect::<Vec<_>>();
+    let required_app_role = USERS_REQUIRED_APP_ROLE_SCOPES
+        .iter()
+        .map(|s| s.to_string())
+        .collect::<Vec<_>>();
+
+    let recommended_delegated = required_delegated
+        .iter()
+        .filter(|s| delegated_set.contains(*s))
+        .cloned()
+        .collect::<Vec<_>>();
+    let missing_delegated = required_delegated
+        .iter()
+        .filter(|s| !delegated_set.contains(*s))
+        .cloned()
+        .collect::<Vec<_>>();
+    let recommended_app_role = required_app_role
+        .iter()
+        .filter(|s| app_role_set.contains(*s))
+        .cloned()
+        .collect::<Vec<_>>();
+    let missing_app_role = required_app_role
+        .iter()
+        .filter(|s| !app_role_set.contains(*s))
+        .cloned()
+        .collect::<Vec<_>>();
+
+    let reauth_scopes = if recommended_delegated.is_empty() {
+        required_delegated.clone()
+    } else {
+        recommended_delegated.clone()
+    };
+    let reauth_scope_arg = reauth_scopes.join(",");
+
+    let mode_tip = if auth == "user" {
+        "当前为 user 授权，优先执行 reauth。"
+    } else {
+        "当前为 app 授权，建议先在应用权限中心补齐 app_role，再按需切 user token 做 reauth。"
+    };
+
+    serde_json::json!({
+        "reason": "permissions_scope_error",
+        "error": scope_error,
+        "mode_tip": mode_tip,
+        "catalog_path": catalog_path.map(|p| p.display().to_string()),
+        "required": {
+            "delegated": required_delegated,
+            "app_role": required_app_role
+        },
+        "available": {
+            "delegated": recommended_delegated,
+            "app_role": recommended_app_role
+        },
+        "missing": {
+            "delegated": missing_delegated,
+            "app_role": missing_app_role
+        },
+        "actions": {
+            "reauth_local": format!("wpscli auth login --user --mode local --scope {reauth_scope_arg}"),
+            "reauth_remote": format!("wpscli auth login --user --mode remote --scope {reauth_scope_arg}"),
+            "verify_auth": "wpscli auth status",
+            "refresh_cache": "wpscli users sync --user-token --refresh-cache",
+            "app_scope_apply_hint": "请在应用权限管理中确保 app_role 至少包含 kso.contact.read 或 kso.contact.readwrite"
+        }
     })
 }
 
@@ -501,7 +641,7 @@ async fn build_org_cache(
 ) -> Result<OrgCache, WpsError> {
     let mut q = HashMap::new();
     q.insert("scopes".to_string(), "org".to_string());
-    let (roots, scope_mode, scope_error) = match execute(
+    let (roots, scope_mode, scope_error, scope_guidance) = match execute(
         "GET",
         "/v7/contacts/permissions_scope",
         q,
@@ -516,16 +656,31 @@ async fn build_org_cache(
             extract_roots(&api_payload(&scope_resp)),
             "permissions_scope".to_string(),
             None,
+            None,
         ),
         Ok(scope_resp) => (
             vec!["root".to_string()],
             "fallback_root".to_string(),
-            Some(format!("permissions_scope_not_ok: {scope_resp}")),
+            {
+                let err = format!("permissions_scope_not_ok: {scope_resp}");
+                Some(err)
+            },
+            {
+                let err = format!("permissions_scope_not_ok: {scope_resp}");
+                Some(scope_guidance_for_permissions_scope_error(auth, &err))
+            },
         ),
         Err(e) => (
             vec!["root".to_string()],
             "fallback_root".to_string(),
-            Some(e.to_string()),
+            {
+                let err = e.to_string();
+                Some(err)
+            },
+            {
+                let err = e.to_string();
+                Some(scope_guidance_for_permissions_scope_error(auth, &err))
+            },
         ),
     };
 
@@ -664,6 +819,7 @@ async fn build_org_cache(
         ttl_seconds,
         scope_mode,
         scope_error,
+        scope_guidance,
         roots,
         depts,
         members_by_dept,
@@ -1127,6 +1283,7 @@ async fn sync_cache(s: &ArgMatches) -> Result<Value, WpsError> {
         "cache_ttl_seconds": cache.ttl_seconds,
         "scope_mode": cache.scope_mode,
         "scope_error": cache.scope_error,
+        "scope_guidance": cache.scope_guidance,
         "roots": cache.roots,
         "dept_count": cache.depts.len(),
         "user_count": cache.users_by_id.len(),
@@ -1156,6 +1313,7 @@ async fn cache_status(s: &ArgMatches) -> Result<Value, WpsError> {
             "cache_ttl_seconds": cache.ttl_seconds,
             "scope_mode": cache.scope_mode,
             "scope_error": cache.scope_error,
+            "scope_guidance": cache.scope_guidance,
             "fresh_by_default_ttl": cache_is_fresh(&cache, cache.ttl_seconds),
             "dept_count": cache.depts.len(),
             "user_count": cache.users_by_id.len(),

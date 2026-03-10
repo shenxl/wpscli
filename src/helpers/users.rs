@@ -7,6 +7,7 @@ use serde_json::Value;
 
 use crate::error::WpsError;
 use crate::executor;
+use crate::scope_catalog::{self, ScopeType};
 use crate::skill_runtime::SkillStateStore;
 
 const SKILL_NAME: &str = "wps-users";
@@ -16,6 +17,8 @@ const DEFAULT_CACHE_TTL_SECONDS: u64 = 60 * 60 * 6;
 const DEFAULT_QUERY_MAX_DEPTS: u32 = 500;
 const USER_LIST_STATUSES: [&str; 3] = ["active", "notactive", "disabled"];
 const REMOTE_SCAN_MAX_PAGES_PER_STATUS: u32 = 80;
+const SYNC_MAX_CHILD_PAGES_PER_DEPT: u32 = 60;
+const SYNC_MAX_MEMBER_PAGES_PER_DEPT: u32 = 60;
 const USERS_REQUIRED_DELEGATED_SCOPES: [&str; 2] = ["kso.contact.read", "kso.contact.readwrite"];
 const USERS_REQUIRED_APP_ROLE_SCOPES: [&str; 2] = ["kso.contact.read", "kso.contact.readwrite"];
 
@@ -44,10 +47,10 @@ pub fn command() -> Command {
         .about("用户与组织架构助手（wps-users）")
         .after_help(
             "示例：\n  \
-             wpscli users sync --user-token --max-depts 300\n  \
+             wpscli users sync --auth-type app --max-depts 300\n  \
              wpscli users cache-status\n  \
-             wpscli users find --name 张三 --user-token\n  \
-             wpscli users members --dept-id root --recursive true --user-token",
+             wpscli users find --name 张三 --auth-type app\n  \
+             wpscli users members --dept-id root --recursive true --auth-type app",
         )
         .subcommand(with_common_opts(Command::new("scope").about("查看通讯录权限范围（org）")))
         .subcommand(
@@ -209,6 +212,15 @@ fn effective_auth_type(s: &ArgMatches) -> String {
             .cloned()
             .unwrap_or_else(|| "app".to_string())
     }
+}
+
+fn ensure_users_auth_type(auth: &str) -> Result<(), WpsError> {
+    if auth != "app" {
+        return Err(WpsError::Auth(
+            "users 助手命令仅支持 app token（组织通讯录接口）。请改用 `--auth-type app` 并移除 `--user-token`。".to_string(),
+        ));
+    }
+    Ok(())
 }
 
 fn api_payload(v: &Value) -> Value {
@@ -429,6 +441,21 @@ fn user_match_keyword(user: &Value, keyword: &str) -> bool {
 }
 
 fn dept_children(cache: &OrgCache, parent_id: &str) -> Vec<Value> {
+    if parent_id == "root" {
+        let mut roots = Vec::new();
+        for rid in &cache.roots {
+            if let Some(d) = cache
+                .depts
+                .iter()
+                .find(|d| d.get("id").and_then(|v| v.as_str()) == Some(rid.as_str()))
+            {
+                roots.push(d.clone());
+            } else {
+                roots.push(serde_json::json!({ "id": rid, "name": rid, "parent_id": "root" }));
+            }
+        }
+        return roots;
+    }
     cache
         .depts
         .iter()
@@ -450,6 +477,11 @@ fn collect_recursive_depts(cache: &OrgCache, start: &str) -> HashSet<String> {
     let mut out = HashSet::new();
     let mut q = VecDeque::new();
     q.push_back(start.to_string());
+    if start == "root" {
+        for rid in &cache.roots {
+            q.push_back(rid.clone());
+        }
+    }
     while let Some(cur) = q.pop_front() {
         if !out.insert(cur.clone()) {
             continue;
@@ -497,72 +529,7 @@ fn cache_meta(cache: &OrgCache, path: &PathBuf) -> Value {
     })
 }
 
-fn candidate_scope_catalog_paths() -> Vec<PathBuf> {
-    let mut paths = Vec::new();
-    if let Ok(v) = std::env::var("WPSCLI_SCOPE_CATALOG_PATH") {
-        if !v.trim().is_empty() {
-            paths.push(PathBuf::from(v));
-        }
-    }
-    if let Ok(cwd) = std::env::current_dir() {
-        paths.push(cwd.join("mock").join("scope").join("data.json"));
-        paths.push(cwd.join("wps-cli").join("mock").join("scope").join("data.json"));
-    }
-    // compile-time project path fallback (for local development / install from this repo)
-    paths.push(PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("mock").join("scope").join("data.json"));
-    paths
-}
-
-fn load_scope_catalog() -> (Option<PathBuf>, Vec<Value>) {
-    for path in candidate_scope_catalog_paths() {
-        if !path.exists() {
-            continue;
-        }
-        let Ok(raw) = std::fs::read_to_string(&path) else {
-            continue;
-        };
-        let Ok(v) = serde_json::from_str::<Value>(&raw) else {
-            continue;
-        };
-        let items = v
-            .get("data")
-            .and_then(|d| d.get("items"))
-            .and_then(|arr| arr.as_array())
-            .cloned()
-            .unwrap_or_default();
-        return (Some(path), items);
-    }
-    (None, vec![])
-}
-
-fn available_scopes_by_type(items: &[Value], scope_type: &str) -> HashSet<String> {
-    let mut out = HashSet::new();
-    for it in items {
-        let tp = it.get("scope_type").and_then(|v| v.as_str()).unwrap_or_default();
-        if tp != scope_type {
-            continue;
-        }
-        let status_ok = it
-            .get("status")
-            .and_then(|v| v.as_str())
-            .map(|s| s.eq_ignore_ascii_case("approved"))
-            .unwrap_or(true);
-        let available = it.get("available").and_then(|v| v.as_bool()).unwrap_or(true);
-        if !status_ok || !available {
-            continue;
-        }
-        if let Some(name) = it.get("scope_name").and_then(|v| v.as_str()) {
-            out.insert(name.to_string());
-        }
-    }
-    out
-}
-
 fn scope_guidance_for_permissions_scope_error(auth: &str, scope_error: &str) -> Value {
-    let (catalog_path, items) = load_scope_catalog();
-    let delegated_set = available_scopes_by_type(&items, "delegated");
-    let app_role_set = available_scopes_by_type(&items, "app_role");
-
     let required_delegated = USERS_REQUIRED_DELEGATED_SCOPES
         .iter()
         .map(|s| s.to_string())
@@ -572,26 +539,12 @@ fn scope_guidance_for_permissions_scope_error(auth: &str, scope_error: &str) -> 
         .map(|s| s.to_string())
         .collect::<Vec<_>>();
 
-    let recommended_delegated = required_delegated
-        .iter()
-        .filter(|s| delegated_set.contains(*s))
-        .cloned()
-        .collect::<Vec<_>>();
-    let missing_delegated = required_delegated
-        .iter()
-        .filter(|s| !delegated_set.contains(*s))
-        .cloned()
-        .collect::<Vec<_>>();
-    let recommended_app_role = required_app_role
-        .iter()
-        .filter(|s| app_role_set.contains(*s))
-        .cloned()
-        .collect::<Vec<_>>();
-    let missing_app_role = required_app_role
-        .iter()
-        .filter(|s| !app_role_set.contains(*s))
-        .cloned()
-        .collect::<Vec<_>>();
+    let delegated = scope_catalog::analyze_required(&required_delegated, ScopeType::Delegated);
+    let app_role = scope_catalog::analyze_required(&required_app_role, ScopeType::AppRole);
+    let recommended_delegated = delegated.available.clone();
+    let missing_delegated = delegated.missing.clone();
+    let recommended_app_role = app_role.available.clone();
+    let missing_app_role = app_role.missing.clone();
 
     let reauth_scopes = if recommended_delegated.is_empty() {
         required_delegated.clone()
@@ -610,7 +563,7 @@ fn scope_guidance_for_permissions_scope_error(auth: &str, scope_error: &str) -> 
         "reason": "permissions_scope_error",
         "error": scope_error,
         "mode_tip": mode_tip,
-        "catalog_path": catalog_path.map(|p| p.display().to_string()),
+        "catalog_source": delegated.source,
         "required": {
             "delegated": required_delegated,
             "app_role": required_app_role
@@ -627,7 +580,7 @@ fn scope_guidance_for_permissions_scope_error(auth: &str, scope_error: &str) -> 
             "reauth_local": format!("wpscli auth login --user --mode local --scope {reauth_scope_arg}"),
             "reauth_remote": format!("wpscli auth login --user --mode remote --scope {reauth_scope_arg}"),
             "verify_auth": "wpscli auth status",
-            "refresh_cache": "wpscli users sync --user-token --refresh-cache",
+            "refresh_cache": "wpscli users sync --auth-type app --refresh-cache",
             "app_scope_apply_hint": "请在应用权限管理中确保 app_role 至少包含 kso.contact.read 或 kso.contact.readwrite"
         }
     })
@@ -707,7 +660,13 @@ async fn build_org_cache(
 
         // children with pagination
         let mut child_page_token: Option<String> = None;
+        let mut child_pages = 0u32;
+        let mut child_empty_streak = 0u32;
         loop {
+            child_pages += 1;
+            if child_pages > SYNC_MAX_CHILD_PAGES_PER_DEPT {
+                break;
+            }
             let mut q_child = HashMap::new();
             q_child.insert("page_size".to_string(), "50".to_string());
             if let Some(tk) = &child_page_token {
@@ -735,6 +694,11 @@ async fn build_org_cache(
                 .and_then(|v| v.as_array())
                 .cloned()
                 .unwrap_or_default();
+            if items.is_empty() {
+                child_empty_streak += 1;
+            } else {
+                child_empty_streak = 0;
+            }
             for mut it in items {
                 let cid = it.get("id").and_then(|v| v.as_str()).unwrap_or_default().to_string();
                 if cid.is_empty() {
@@ -748,7 +712,14 @@ async fn build_org_cache(
                     queue.push_back(cid);
                 }
             }
-            child_page_token = extract_next_page_token(&payload);
+            let next_child_token = extract_next_page_token(&payload);
+            if next_child_token.is_some() && next_child_token == child_page_token {
+                break;
+            }
+            if child_empty_streak >= 2 && next_child_token.is_some() {
+                break;
+            }
+            child_page_token = next_child_token;
             if child_page_token.is_none() {
                 break;
             }
@@ -757,7 +728,13 @@ async fn build_org_cache(
         // members with pagination
         let mut dept_members: Vec<Value> = Vec::new();
         let mut member_page_token: Option<String> = None;
+        let mut member_pages = 0u32;
+        let mut member_empty_streak = 0u32;
         loop {
+            member_pages += 1;
+            if member_pages > SYNC_MAX_MEMBER_PAGES_PER_DEPT {
+                break;
+            }
             let mut q_member = HashMap::new();
             q_member.insert("status".to_string(), DEFAULT_MEMBER_STATUS.to_string());
             q_member.insert("page_size".to_string(), "50".to_string());
@@ -788,6 +765,11 @@ async fn build_org_cache(
                 .and_then(|v| v.as_array())
                 .cloned()
                 .unwrap_or_default();
+            if items.is_empty() {
+                member_empty_streak += 1;
+            } else {
+                member_empty_streak = 0;
+            }
             for it in items.clone() {
                 if let Some(uid) = user_id_from_member(&it) {
                     if let Some(uobj) = user_obj_from_member(&it) {
@@ -796,7 +778,14 @@ async fn build_org_cache(
                 }
             }
             dept_members.extend(items);
-            member_page_token = extract_next_page_token(&payload);
+            let next_member_token = extract_next_page_token(&payload);
+            if next_member_token.is_some() && next_member_token == member_page_token {
+                break;
+            }
+            if member_empty_streak >= 2 && next_member_token.is_some() {
+                break;
+            }
+            member_page_token = next_member_token;
             if member_page_token.is_none() {
                 break;
             }
@@ -867,6 +856,7 @@ async fn ensure_cache(
 
 async fn get_scope(s: &ArgMatches) -> Result<Value, WpsError> {
     let auth = effective_auth_type(s);
+    ensure_users_auth_type(&auth)?;
     let dry = s.get_flag("dry-run");
     let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
     let mut q = HashMap::new();
@@ -876,6 +866,7 @@ async fn get_scope(s: &ArgMatches) -> Result<Value, WpsError> {
 
 async fn get_depts(s: &ArgMatches) -> Result<Value, WpsError> {
     let auth = effective_auth_type(s);
+    ensure_users_auth_type(&auth)?;
     let dry = s.get_flag("dry-run");
     let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
     let dept_id = s.get_one::<String>("dept-id").expect("required");
@@ -918,6 +909,7 @@ async fn get_depts(s: &ArgMatches) -> Result<Value, WpsError> {
 
 async fn get_members(s: &ArgMatches) -> Result<Value, WpsError> {
     let auth = effective_auth_type(s);
+    ensure_users_auth_type(&auth)?;
     let dry = s.get_flag("dry-run");
     let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
     let dept_id = s.get_one::<String>("dept-id").expect("required");
@@ -1009,6 +1001,7 @@ async fn get_members(s: &ArgMatches) -> Result<Value, WpsError> {
 
 async fn get_user(s: &ArgMatches) -> Result<Value, WpsError> {
     let auth = effective_auth_type(s);
+    ensure_users_auth_type(&auth)?;
     let dry = s.get_flag("dry-run");
     let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
     let user_id = s.get_one::<String>("user-id").expect("required");
@@ -1162,6 +1155,7 @@ async fn fetch_all_users_remote(
 
 async fn list_users(s: &ArgMatches) -> Result<Value, WpsError> {
     let auth = effective_auth_type(s);
+    ensure_users_auth_type(&auth)?;
     let dry = s.get_flag("dry-run");
     let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
     let keyword = s.get_one::<String>("keyword").cloned().unwrap_or_default();
@@ -1208,6 +1202,7 @@ async fn list_users(s: &ArgMatches) -> Result<Value, WpsError> {
 
 async fn find_users(s: &ArgMatches) -> Result<Value, WpsError> {
     let auth = effective_auth_type(s);
+    ensure_users_auth_type(&auth)?;
     let dry = s.get_flag("dry-run");
     let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
     let name = s.get_one::<String>("name").expect("required").clone();
@@ -1254,6 +1249,7 @@ async fn find_users(s: &ArgMatches) -> Result<Value, WpsError> {
 
 async fn sync_cache(s: &ArgMatches) -> Result<Value, WpsError> {
     let auth = effective_auth_type(s);
+    ensure_users_auth_type(&auth)?;
     let dry = s.get_flag("dry-run");
     let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
     let max_depts = s.get_one::<u32>("max-depts").copied().unwrap_or(300);
@@ -1323,7 +1319,7 @@ async fn cache_status(s: &ArgMatches) -> Result<Value, WpsError> {
     Ok(ok_data(serde_json::json!({
         "exists": false,
         "cache_path": path.display().to_string(),
-        "hint": "执行 `wpscli users sync --user-token` 先构建缓存"
+        "hint": "执行 `wpscli users sync --auth-type app` 先构建缓存"
     })))
 }
 

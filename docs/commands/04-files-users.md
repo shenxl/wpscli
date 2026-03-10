@@ -66,8 +66,8 @@ Options:
   -h, --help  Print help
 
 示例：
-  wpscli users sync --user-token --max-depts 300
+  wpscli users sync --auth-type app --max-depts 300
   wpscli users cache-status
-  wpscli users find --name 张三 --user-token
-  wpscli users members --dept-id root --recursive true --user-token
+  wpscli users find --name 张三 --auth-type app
+  wpscli users members --dept-id root --recursive true --auth-type app
 ```

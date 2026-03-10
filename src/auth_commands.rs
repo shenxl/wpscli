@@ -653,7 +653,13 @@ fn run_auth_harden(m: &ArgMatches) -> Result<(), WpsError> {
     }
 
     let mut env_risks = Vec::new();
-    for k in ["WPS_CLI_AK", "WPS_CLI_SK", "WPS_CLI_TOKEN"] {
+    for k in [
+        "WPS_CLI_AK",
+        "WPS_CLI_SK",
+        "WPS_CLI_TOKEN",
+        "WPS_CLI_APP_TOKEN",
+        "WPS_CLI_USER_TOKEN",
+    ] {
         if std::env::var(k).ok().filter(|v| !v.is_empty()).is_some() {
             env_risks.push(k.to_string());
         }
@@ -672,7 +678,14 @@ fn run_auth_harden(m: &ArgMatches) -> Result<(), WpsError> {
     if env_file.exists() {
         let raw = std::fs::read_to_string(&env_file).unwrap_or_default();
         let mut hits = Vec::new();
-        for key in ["WPS_CLI_AK", "WPS_CLI_SK", "WPS_CLI_TOKEN", "refresh_token"] {
+        for key in [
+            "WPS_CLI_AK",
+            "WPS_CLI_SK",
+            "WPS_CLI_TOKEN",
+            "WPS_CLI_APP_TOKEN",
+            "WPS_CLI_USER_TOKEN",
+            "refresh_token",
+        ] {
             if raw.contains(key) {
                 hits.push(key.to_string());
             }

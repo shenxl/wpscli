@@ -31,4 +31,4 @@ metadata:
 - `sync` 会拉取部门树与成员并写入 `~/.config/wps/skills/wps-users/org_cache.json`
 - `find/list/depts/members/user` 默认优先使用缓存；缓存过期自动刷新（可用 `--cache-ttl-seconds` 控制）
 - 可用 `--no-cache` 强制远端查询，`--refresh-cache` 先刷新再查
-- 所有命令支持：`--auth-type app|user`、`--user-token`、`--dry-run`、`--retry`
+- 所有命令支持：`--auth-type app`、`--dry-run`、`--retry`

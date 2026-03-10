@@ -343,9 +343,31 @@ pub async fn refresh_user_token(
 }
 
 pub async fn get_access_token(auth_type: AuthType) -> Result<String, WpsError> {
-    if let Ok(token) = std::env::var("WPS_CLI_TOKEN") {
-        if !token.trim().is_empty() {
-            return Ok(token);
+    fn env_non_empty(name: &str) -> Option<String> {
+        std::env::var(name).ok().and_then(|v| {
+            if v.trim().is_empty() {
+                None
+            } else {
+                Some(v)
+            }
+        })
+    }
+
+    match auth_type {
+        // app mode must not be polluted by generic/user token env
+        AuthType::App => {
+            if let Some(token) = env_non_empty("WPS_CLI_APP_TOKEN") {
+                return Ok(token);
+            }
+        }
+        AuthType::User => {
+            if let Some(token) = env_non_empty("WPS_CLI_USER_TOKEN") {
+                return Ok(token);
+            }
+            // backward compatibility: generic token is treated as user token only
+            if let Some(token) = env_non_empty("WPS_CLI_TOKEN") {
+                return Ok(token);
+            }
         }
     }
 

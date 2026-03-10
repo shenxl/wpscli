@@ -1,0 +1,632 @@
+{
+  "version": "1",
+  "source": "curated_from_mock_scope_data",
+  "generated_at": "2026-03-10T04:09:16Z",
+  "total_scopes": 104,
+  "scopes": [
+    {
+      "scope_name": "kso.agent.readwrite",
+      "display_name": "365Agent能力",
+      "app_role": false,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.aidocs.readwrite",
+      "display_name": "查询和管理智能文档库",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.aidocs_extract.readwrite",
+      "display_name": "提取智能文档库数据",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.aippt.read",
+      "display_name": "查询AIPPT资源",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.aippt.readwrite",
+      "display_name": "AIPPT资源使用及生成",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.airpage.read",
+      "display_name": "查询智能文档",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.airpage.readwrite",
+      "display_name": "管理智能文档",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.airsheet.read",
+      "display_name": "查询智能表格",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.airsheet.readwrite",
+      "display_name": "查询和管理智能表格",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.app.read",
+      "display_name": "查询应用信息",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.app.readwrite",
+      "display_name": "管理应用信息",
+      "app_role": false,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.app_admin.read",
+      "display_name": "查询应用管理信息",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.app_version.read",
+      "display_name": "查询应用详情",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.app_version.readwrite",
+      "display_name": "查询和管理应用版本信息",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.apps.read",
+      "display_name": "读取应用信息权限",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.apps.readwrite",
+      "display_name": "修改应用信息权限",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.automation.read",
+      "display_name": "查询自动化流程",
+      "app_role": false,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.automation.readwrite",
+      "display_name": "查询和管理自动化流程",
+      "app_role": false,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.calendar.read",
+      "display_name": "查询日历",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.calendar.readwrite",
+      "display_name": "查询和管理日历",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.calendar_events.read",
+      "display_name": "查询日程信息",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.calendar_events.readwrite",
+      "display_name": "查询和管理日程信息",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.chat.read",
+      "display_name": "查询会话",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.chat.readwrite",
+      "display_name": "查询和管理会话",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.chat_bookmark.read",
+      "display_name": "查询会话书签",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.chat_bookmark.readwrite",
+      "display_name": "查询和管理会话书签",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.chat_dept.readwrite",
+      "display_name": "查询和管理部门群",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.chat_message.readwrite",
+      "display_name": "查询和管理会话消息",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.component.agentspace_chat",
+      "display_name": "Agentspace智能问答组件",
+      "app_role": false,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.contact.read",
+      "display_name": "查询通讯录信息",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.contact.readwrite",
+      "display_name": "查询和管理通讯录信息",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.coop_files.readwrite",
+      "display_name": "协作文件管理能力",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.dbsheet.read",
+      "display_name": "查询多维表格",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.dbsheet.readwrite",
+      "display_name": "查询和管理多维表格",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.deleted_file.read",
+      "display_name": "查询回收站",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.deleted_file.readwrite",
+      "display_name": "查询和管理回收站",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.devhub_app.readwrite",
+      "display_name": "智能体应用管理",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.devhub_chat.readwrite",
+      "display_name": "智能体对话管理",
+      "app_role": false,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.devhub_session.readwrite",
+      "display_name": "智能体会话管理",
+      "app_role": false,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.doclib.read",
+      "display_name": "查询文档库",
+      "app_role": false,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.doclib.readwrite",
+      "display_name": "KSO-查询和管理文档库",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.docqa.readwrite",
+      "display_name": "查询和管理文档问答",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.documents.readwrite",
+      "display_name": "通用文档管理能力",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.drive.readwrite",
+      "display_name": "KSO-管理驱动盘",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.drive_role.readwrite",
+      "display_name": "KSO-查询和管理文件权限角色",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.event_egress_ip.read",
+      "display_name": "查询事件出网IP地址",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.file.read",
+      "display_name": "查询文件",
+      "app_role": false,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.file.readwrite",
+      "display_name": "查询和管理文件",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.file_link.readwrite",
+      "display_name": "查询和管理文件分享",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.file_permission.readwrite",
+      "display_name": "KSO-查询和管理文件权限",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.file_search.readwrite",
+      "display_name": "KSO-搜索文件",
+      "app_role": false,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.file_version.readwrite",
+      "display_name": "KSO-查询和管理文档版本",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.group.read",
+      "display_name": "查询用户组",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.group.readwrite",
+      "display_name": "查询和管理用户组",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.mail.read",
+      "display_name": "查询邮件",
+      "app_role": false,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.mail.readwrite",
+      "display_name": "查询和管理邮件",
+      "app_role": false,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.mail_contact.read",
+      "display_name": "查询邮箱联系人",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.mail_contact.readwrite",
+      "display_name": "查询和管理邮箱联系人",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.mail_group.read",
+      "display_name": "查询邮件组信息",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.mail_group.readwrite",
+      "display_name": "查询和管理邮件组",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.mail_migration.read",
+      "display_name": "查询邮箱搬家",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.mail_migration.readwrite",
+      "display_name": "查询和管理邮箱搬家",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.mailbox.read",
+      "display_name": "查询企业邮箱",
+      "app_role": false,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.mcp_airpage.readwrite",
+      "display_name": "MCP智能文档管理",
+      "app_role": false,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.mcp_calendar.readwrite",
+      "display_name": "MCP日程管理",
+      "app_role": false,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.mcp_dbsheet.readwrite",
+      "display_name": "MCP多维表格管理",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.mcp_mail.readwrite",
+      "display_name": "MCP邮箱管理",
+      "app_role": false,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.mcp_meeting.readwrite",
+      "display_name": "MCP会议管理",
+      "app_role": false,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.mcp_message.readwrite",
+      "display_name": "MCP协作消息与会话管理",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.mcp_scenario.readwrite",
+      "display_name": "MCP场景化服务管理",
+      "app_role": false,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.mcp_todo.readwrite",
+      "display_name": "MCP个人待办管理",
+      "app_role": false,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.mcp_yundoc.readwrite",
+      "display_name": "MCP云文档管理",
+      "app_role": false,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.meeting.read",
+      "display_name": "查询会议",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.meeting.readwrite",
+      "display_name": "查询和管理会议",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.meeting_minutes.read",
+      "display_name": "查询纪要",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.meeting_minutes.readwrite",
+      "display_name": "查询和管理纪要",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.meeting_minutes_content.read",
+      "display_name": "查询会议纪要内容信息",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.meeting_recording.read",
+      "display_name": "查询会议录制信息",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.meeting_recording.readwrite",
+      "display_name": "查询和管理会议录制信息",
+      "app_role": false,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.meeting_recording_content.read",
+      "display_name": "查询会议录制内容信息",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.meeting_rooms.read",
+      "display_name": "查询会议室",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.meeting_rooms.readwrite",
+      "display_name": "查询和管理会议室",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.public_mailbox.read",
+      "display_name": "查询公共邮箱",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.public_mailbox.readwrite",
+      "display_name": "查询和管理公共邮箱",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.sheets.read",
+      "display_name": "查询传统表格",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.sheets.readwrite",
+      "display_name": "查询和管理传统表格",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.task.read",
+      "display_name": "查询待办任务",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.task.readwrite",
+      "display_name": "查询和管理待办任务",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.title.read",
+      "display_name": "查询职务信息",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.user_base.read",
+      "display_name": "查询用户基础信息",
+      "app_role": false,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.user_current_id.read",
+      "display_name": "查询用户ID信息",
+      "app_role": false,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.user_custom_attr.readwrite",
+      "display_name": "查询和管理用户自定义字段",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.user_email.read",
+      "display_name": "查询用户的邮箱",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.user_gender.read",
+      "display_name": "查询用户的性别",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.user_mailbox.read",
+      "display_name": "查询用户邮箱信息",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.user_mailbox.readwrite",
+      "display_name": "查询和管理用户邮箱信息",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.user_phone.read",
+      "display_name": "查询用户的手机号",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.wiki.readwrite",
+      "display_name": "查询和管理知识库",
+      "app_role": false,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.workbench_block.readwrite",
+      "display_name": "查询和管理工作台小组件数据",
+      "app_role": true,
+      "delegated": false
+    },
+    {
+      "scope_name": "kso.workflow_approval_define.read",
+      "display_name": "查询审批定义",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.workflow_approval_define.readwrite",
+      "display_name": "查询和管理审批定义",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.workflow_approval_instance.read",
+      "display_name": "查询审批实例",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.workflow_approval_instance.readwrite",
+      "display_name": "查询和管理审批实例",
+      "app_role": true,
+      "delegated": true
+    },
+    {
+      "scope_name": "kso.workflow_approval_task.readwrite",
+      "display_name": "查询和管理审批任务",
+      "app_role": true,
+      "delegated": true
+    }
+  ]
+}

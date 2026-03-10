@@ -10,6 +10,7 @@ mod helpers;
 mod link_resolver;
 mod schema;
 mod secure_store;
+mod scope_catalog;
 mod skill_runtime;
 mod skill_gen;
 mod services;

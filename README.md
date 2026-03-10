@@ -166,6 +166,7 @@ wps-cli/
   - `skills/wps-doc-rw/SKILL.md`
   - `skills/wps-app-files/SKILL.md`
   - `skills/wps-users/SKILL.md`
+  - `skills/wps-skill-builder/SKILL.md`（基于 wpscli schema 生成 Claude 可复用技能包）
 
 ---
 

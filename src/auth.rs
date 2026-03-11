@@ -1,6 +1,6 @@
 use std::io::{Read, Write};
 use std::net::TcpListener;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -20,12 +20,15 @@ type HmacSha1 = Hmac<Sha1>;
 pub enum AuthType {
     App,
     User,
+    Cookie,
 }
 
 impl AuthType {
     pub fn parse(v: &str) -> Self {
         if v.eq_ignore_ascii_case("user") {
             Self::User
+        } else if v.eq_ignore_ascii_case("cookie") {
+            Self::Cookie
         } else {
             Self::App
         }
@@ -87,6 +90,120 @@ pub fn legacy_credentials_path() -> PathBuf {
 
 pub fn legacy_token_cache_path() -> PathBuf {
     config_dir().join("token_cache.json")
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+struct CookiePayload {
+    cookie: Option<String>,
+    cookie_string: Option<String>,
+    wps_sid: Option<String>,
+}
+
+fn normalize_cookie_string(raw: &str) -> Option<String> {
+    let v = raw.trim();
+    if v.is_empty() {
+        return None;
+    }
+    if v.contains('=') {
+        return Some(v.to_string());
+    }
+    Some(format!("wps_sid={v}; csrf={v}"))
+}
+
+fn cookie_from_sid(raw: &str) -> Option<String> {
+    let sid = raw.trim();
+    if sid.is_empty() {
+        return None;
+    }
+    Some(format!("wps_sid={sid}; csrf={sid}"))
+}
+
+fn parse_cookie_file_payload(raw: &str) -> Option<String> {
+    let trimmed = raw.trim();
+    if trimmed.is_empty() {
+        return None;
+    }
+    if trimmed.starts_with('{') {
+        if let Ok(v) = serde_json::from_str::<CookiePayload>(trimmed) {
+            if let Some(cookie) = v.cookie_string.as_deref().and_then(normalize_cookie_string) {
+                return Some(cookie);
+            }
+            if let Some(cookie) = v.cookie.as_deref().and_then(normalize_cookie_string) {
+                return Some(cookie);
+            }
+            if let Some(cookie) = v.wps_sid.as_deref().and_then(cookie_from_sid) {
+                return Some(cookie);
+            }
+        }
+    }
+    normalize_cookie_string(trimmed)
+}
+
+fn read_cookie_file(path: &Path) -> Option<String> {
+    let raw = std::fs::read_to_string(path).ok()?;
+    parse_cookie_file_payload(&raw)
+}
+
+pub fn cookie_api_base() -> String {
+    std::env::var("WPS_CLI_COOKIE_BASE")
+        .ok()
+        .filter(|v| !v.trim().is_empty())
+        .unwrap_or_else(|| "https://api.wps.cn".to_string())
+}
+
+pub fn cookie_origin() -> String {
+    std::env::var("WPS_CLI_COOKIE_ORIGIN")
+        .ok()
+        .filter(|v| !v.trim().is_empty())
+        .unwrap_or_else(|| "https://365.kdocs.cn".to_string())
+}
+
+pub fn cookie_referer() -> String {
+    std::env::var("WPS_CLI_COOKIE_REFERER")
+        .ok()
+        .filter(|v| !v.trim().is_empty())
+        .unwrap_or_else(|| "https://365.kdocs.cn/woa/im/messages".to_string())
+}
+
+pub fn get_cookie_header() -> Result<String, WpsError> {
+    for k in ["WPS_CLI_COOKIE", "WPS_COOKIE"] {
+        if let Ok(v) = std::env::var(k) {
+            if let Some(cookie) = normalize_cookie_string(&v) {
+                return Ok(cookie);
+            }
+        }
+    }
+    for k in ["WPS_CLI_WPS_SID", "WPS_SID", "wps_sid"] {
+        if let Ok(v) = std::env::var(k) {
+            if let Some(cookie) = cookie_from_sid(&v) {
+                return Ok(cookie);
+            }
+        }
+    }
+    if let Ok(file_path) = std::env::var("WPS_CLI_COOKIE_FILE") {
+        let p = PathBuf::from(file_path);
+        if let Some(cookie) = read_cookie_file(&p) {
+            return Ok(cookie);
+        }
+    }
+
+    let mut candidates: Vec<PathBuf> = vec![];
+    candidates.push(config_dir().join("cookie.json"));
+    candidates.push(config_dir().join("cookie_cache.json"));
+    if let Some(home) = dirs::home_dir() {
+        candidates.push(home.join(".cursor/skills/wpsv7-skills/.wps_sid_cache.json"));
+        candidates.push(home.join(".cursor/skills/wps-sign/cookie.json"));
+    }
+    for p in candidates {
+        if p.exists() {
+            if let Some(cookie) = read_cookie_file(&p) {
+                return Ok(cookie);
+            }
+        }
+    }
+    Err(WpsError::Auth(
+        "missing cookie auth credential. Set `WPS_CLI_COOKIE` (full cookie) or `WPS_CLI_WPS_SID`, or provide `WPS_CLI_COOKIE_FILE`.".to_string(),
+    ))
 }
 
 pub fn save_credentials(creds: &Credentials) -> Result<(), WpsError> {
@@ -180,6 +297,7 @@ async fn fetch_token_from_oauth_server(base: &str, auth_type: AuthType) -> Optio
     let endpoint = match auth_type {
         AuthType::App => "/api/token/app",
         AuthType::User => "/api/token/user",
+        AuthType::Cookie => return None,
     };
     let url = format!("{}{}", base.trim_end_matches('/'), endpoint);
     let client = Client::new();
@@ -369,6 +487,11 @@ pub async fn get_access_token(auth_type: AuthType) -> Result<String, WpsError> {
                 return Ok(token);
             }
         }
+        AuthType::Cookie => {
+            return Err(WpsError::Auth(
+                "cookie auth does not use bearer token. Use `auth-type cookie` with cookie sources: `WPS_CLI_COOKIE`, `WPS_CLI_WPS_SID`, or `WPS_CLI_COOKIE_FILE`.".to_string(),
+            ));
+        }
     }
 
     let creds = load_credentials();
@@ -420,6 +543,9 @@ pub async fn get_access_token(auth_type: AuthType) -> Result<String, WpsError> {
                 "missing user token; run `wpscli auth login --user` or `wpscli auth login --user-token <token>`".to_string(),
             ))
         }
+        AuthType::Cookie => Err(WpsError::Auth(
+            "cookie auth does not use bearer token. Use `auth-type cookie` with cookie sources: `WPS_CLI_COOKIE`, `WPS_CLI_WPS_SID`, or `WPS_CLI_COOKIE_FILE`.".to_string(),
+        )),
     }
 }
 

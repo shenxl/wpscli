@@ -48,6 +48,16 @@ pub async fn ensure_user_scope(
         required_scopes.join(",")
     );
 
+    if auth_type == "cookie" {
+        return Ok(ScopePreflight {
+            required_scopes: required,
+            token_scopes: vec![],
+            missing_scopes: vec![],
+            check_mode: "cookie_session_no_scope_claim".to_string(),
+            reauth_hint: "Refresh cookie session (Playwright / browser login) and retry.".to_string(),
+        });
+    }
+
     if auth_type != "user" {
         return Err(WpsError::Auth(
             "该命令需要用户身份（user token），请添加 `--user-token` 或 `--auth-type user`".to_string(),

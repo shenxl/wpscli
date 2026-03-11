@@ -71,9 +71,9 @@ pub fn build_service_command(desc: &ServiceDescriptor) -> Command {
             .arg(
                 Arg::new("auth-type")
                     .long("auth-type")
-                    .value_parser(["app", "user"])
+                    .value_parser(["app", "user", "cookie"])
                     .default_value("app")
-                    .help("鉴权类型：app 或 user"),
+                    .help("鉴权类型：app / user / cookie"),
             )
             .arg(
                 Arg::new("user-token")
@@ -145,7 +145,7 @@ pub fn build_raw_command() -> Command {
         .arg(
             Arg::new("auth-type")
                 .long("auth-type")
-                .value_parser(["app", "user"])
+                .value_parser(["app", "user", "cookie"])
                 .default_value("app"),
         )
         .arg(

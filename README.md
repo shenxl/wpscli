@@ -100,6 +100,23 @@ wpscli auth harden --apply
 wpscli doctor
 ```
 
+### 4) Cookie 会话模式（补位能力）
+
+当某些前端接口能力暂未开放到 OpenAPI 时，可使用 cookie 会话模式：
+
+```bash
+export WPS_CLI_WPS_SID=<wps_sid>
+# 或 export WPS_CLI_COOKIE='wps_sid=...; csrf=...'
+# 或 export WPS_CLI_COOKIE_FILE=~/.cursor/skills/wpsv7-skills/.wps_sid_cache.json
+
+wpscli raw GET /v7/users/current --auth-type cookie
+```
+
+可选环境变量：
+- `WPS_CLI_COOKIE_BASE`（默认 `https://api.wps.cn`）
+- `WPS_CLI_COOKIE_ORIGIN`（默认 `https://365.kdocs.cn`）
+- `WPS_CLI_COOKIE_REFERER`（默认 `https://365.kdocs.cn/woa/im/messages`）
+
 ---
 
 ## 核心命令示例
@@ -133,6 +150,7 @@ wpscli drives list-files --path-param drive_id=<id> --path-param parent_id=0 --q
 
 ```bash
 wpscli raw GET /v7/companies/current --user-token
+wpscli raw GET /v7/users/current --auth-type cookie
 ```
 
 ---
@@ -162,6 +180,7 @@ wps-cli/
 - 拆分命令文档索引：`docs/commands/README.md`
 - 全量命令参考（汇总版）：`docs/wpscli-command-reference.md`
 - DBSheet 指南：`docs/wpscli-dbsheet-guide.md`
+- 混合鉴权策略：`docs/cookie-hybrid-strategy.md`
 - Skill 契约：
   - `skills/wps-doc-rw/SKILL.md`
   - `skills/wps-app-files/SKILL.md`

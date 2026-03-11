@@ -659,6 +659,11 @@ fn run_auth_harden(m: &ArgMatches) -> Result<(), WpsError> {
         "WPS_CLI_TOKEN",
         "WPS_CLI_APP_TOKEN",
         "WPS_CLI_USER_TOKEN",
+        "WPS_CLI_COOKIE",
+        "WPS_CLI_WPS_SID",
+        "WPS_CLI_COOKIE_FILE",
+        "WPS_SID",
+        "wps_sid",
     ] {
         if std::env::var(k).ok().filter(|v| !v.is_empty()).is_some() {
             env_risks.push(k.to_string());
@@ -684,6 +689,11 @@ fn run_auth_harden(m: &ArgMatches) -> Result<(), WpsError> {
             "WPS_CLI_TOKEN",
             "WPS_CLI_APP_TOKEN",
             "WPS_CLI_USER_TOKEN",
+            "WPS_CLI_COOKIE",
+            "WPS_CLI_WPS_SID",
+            "WPS_CLI_COOKIE_FILE",
+            "WPS_SID",
+            "wps_sid",
             "refresh_token",
         ] {
             if raw.contains(key) {

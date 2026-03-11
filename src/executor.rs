@@ -35,7 +35,11 @@ struct EndpointRoute {
 
 static ENDPOINT_ROUTES: OnceLock<Vec<EndpointRoute>> = OnceLock::new();
 
-fn build_url(endpoint: &EndpointDescriptor, path_params: &HashMap<String, String>) -> Result<String, WpsError> {
+fn build_url(
+    endpoint: &EndpointDescriptor,
+    path_params: &HashMap<String, String>,
+    base_url: &str,
+) -> Result<String, WpsError> {
     let mut path = endpoint.path.clone();
     for p in &endpoint.params.path {
         if let Some(v) = path_params.get(&p.name) {
@@ -44,7 +48,7 @@ fn build_url(endpoint: &EndpointDescriptor, path_params: &HashMap<String, String
             return Err(WpsError::Validation(format!("missing required path param {}", p.name)));
         }
     }
-    Ok(format!("https://openapi.wps.cn{path}"))
+    Ok(format!("{}{}", base_url.trim_end_matches('/'), path))
 }
 
 fn normalize_path(path_or_url: &str) -> String {
@@ -181,6 +185,9 @@ fn extract_token_scopes(access_token: &str) -> Vec<String> {
 }
 
 fn scope_prelight(endpoint: &EndpointDescriptor, auth_type: AuthType, token: &str) -> Result<(), WpsError> {
+    if matches!(auth_type, AuthType::Cookie) {
+        return Ok(());
+    }
     let endpoint_scopes = dedup_scopes(&endpoint.scopes);
     if endpoint_scopes.is_empty() {
         return Ok(());
@@ -219,12 +226,19 @@ fn scope_prelight(endpoint: &EndpointDescriptor, auth_type: AuthType, token: &st
                 )));
             }
         }
+        AuthType::Cookie => {}
     }
     Ok(())
 }
 
 pub async fn execute_endpoint(endpoint: &EndpointDescriptor, opts: ExecOptions) -> Result<Value, WpsError> {
-    let mut url = build_url(endpoint, &opts.path_params)?;
+    let auth_type = AuthType::parse(&opts.auth_type);
+    let base_url = if matches!(auth_type, AuthType::Cookie) {
+        auth::cookie_api_base()
+    } else {
+        "https://openapi.wps.cn".to_string()
+    };
+    let mut url = build_url(endpoint, &opts.path_params, &base_url)?;
     if !opts.query_params.is_empty() {
         let parsed = reqwest::Url::parse_with_params(&url, opts.query_params.iter())
             .map_err(|e| WpsError::Validation(format!("invalid query params: {e}")))?;
@@ -251,25 +265,49 @@ pub async fn execute_endpoint(endpoint: &EndpointDescriptor, opts: ExecOptions) 
 
     let method = Method::from_bytes(endpoint.http_method.as_bytes())
         .map_err(|e| WpsError::Validation(format!("invalid http method: {e}")))?;
-    let auth_type = AuthType::parse(&opts.auth_type);
-    let mut token = auth::get_access_token(auth_type).await?;
-    scope_prelight(endpoint, auth_type, &token)?;
-    let sk = auth::current_sk()?;
+    let mut token = String::new();
+    let mut sk: Option<String> = None;
+    let mut cookie_header: Option<String> = None;
+    if matches!(auth_type, AuthType::Cookie) {
+        cookie_header = Some(auth::get_cookie_header()?);
+    } else {
+        token = auth::get_access_token(auth_type).await?;
+        scope_prelight(endpoint, auth_type, &token)?;
+        sk = Some(auth::current_sk()?);
+    }
 
     let client = Client::new();
     let attempts = std::cmp::max(1, opts.retry + 1);
     let mut last_err = None;
     let mut refreshed_once = false;
     for attempt in 1..=attempts {
-        let date = auth::rfc1123_now();
-        let signature = auth::generate_kso1_signature(endpoint.http_method.as_str(), &url, &date, &sk)?;
         let mut request_headers = opts.headers.clone();
-        request_headers.insert("Authorization".to_string(), format!("Bearer {token}"));
-        request_headers.insert("X-Kso-Date".to_string(), date);
-        request_headers.insert("X-Kso-Authorization".to_string(), signature);
         request_headers
             .entry("Content-Type".to_string())
             .or_insert_with(|| "application/json".to_string());
+        if matches!(auth_type, AuthType::Cookie) {
+            request_headers
+                .entry("Origin".to_string())
+                .or_insert_with(auth::cookie_origin);
+            request_headers
+                .entry("Referer".to_string())
+                .or_insert_with(auth::cookie_referer);
+            request_headers.insert(
+                "Cookie".to_string(),
+                cookie_header.clone().unwrap_or_default(),
+            );
+        } else {
+            let date = auth::rfc1123_now();
+            let signature = auth::generate_kso1_signature(
+                endpoint.http_method.as_str(),
+                &url,
+                &date,
+                sk.as_deref().unwrap_or_default(),
+            )?;
+            request_headers.insert("Authorization".to_string(), format!("Bearer {token}"));
+            request_headers.insert("X-Kso-Date".to_string(), date);
+            request_headers.insert("X-Kso-Authorization".to_string(), signature);
+        }
 
         let mut req = client.request(method.clone(), &url);
         for (k, v) in &request_headers {
@@ -370,11 +408,18 @@ pub async fn execute_raw(
     dry_run: bool,
     retry: u32,
 ) -> Result<Value, WpsError> {
+    let auth_kind = AuthType::parse(auth_type);
+    let base_url = if matches!(auth_kind, AuthType::Cookie) {
+        auth::cookie_api_base()
+    } else {
+        "https://openapi.wps.cn".to_string()
+    };
     let path = if path_or_url.starts_with("http://") || path_or_url.starts_with("https://") {
         path_or_url.to_string()
     } else {
         format!(
-            "https://openapi.wps.cn{}",
+            "{}{}",
+            base_url.trim_end_matches('/'),
             if path_or_url.starts_with('/') {
                 path_or_url.to_string()
             } else {
@@ -392,7 +437,10 @@ pub async fn execute_raw(
             .unwrap_or_else(|| "raw".to_string()),
         summary: "".to_string(),
         http_method: method.to_uppercase(),
-        path: path.trim_start_matches("https://openapi.wps.cn").to_string(),
+        path: reqwest::Url::parse(&path)
+            .ok()
+            .map(|u| u.path().to_string())
+            .unwrap_or_else(|| path.clone()),
         signature: "KSO-1".to_string(),
         scopes: route
             .as_ref()

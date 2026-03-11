@@ -229,9 +229,9 @@ fn with_common_opts(cmd: Command) -> Command {
     cmd.arg(
         Arg::new("auth-type")
             .long("auth-type")
-            .value_parser(["app", "user"])
+            .value_parser(["app", "user", "cookie"])
             .default_value("user")
-            .help("鉴权类型：app 或 user"),
+            .help("鉴权类型：app / user / cookie"),
     )
     .arg(Arg::new("user-token").long("user-token").action(ArgAction::SetTrue).help("快捷方式：等价于 --auth-type user"))
     .arg(Arg::new("dry-run").long("dry-run").action(ArgAction::SetTrue))

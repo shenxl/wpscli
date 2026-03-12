@@ -125,6 +125,9 @@ wpscli raw GET /v7/users/current --auth-type cookie
 
 ```bash
 wpscli doc read-doc --url "https://365.kdocs.cn/l/xxxx" --user-token
+
+# 强制按多维表语义读取（路由到 dbsheet 模块）
+wpscli doc read-doc --url "https://365.kdocs.cn/l/xxxx" --format dbt --dbsheet-sheet-id 2 --user-token
 ```
 
 ### 多维表查询
@@ -137,6 +140,9 @@ wpscli dbsheet select \
   --fields "状态,负责人" \
   --limit 20 \
   --user-token
+
+# 通用请求（补齐高级端点能力）
+wpscli dbsheet request GET /FILE_ID/schema --user-token
 ```
 
 ### 动态 API

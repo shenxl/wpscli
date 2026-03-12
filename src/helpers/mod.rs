@@ -34,6 +34,7 @@ pub async fn dispatch(first: &str, args: &[String]) -> Option<Result<serde_json:
                     args[0].as_str(),
                     "schema"
                         | "list-sheets"
+                        | "request"
                         | "init"
                         | "select"
                         | "insert"

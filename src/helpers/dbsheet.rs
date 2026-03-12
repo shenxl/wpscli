@@ -108,6 +108,46 @@ pub fn command() -> Command {
             with_file_args(Command::new("list-sheets").about("列出所有工作表"), false),
         ))
         .subcommand(with_common_opts(
+            Command::new("request")
+                .about("通用 DBSheet 请求（对齐官方 wps-dbsheet 通用 request 能力）")
+                .arg(
+                    Arg::new("method")
+                        .required(true)
+                        .value_parser(["GET", "POST", "PUT", "PATCH", "DELETE"])
+                        .help("HTTP 方法"),
+                )
+                .arg(
+                    Arg::new("path")
+                        .required(true)
+                        .help("请求路径，例如 /{file_id}/schema 或 /files/search"),
+                )
+                .arg(
+                    Arg::new("prefix")
+                        .long("prefix")
+                        .default_value("/v7/coop/dbsheet")
+                        .num_args(1)
+                        .help("接口前缀，默认 /v7/coop/dbsheet；可改为 /v7 或 /v7/dbsheet"),
+                )
+                .arg(
+                    Arg::new("body")
+                        .long("body")
+                        .num_args(1)
+                        .help("JSON 请求体（支持内联 JSON 或 @文件路径）"),
+                )
+                .arg(
+                    Arg::new("params")
+                        .long("params")
+                        .num_args(1)
+                        .help("查询参数 JSON（对象）"),
+                )
+                .arg(
+                    Arg::new("headers")
+                        .long("headers")
+                        .num_args(1)
+                        .help("附加请求头 JSON（对象）"),
+                ),
+        ))
+        .subcommand(with_common_opts(
             with_file_args(
                 Command::new("init")
                     .about("基于 schema 文件初始化多维表结构")
@@ -253,6 +293,7 @@ pub async fn handle(args: &[String]) -> Result<Value, WpsError> {
     match m.subcommand() {
         Some(("schema", s)) => get_schema_cmd(s).await,
         Some(("list-sheets", s)) => list_sheets_cmd(s).await,
+        Some(("request", s)) => request_cmd(s).await,
         Some(("init", s)) => init_cmd(s).await,
         Some(("select", s)) => select_cmd(s).await,
         Some(("insert", s)) => insert_cmd(s).await,
@@ -261,6 +302,83 @@ pub async fn handle(args: &[String]) -> Result<Value, WpsError> {
         Some(("clean", s)) => clean_cmd(s).await,
         _ => Err(WpsError::Validation("unknown dbsheet subcommand".to_string())),
     }
+}
+
+fn read_json_input(raw: &str, label: &str) -> Result<Value, WpsError> {
+    let input = raw.trim();
+    if let Some(path) = input.strip_prefix('@') {
+        let data = std::fs::read_to_string(path)
+            .map_err(|e| WpsError::Validation(format!("读取 {label} 文件失败: {e}")))?;
+        return serde_json::from_str(&data)
+            .map_err(|e| WpsError::Validation(format!("{label} JSON 解析失败: {e}")));
+    }
+    serde_json::from_str(input).map_err(|e| WpsError::Validation(format!("{label} JSON 解析失败: {e}")))
+}
+
+fn json_scalar_to_string(v: &Value) -> Option<String> {
+    match v {
+        Value::String(s) => Some(s.clone()),
+        Value::Number(n) => Some(n.to_string()),
+        Value::Bool(b) => Some(b.to_string()),
+        Value::Null => None,
+        _ => Some(v.to_string()),
+    }
+}
+
+fn parse_json_kv(raw: Option<&String>, label: &str) -> Result<HashMap<String, String>, WpsError> {
+    let Some(raw) = raw else {
+        return Ok(HashMap::new());
+    };
+    let value = read_json_input(raw, label)?;
+    let obj = value
+        .as_object()
+        .ok_or_else(|| WpsError::Validation(format!("{label} 必须是 JSON 对象")))?;
+    let mut out = HashMap::new();
+    for (k, v) in obj {
+        if let Some(s) = json_scalar_to_string(v) {
+            out.insert(k.clone(), s);
+        }
+    }
+    Ok(out)
+}
+
+async fn request_cmd(s: &ArgMatches) -> Result<Value, WpsError> {
+    let method = s.get_one::<String>("method").expect("required");
+    let raw_path = s.get_one::<String>("path").expect("required");
+    let prefix = s
+        .get_one::<String>("prefix")
+        .cloned()
+        .unwrap_or_else(|| "/v7/coop/dbsheet".to_string());
+    let mut path = raw_path.clone();
+    if !path.starts_with('/') {
+        path = format!("/{path}");
+    }
+    let full_path = if raw_path.starts_with("http://") || raw_path.starts_with("https://") {
+        raw_path.clone()
+    } else {
+        format!("{}{}", prefix.trim_end_matches('/'), path)
+    };
+    let auth = effective_auth_type(s);
+    let dry = s.get_flag("dry-run");
+    let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
+    let query_params = parse_json_kv(s.get_one::<String>("params"), "params")?;
+    let headers = parse_json_kv(s.get_one::<String>("headers"), "headers")?;
+    let body = if let Some(raw_body) = s.get_one::<String>("body") {
+        Some(read_json_input(raw_body, "body")?.to_string())
+    } else {
+        None
+    };
+    executor::execute_raw(
+        method,
+        &full_path,
+        query_params,
+        headers,
+        body,
+        &auth,
+        dry,
+        retry,
+    )
+    .await
 }
 
 fn effective_auth_type(s: &ArgMatches) -> String {

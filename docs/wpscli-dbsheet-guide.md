@@ -44,12 +44,34 @@ wpscli dbsheet --help
 
 - `schema`：读取多维表结构
 - `list-sheets`：列出工作表
+- `request`：通用 API 请求（支持自定义前缀，兼容官方 `wps-dbsheet request` 风格）
 - `init`：按 YAML schema 初始化工作表
 - `select`：SQL-like 查询
 - `insert`：新增记录（支持批量）
 - `update`：更新记录（支持批量）
 - `delete`：删除记录（按 id 或 where）
 - `clean`：清理默认字段与默认空行
+
+---
+
+## 2.1 通用请求模式（补齐高级能力）
+
+当你需要调用 `webhooks/permissions/forms/share-views` 等尚未 helper 化的接口时，可用 `request`：
+
+```bash
+# 默认前缀 /v7/coop/dbsheet
+wpscli dbsheet request GET /FILE_ID/schema --user-token
+
+# 使用 /v7/dbsheet 前缀
+wpscli dbsheet request GET /files/FILE_ID/views --prefix /v7/dbsheet --user-token
+
+# 传 body / params / headers（支持 @文件）
+wpscli dbsheet request POST /FILE_ID/sheets/SHEET_ID/records/create \
+  --body @./assets/create-records.json \
+  --params '{"page_size":100}' \
+  --headers '{"X-Kso-Id-Type":"internal"}' \
+  --user-token
+```
 
 ---
 
@@ -116,6 +138,24 @@ wpscli dbsheet select \
 - 逻辑：`AND`, `OR`
 - 集合：`IN ('A','B')`
 - 模糊：`LIKE '%关键词%'`
+
+---
+
+## 5.3 从 doc 入口路由到 dbsheet
+
+当文档是 `.dbt`，或你希望强制按多维表语义读取，可直接：
+
+```bash
+wpscli doc read-doc \
+  --url "https://365.kdocs.cn/l/<link_id>" \
+  --format dbt \
+  --dbsheet-sheet-id 2 \
+  --dbsheet-where "状态 = '进行中'" \
+  --dbsheet-fields "状态,负责人" \
+  --user-token
+```
+
+这会直接路由到 `wpscli dbsheet` SQL-like 查询模块，而不是 `drives/content` 文本抽取链路。
 
 ---
 

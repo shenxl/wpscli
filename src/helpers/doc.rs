@@ -45,6 +45,7 @@ pub fn command() -> Command {
                 .after_help(
                     "示例：\n  \
                      wpscli doc read-doc --url \"https://365.kdocs.cn/l/xxxx\" --format markdown --mode auto --user-token\n  \
+                     wpscli doc read-doc --url \"https://365.kdocs.cn/l/xxxx\" --format dbt --dbsheet-sheet-id 2 --dbsheet-fields \"标题,状态\" --user-token\n  \
                      wpscli doc read-doc --drive-id <drive_id> --file-id <file_id> --user-token\n  \
                      wpscli doc read-doc --url \"https://365.kdocs.cn/l/xxxx\" --xlsx-row-offset 500 --xlsx-row-head 200 --output-file /tmp/xlsx_page_3.json --user-token\n  \
                      wpscli doc read-doc --url \"https://365.kdocs.cn/l/xxxx\" --xlsx-row-head 1000 --export-parquet /tmp/xlsx.parquet --user-token",
@@ -55,9 +56,10 @@ pub fn command() -> Command {
                 .arg(
                     Arg::new("format")
                         .long("format")
+                        .visible_alias("fomat")
                         .default_value("markdown")
-                        .value_parser(["markdown", "plain", "kdc"])
-                        .help("输出格式"),
+                        .value_parser(["markdown", "plain", "kdc", "dbt"])
+                        .help("输出格式（dbt 会路由到 wpscli dbsheet SQL-like 查询模块）"),
                 )
                 .arg(
                     Arg::new("mode")
@@ -214,9 +216,17 @@ pub fn command() -> Command {
                 .arg(
                     Arg::new("target-format")
                         .long("target-format")
+                        .visible_alias("fomat")
                         .default_value("auto")
                         .value_parser(["auto", "otl", "dbt", "xlsx"])
                         .help("目标格式（默认自动识别）"),
+                )
+                .arg(
+                    Arg::new("format")
+                        .long("format")
+                        .num_args(1)
+                        .value_parser(["auto", "otl", "dbt", "xlsx"])
+                        .help("target-format 的兼容别名"),
                 )
                 .arg(
                     Arg::new("write-mode")
@@ -379,6 +389,10 @@ pub async fn handle(args: &[String]) -> Result<serde_json::Value, WpsError> {
             let auth = effective_auth_type(s);
             let dry = s.get_flag("dry-run");
             let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
+            let read_format = s
+                .get_one::<String>("format")
+                .cloned()
+                .unwrap_or_else(|| "markdown".to_string());
             let poll_interval_ms = *s.get_one::<u64>("poll-interval-ms").unwrap_or(&1500);
             let max_wait_seconds = *s.get_one::<u64>("max-wait-seconds").unwrap_or(&120);
             let xlsx_sheet_offset = *s.get_one::<u32>("xlsx-sheet-offset").unwrap_or(&0);
@@ -397,6 +411,45 @@ pub async fn handle(args: &[String]) -> Result<serde_json::Value, WpsError> {
                 .copied()
                 .unwrap_or_else(|| *s.get_one::<u32>("xlsx-max-cols").unwrap_or(&50));
             let (drive_id, file_id) = resolve_doc_ids(s, &auth, dry, retry).await?;
+            if read_format == "dbt" {
+                let sheet_id = if let Some(v) = s.get_one::<String>("dbsheet-sheet-id") {
+                    v.clone()
+                } else {
+                    dbsheet::resolve_first_sheet_id(&file_id, &auth, dry, retry).await?
+                };
+                let selected_fields = parse_csv_fields(s.get_one::<String>("dbsheet-fields"));
+                let selected = dbsheet::sql_like_select_records(
+                    &file_id,
+                    &sheet_id,
+                    s.get_one::<String>("dbsheet-where").cloned(),
+                    selected_fields.clone(),
+                    *s.get_one::<usize>("dbsheet-limit").unwrap_or(&100),
+                    *s.get_one::<usize>("dbsheet-offset").unwrap_or(&0),
+                    100,
+                    &auth,
+                    dry,
+                    retry,
+                )
+                .await?;
+                let dbt_resp = serde_json::json!({
+                    "ok": true,
+                    "status": 200,
+                    "data": {
+                        "code": 0,
+                        "msg": "ok",
+                        "data": {
+                            "src_format": "dbt",
+                            "file_id": file_id,
+                            "sheet_id": sheet_id,
+                            "where": s.get_one::<String>("dbsheet-where").cloned(),
+                            "fields": selected_fields,
+                            "total": selected.total,
+                            "records": selected.records
+                        }
+                    }
+                });
+                return finalize_read_output(s, attach_read_mode(dbt_resp, "dbsheet_sql_like_format"));
+            }
             let file_meta = if dry {
                 None
             } else {
@@ -484,10 +537,6 @@ pub async fn handle(args: &[String]) -> Result<serde_json::Value, WpsError> {
                 }
             }
 
-            let format = s
-                .get_one::<String>("format")
-                .cloned()
-                .unwrap_or_else(|| "markdown".to_string());
             let input_mode = s
                 .get_one::<String>("mode")
                 .cloned()
@@ -505,7 +554,7 @@ pub async fn handle(args: &[String]) -> Result<serde_json::Value, WpsError> {
                 &auth,
                 dry,
                 retry,
-                &format,
+                &read_format,
                 &effective_mode,
                 task_id,
                 include_elements,
@@ -539,10 +588,13 @@ pub async fn handle(args: &[String]) -> Result<serde_json::Value, WpsError> {
             let dry = s.get_flag("dry-run");
             let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
             let (drive_id, file_id) = resolve_doc_ids(s, &auth, dry, retry).await?;
-            let target_format = s
-                .get_one::<String>("target-format")
-                .cloned()
-                .unwrap_or_else(|| "auto".to_string());
+            let target_format = if let Some(fmt_alias) = s.get_one::<String>("format") {
+                fmt_alias.clone()
+            } else {
+                s.get_one::<String>("target-format")
+                    .cloned()
+                    .unwrap_or_else(|| "auto".to_string())
+            };
             let file_meta = if dry {
                 let fake_name = match target_format.as_str() {
                     "dbt" => "dry_run.dbt",

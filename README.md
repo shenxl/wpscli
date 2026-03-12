@@ -141,10 +141,10 @@ wpscli dbsheet select \
   --limit 20 \
   --user-token
 
-# 通用请求（补齐高级端点能力）
-# 视图与 webhook 等高级能力（语义命令）
+# 视图 / webhook / 分享视图等高级能力（语义命令）
 wpscli dbsheet view-list --url "https://365.kdocs.cn/l/xxxx" --sheet-id 2 --user-token
 wpscli dbsheet webhook-list --url "https://365.kdocs.cn/l/xxxx" --with-detail --user-token
+wpscli dbsheet share-status --url "https://365.kdocs.cn/l/xxxx" --sheet-id 2 --view-id VIEW_ID --user-token
 ```
 
 ### 动态 API

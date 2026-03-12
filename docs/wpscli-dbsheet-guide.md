@@ -51,11 +51,14 @@ wpscli dbsheet --help
 - `delete`：删除记录（按 id 或 where）
 - `view-list/view-get/view-create/view-update/view-delete`：视图能力
 - `webhook-list/webhook-create/webhook-delete`：Webhook 能力
+- `share-status/share-enable/share-disable/share-permission-update`：分享视图能力
+- `form-meta/form-meta-update/form-fields/form-field-update`：表单能力
+- `dashboard-list/dashboard-copy`：仪表盘能力
 - `clean`：清理默认字段与默认空行
 
 ---
 
-## 2.1 视图与 Webhook（内化高级能力）
+## 2.1 高级能力（全部语义化命令）
 
 不再通过通用 request 暴露底层路径，而是以语义命令操作：
 
@@ -71,6 +74,22 @@ wpscli dbsheet view-delete --url "https://365.kdocs.cn/l/<link_id>" --sheet-id 2
 wpscli dbsheet webhook-list --url "https://365.kdocs.cn/l/<link_id>" --with-detail --user-token
 wpscli dbsheet webhook-create --url "https://365.kdocs.cn/l/<link_id>" --data-file ./hook_create.json --user-token
 wpscli dbsheet webhook-delete --url "https://365.kdocs.cn/l/<link_id>" --hook-id HOOK_ID --user-token
+
+# 分享视图
+wpscli dbsheet share-status --url "https://365.kdocs.cn/l/<link_id>" --sheet-id 2 --view-id VIEW_ID --user-token
+wpscli dbsheet share-enable --url "https://365.kdocs.cn/l/<link_id>" --sheet-id 2 --view-id VIEW_ID --user-token
+wpscli dbsheet share-disable --url "https://365.kdocs.cn/l/<link_id>" --sheet-id 2 --view-id VIEW_ID --share-id SHARE_ID --user-token
+wpscli dbsheet share-permission-update --url "https://365.kdocs.cn/l/<link_id>" --sheet-id 2 --view-id VIEW_ID --share-id SHARE_ID --params-json '{"alias_name":"editable"}' --user-token
+
+# 表单
+wpscli dbsheet form-meta --url "https://365.kdocs.cn/l/<link_id>" --sheet-id 2 --view-id VIEW_ID --user-token
+wpscli dbsheet form-meta-update --url "https://365.kdocs.cn/l/<link_id>" --sheet-id 2 --view-id VIEW_ID --params-json '{"title":"新表单"}' --user-token
+wpscli dbsheet form-fields --url "https://365.kdocs.cn/l/<link_id>" --sheet-id 2 --view-id VIEW_ID --user-token
+wpscli dbsheet form-field-update --url "https://365.kdocs.cn/l/<link_id>" --sheet-id 2 --view-id VIEW_ID --field-id FIELD_ID --params-json '{"required":true}' --user-token
+
+# 仪表盘
+wpscli dbsheet dashboard-list --url "https://365.kdocs.cn/l/<link_id>" --user-token
+wpscli dbsheet dashboard-copy --url "https://365.kdocs.cn/l/<link_id>" --dashboard-id DASHBOARD_ID --user-token
 ```
 
 ---

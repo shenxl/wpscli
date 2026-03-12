@@ -93,12 +93,17 @@ impl DocDbAction {
 
 pub fn command() -> Command {
     Command::new("dbsheet")
-        .about("多维表 SQL-like 助手（schema/init/select/insert/update/delete）")
+        .about("多维表语义助手（SQL-like + 视图/Webhook/分享视图/表单/仪表盘）")
         .after_help(
             "示例：\n  \
              wpscli dbsheet schema --url \"https://365.kdocs.cn/l/xxxx\" --user-token\n  \
              wpscli dbsheet select --url \"https://365.kdocs.cn/l/xxxx\" --sheet-id 2 --where \"状态 = '进行中'\" --fields \"状态,负责人\" --user-token\n  \
-             wpscli dbsheet insert --url \"https://365.kdocs.cn/l/xxxx\" --sheet-id 2 --data-json '[{\"标题\":\"A\"}]' --user-token",
+             wpscli dbsheet insert --url \"https://365.kdocs.cn/l/xxxx\" --sheet-id 2 --data-json '[{\"标题\":\"A\"}]' --user-token\n  \
+             wpscli dbsheet view-list --url \"https://365.kdocs.cn/l/xxxx\" --sheet-id 2 --user-token\n  \
+             wpscli dbsheet webhook-list --url \"https://365.kdocs.cn/l/xxxx\" --with-detail --user-token\n  \
+             wpscli dbsheet share-status --url \"https://365.kdocs.cn/l/xxxx\" --sheet-id 2 --view-id V1 --user-token\n  \
+             wpscli dbsheet form-meta --url \"https://365.kdocs.cn/l/xxxx\" --sheet-id 2 --view-id V1 --user-token\n  \
+             wpscli dbsheet dashboard-list --url \"https://365.kdocs.cn/l/xxxx\" --user-token",
         )
         .subcommand(with_common_opts(
             with_file_args(Command::new("schema").about("获取多维表 schema（支持 --url 或 --file-id）"),
@@ -284,6 +289,102 @@ pub fn command() -> Command {
         ))
         .subcommand(with_common_opts(
             with_file_args(
+                Command::new("share-status")
+                    .about("查询视图分享状态")
+                    .arg(Arg::new("sheet-id").long("sheet-id").required(true).num_args(1).help("工作表 ID"))
+                    .arg(Arg::new("view-id").long("view-id").required(true).num_args(1).help("视图 ID")),
+                false,
+            ),
+        ))
+        .subcommand(with_common_opts(
+            with_file_args(
+                Command::new("share-enable")
+                    .about("开启视图分享链接")
+                    .arg(Arg::new("sheet-id").long("sheet-id").required(true).num_args(1).help("工作表 ID"))
+                    .arg(Arg::new("view-id").long("view-id").required(true).num_args(1).help("视图 ID")),
+                false,
+            ),
+        ))
+        .subcommand(with_common_opts(
+            with_file_args(
+                Command::new("share-disable")
+                    .about("关闭视图分享链接")
+                    .arg(Arg::new("sheet-id").long("sheet-id").required(true).num_args(1).help("工作表 ID"))
+                    .arg(Arg::new("view-id").long("view-id").required(true).num_args(1).help("视图 ID"))
+                    .arg(Arg::new("share-id").long("share-id").required(true).num_args(1).help("分享 ID")),
+                false,
+            ),
+        ))
+        .subcommand(with_common_opts(
+            with_file_args(
+                Command::new("share-permission-update")
+                    .about("更新视图分享权限（通过 --params-json 提供参数）")
+                    .arg(Arg::new("sheet-id").long("sheet-id").required(true).num_args(1).help("工作表 ID"))
+                    .arg(Arg::new("view-id").long("view-id").required(true).num_args(1).help("视图 ID"))
+                    .arg(Arg::new("share-id").long("share-id").required(true).num_args(1).help("分享 ID"))
+                    .arg(Arg::new("params-json").long("params-json").num_args(1).help("更新参数 JSON（对象）"))
+                    .arg(Arg::new("params-file").long("params-file").num_args(1).help("从文件读取更新参数 JSON")),
+                false,
+            ),
+        ))
+        .subcommand(with_common_opts(
+            with_file_args(
+                Command::new("form-meta")
+                    .about("查询表单元数据")
+                    .arg(Arg::new("sheet-id").long("sheet-id").required(true).num_args(1).help("工作表 ID"))
+                    .arg(Arg::new("view-id").long("view-id").required(true).num_args(1).help("表单视图 ID")),
+                false,
+            ),
+        ))
+        .subcommand(with_common_opts(
+            with_file_args(
+                Command::new("form-meta-update")
+                    .about("更新表单元数据（通过 --params-json 提供参数）")
+                    .arg(Arg::new("sheet-id").long("sheet-id").required(true).num_args(1).help("工作表 ID"))
+                    .arg(Arg::new("view-id").long("view-id").required(true).num_args(1).help("表单视图 ID"))
+                    .arg(Arg::new("params-json").long("params-json").num_args(1).help("更新参数 JSON（对象）"))
+                    .arg(Arg::new("params-file").long("params-file").num_args(1).help("从文件读取更新参数 JSON")),
+                false,
+            ),
+        ))
+        .subcommand(with_common_opts(
+            with_file_args(
+                Command::new("form-fields")
+                    .about("列出表单问题字段")
+                    .arg(Arg::new("sheet-id").long("sheet-id").required(true).num_args(1).help("工作表 ID"))
+                    .arg(Arg::new("view-id").long("view-id").required(true).num_args(1).help("表单视图 ID")),
+                false,
+            ),
+        ))
+        .subcommand(with_common_opts(
+            with_file_args(
+                Command::new("form-field-update")
+                    .about("更新表单问题字段（通过 --params-json 提供参数）")
+                    .arg(Arg::new("sheet-id").long("sheet-id").required(true).num_args(1).help("工作表 ID"))
+                    .arg(Arg::new("view-id").long("view-id").required(true).num_args(1).help("表单视图 ID"))
+                    .arg(Arg::new("field-id").long("field-id").required(true).num_args(1).help("字段 ID"))
+                    .arg(Arg::new("params-json").long("params-json").num_args(1).help("更新参数 JSON（对象）"))
+                    .arg(Arg::new("params-file").long("params-file").num_args(1).help("从文件读取更新参数 JSON")),
+                false,
+            ),
+        ))
+        .subcommand(with_common_opts(
+            with_file_args(
+                Command::new("dashboard-list")
+                    .about("列出仪表盘"),
+                false,
+            ),
+        ))
+        .subcommand(with_common_opts(
+            with_file_args(
+                Command::new("dashboard-copy")
+                    .about("复制仪表盘")
+                    .arg(Arg::new("dashboard-id").long("dashboard-id").required(true).num_args(1).help("仪表盘 ID")),
+                false,
+            ),
+        ))
+        .subcommand(with_common_opts(
+            with_file_args(
                 Command::new("clean")
                     .about("清理默认字段和默认空行")
                     .arg(Arg::new("sheet-id").long("sheet-id").required(true).num_args(1).help("工作表 ID")),
@@ -338,6 +439,16 @@ pub async fn handle(args: &[String]) -> Result<Value, WpsError> {
         Some(("webhook-list", s)) => webhook_list_cmd(s).await,
         Some(("webhook-create", s)) => webhook_create_cmd(s).await,
         Some(("webhook-delete", s)) => webhook_delete_cmd(s).await,
+        Some(("share-status", s)) => share_status_cmd(s).await,
+        Some(("share-enable", s)) => share_enable_cmd(s).await,
+        Some(("share-disable", s)) => share_disable_cmd(s).await,
+        Some(("share-permission-update", s)) => share_permission_update_cmd(s).await,
+        Some(("form-meta", s)) => form_meta_cmd(s).await,
+        Some(("form-meta-update", s)) => form_meta_update_cmd(s).await,
+        Some(("form-fields", s)) => form_fields_cmd(s).await,
+        Some(("form-field-update", s)) => form_field_update_cmd(s).await,
+        Some(("dashboard-list", s)) => dashboard_list_cmd(s).await,
+        Some(("dashboard-copy", s)) => dashboard_copy_cmd(s).await,
         Some(("clean", s)) => clean_cmd(s).await,
         _ => Err(WpsError::Validation("unknown dbsheet subcommand".to_string())),
     }
@@ -367,6 +478,50 @@ fn read_payload_arg(s: &ArgMatches, inline_key: &str, file_key: &str) -> Result<
     Err(WpsError::Validation(format!(
         "缺少 --{inline_key} 或 --{file_key}"
     )))
+}
+
+fn json_scalar_to_string(v: &Value) -> Option<String> {
+    match v {
+        Value::String(s) => Some(s.clone()),
+        Value::Number(n) => Some(n.to_string()),
+        Value::Bool(b) => Some(b.to_string()),
+        Value::Null => None,
+        _ => Some(v.to_string()),
+    }
+}
+
+fn parse_params_arg(s: &ArgMatches, inline_key: &str, file_key: &str) -> Result<HashMap<String, String>, WpsError> {
+    let mut out = HashMap::new();
+    let v = if let Some(raw) = s.get_one::<String>(inline_key) {
+        serde_json::from_str::<Value>(raw)
+            .map_err(|e| WpsError::Validation(format!("{inline_key} JSON 解析失败: {e}")))?
+    } else if let Some(path) = s.get_one::<String>(file_key) {
+        let txt = std::fs::read_to_string(path)
+            .map_err(|e| WpsError::Validation(format!("读取 {file_key} 失败: {e}")))?;
+        serde_json::from_str::<Value>(&txt)
+            .map_err(|e| WpsError::Validation(format!("{file_key} JSON 解析失败: {e}")))?
+    } else {
+        return Ok(out);
+    };
+    let obj = v
+        .as_object()
+        .ok_or_else(|| WpsError::Validation(format!("{inline_key} 必须是 JSON 对象")))?;
+    for (k, val) in obj {
+        if let Some(sv) = json_scalar_to_string(val) {
+            out.insert(k.clone(), sv);
+        }
+    }
+    Ok(out)
+}
+
+async fn execute_get_query(
+    path: String,
+    query: HashMap<String, String>,
+    auth: &str,
+    dry: bool,
+    retry: u32,
+) -> Result<Value, WpsError> {
+    executor::execute_raw("GET", &path, query, HashMap::new(), None, auth, dry, retry).await
 }
 
 fn effective_auth_type(s: &ArgMatches) -> String {
@@ -771,6 +926,375 @@ async fn webhook_delete_cmd(s: &ArgMatches) -> Result<Value, WpsError> {
             "action": "webhook-delete",
             "file_id": file_id,
             "hook_id": hook_id,
+            "result": payload(&resp),
+        }
+    }))
+}
+
+async fn share_status_cmd(s: &ArgMatches) -> Result<Value, WpsError> {
+    let auth = effective_auth_type(s);
+    let dry = s.get_flag("dry-run");
+    let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
+    let scope = ensure_scope(&auth, dry, false).await?;
+    let file_id = resolve_file_id(s, &auth, dry, retry).await?;
+    let sheet_id = parse_sheet_id(s)?;
+    let view_id = s
+        .get_one::<String>("view-id")
+        .cloned()
+        .ok_or_else(|| WpsError::Validation("缺少 --view-id".to_string()))?;
+    let resp = execute_get_query(
+        format!("/v7/dbsheet/{file_id}/sheets/{sheet_id}/views/{view_id}/sharedlinks/status"),
+        HashMap::new(),
+        &auth,
+        dry,
+        retry,
+    )
+    .await?;
+    if !dry && !api_ok(&resp) {
+        return Err(WpsError::Network(format!("查询分享状态失败: {resp}")));
+    }
+    Ok(serde_json::json!({
+        "ok": true,
+        "msg": "ok",
+        "data": {
+            "scope_preflight": scope,
+            "action": "share-status",
+            "file_id": file_id,
+            "sheet_id": sheet_id,
+            "view_id": view_id,
+            "result": payload(&resp),
+        }
+    }))
+}
+
+async fn share_enable_cmd(s: &ArgMatches) -> Result<Value, WpsError> {
+    let auth = effective_auth_type(s);
+    let dry = s.get_flag("dry-run");
+    let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
+    let scope = ensure_scope(&auth, dry, true).await?;
+    let file_id = resolve_file_id(s, &auth, dry, retry).await?;
+    let sheet_id = parse_sheet_id(s)?;
+    let view_id = s
+        .get_one::<String>("view-id")
+        .cloned()
+        .ok_or_else(|| WpsError::Validation("缺少 --view-id".to_string()))?;
+    let resp = execute_get_query(
+        format!("/v7/dbsheet/{file_id}/sheets/{sheet_id}/views/{view_id}/sharedlinks/open"),
+        HashMap::new(),
+        &auth,
+        dry,
+        retry,
+    )
+    .await?;
+    if !dry && !api_ok(&resp) {
+        return Err(WpsError::Network(format!("开启分享失败: {resp}")));
+    }
+    Ok(serde_json::json!({
+        "ok": true,
+        "msg": "ok",
+        "data": {
+            "scope_preflight": scope,
+            "action": "share-enable",
+            "file_id": file_id,
+            "sheet_id": sheet_id,
+            "view_id": view_id,
+            "result": payload(&resp),
+        }
+    }))
+}
+
+async fn share_disable_cmd(s: &ArgMatches) -> Result<Value, WpsError> {
+    let auth = effective_auth_type(s);
+    let dry = s.get_flag("dry-run");
+    let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
+    let scope = ensure_scope(&auth, dry, true).await?;
+    let file_id = resolve_file_id(s, &auth, dry, retry).await?;
+    let sheet_id = parse_sheet_id(s)?;
+    let view_id = s
+        .get_one::<String>("view-id")
+        .cloned()
+        .ok_or_else(|| WpsError::Validation("缺少 --view-id".to_string()))?;
+    let share_id = s
+        .get_one::<String>("share-id")
+        .cloned()
+        .ok_or_else(|| WpsError::Validation("缺少 --share-id".to_string()))?;
+    let resp = execute_get_query(
+        format!("/v7/dbsheet/{file_id}/sheets/{sheet_id}/views/{view_id}/sharedlinks/{share_id}/close"),
+        HashMap::new(),
+        &auth,
+        dry,
+        retry,
+    )
+    .await?;
+    if !dry && !api_ok(&resp) {
+        return Err(WpsError::Network(format!("关闭分享失败: {resp}")));
+    }
+    Ok(serde_json::json!({
+        "ok": true,
+        "msg": "ok",
+        "data": {
+            "scope_preflight": scope,
+            "action": "share-disable",
+            "file_id": file_id,
+            "sheet_id": sheet_id,
+            "view_id": view_id,
+            "share_id": share_id,
+            "result": payload(&resp),
+        }
+    }))
+}
+
+async fn share_permission_update_cmd(s: &ArgMatches) -> Result<Value, WpsError> {
+    let auth = effective_auth_type(s);
+    let dry = s.get_flag("dry-run");
+    let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
+    let scope = ensure_scope(&auth, dry, true).await?;
+    let file_id = resolve_file_id(s, &auth, dry, retry).await?;
+    let sheet_id = parse_sheet_id(s)?;
+    let view_id = s
+        .get_one::<String>("view-id")
+        .cloned()
+        .ok_or_else(|| WpsError::Validation("缺少 --view-id".to_string()))?;
+    let share_id = s
+        .get_one::<String>("share-id")
+        .cloned()
+        .ok_or_else(|| WpsError::Validation("缺少 --share-id".to_string()))?;
+    let query = parse_params_arg(s, "params-json", "params-file")?;
+    let resp = execute_get_query(
+        format!("/v7/dbsheet/{file_id}/sheets/{sheet_id}/views/{view_id}/sharedlinks/{share_id}/update"),
+        query,
+        &auth,
+        dry,
+        retry,
+    )
+    .await?;
+    if !dry && !api_ok(&resp) {
+        return Err(WpsError::Network(format!("更新分享权限失败: {resp}")));
+    }
+    Ok(serde_json::json!({
+        "ok": true,
+        "msg": "ok",
+        "data": {
+            "scope_preflight": scope,
+            "action": "share-permission-update",
+            "file_id": file_id,
+            "sheet_id": sheet_id,
+            "view_id": view_id,
+            "share_id": share_id,
+            "result": payload(&resp),
+        }
+    }))
+}
+
+async fn form_meta_cmd(s: &ArgMatches) -> Result<Value, WpsError> {
+    let auth = effective_auth_type(s);
+    let dry = s.get_flag("dry-run");
+    let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
+    let scope = ensure_scope(&auth, dry, false).await?;
+    let file_id = resolve_file_id(s, &auth, dry, retry).await?;
+    let sheet_id = parse_sheet_id(s)?;
+    let view_id = s
+        .get_one::<String>("view-id")
+        .cloned()
+        .ok_or_else(|| WpsError::Validation("缺少 --view-id".to_string()))?;
+    let resp = execute_get_query(
+        format!("/v7/dbsheet/{file_id}/sheets/{sheet_id}/forms/{view_id}/meta"),
+        HashMap::new(),
+        &auth,
+        dry,
+        retry,
+    )
+    .await?;
+    if !dry && !api_ok(&resp) {
+        return Err(WpsError::Network(format!("查询表单元数据失败: {resp}")));
+    }
+    Ok(serde_json::json!({
+        "ok": true,
+        "msg": "ok",
+        "data": {
+            "scope_preflight": scope,
+            "action": "form-meta",
+            "file_id": file_id,
+            "sheet_id": sheet_id,
+            "view_id": view_id,
+            "result": payload(&resp),
+        }
+    }))
+}
+
+async fn form_meta_update_cmd(s: &ArgMatches) -> Result<Value, WpsError> {
+    let auth = effective_auth_type(s);
+    let dry = s.get_flag("dry-run");
+    let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
+    let scope = ensure_scope(&auth, dry, true).await?;
+    let file_id = resolve_file_id(s, &auth, dry, retry).await?;
+    let sheet_id = parse_sheet_id(s)?;
+    let view_id = s
+        .get_one::<String>("view-id")
+        .cloned()
+        .ok_or_else(|| WpsError::Validation("缺少 --view-id".to_string()))?;
+    let query = parse_params_arg(s, "params-json", "params-file")?;
+    let resp = execute_get_query(
+        format!("/v7/dbsheet/{file_id}/sheets/{sheet_id}/forms/{view_id}/meta"),
+        query,
+        &auth,
+        dry,
+        retry,
+    )
+    .await?;
+    if !dry && !api_ok(&resp) {
+        return Err(WpsError::Network(format!("更新表单元数据失败: {resp}")));
+    }
+    Ok(serde_json::json!({
+        "ok": true,
+        "msg": "ok",
+        "data": {
+            "scope_preflight": scope,
+            "action": "form-meta-update",
+            "file_id": file_id,
+            "sheet_id": sheet_id,
+            "view_id": view_id,
+            "result": payload(&resp),
+        }
+    }))
+}
+
+async fn form_fields_cmd(s: &ArgMatches) -> Result<Value, WpsError> {
+    let auth = effective_auth_type(s);
+    let dry = s.get_flag("dry-run");
+    let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
+    let scope = ensure_scope(&auth, dry, false).await?;
+    let file_id = resolve_file_id(s, &auth, dry, retry).await?;
+    let sheet_id = parse_sheet_id(s)?;
+    let view_id = s
+        .get_one::<String>("view-id")
+        .cloned()
+        .ok_or_else(|| WpsError::Validation("缺少 --view-id".to_string()))?;
+    let resp = execute_get_query(
+        format!("/v7/dbsheet/{file_id}/sheets/{sheet_id}/forms/{view_id}/fields"),
+        HashMap::new(),
+        &auth,
+        dry,
+        retry,
+    )
+    .await?;
+    if !dry && !api_ok(&resp) {
+        return Err(WpsError::Network(format!("查询表单字段失败: {resp}")));
+    }
+    Ok(serde_json::json!({
+        "ok": true,
+        "msg": "ok",
+        "data": {
+            "scope_preflight": scope,
+            "action": "form-fields",
+            "file_id": file_id,
+            "sheet_id": sheet_id,
+            "view_id": view_id,
+            "result": payload(&resp),
+        }
+    }))
+}
+
+async fn form_field_update_cmd(s: &ArgMatches) -> Result<Value, WpsError> {
+    let auth = effective_auth_type(s);
+    let dry = s.get_flag("dry-run");
+    let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
+    let scope = ensure_scope(&auth, dry, true).await?;
+    let file_id = resolve_file_id(s, &auth, dry, retry).await?;
+    let sheet_id = parse_sheet_id(s)?;
+    let view_id = s
+        .get_one::<String>("view-id")
+        .cloned()
+        .ok_or_else(|| WpsError::Validation("缺少 --view-id".to_string()))?;
+    let field_id = s
+        .get_one::<String>("field-id")
+        .cloned()
+        .ok_or_else(|| WpsError::Validation("缺少 --field-id".to_string()))?;
+    let query = parse_params_arg(s, "params-json", "params-file")?;
+    let resp = execute_get_query(
+        format!("/v7/dbsheet/{file_id}/sheets/{sheet_id}/forms/{view_id}/fields/{field_id}/update"),
+        query,
+        &auth,
+        dry,
+        retry,
+    )
+    .await?;
+    if !dry && !api_ok(&resp) {
+        return Err(WpsError::Network(format!("更新表单字段失败: {resp}")));
+    }
+    Ok(serde_json::json!({
+        "ok": true,
+        "msg": "ok",
+        "data": {
+            "scope_preflight": scope,
+            "action": "form-field-update",
+            "file_id": file_id,
+            "sheet_id": sheet_id,
+            "view_id": view_id,
+            "field_id": field_id,
+            "result": payload(&resp),
+        }
+    }))
+}
+
+async fn dashboard_list_cmd(s: &ArgMatches) -> Result<Value, WpsError> {
+    let auth = effective_auth_type(s);
+    let dry = s.get_flag("dry-run");
+    let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
+    let scope = ensure_scope(&auth, dry, false).await?;
+    let file_id = resolve_file_id(s, &auth, dry, retry).await?;
+    let resp = execute_get_query(
+        format!("/v7/dbsheet/{file_id}/dashboards"),
+        HashMap::new(),
+        &auth,
+        dry,
+        retry,
+    )
+    .await?;
+    if !dry && !api_ok(&resp) {
+        return Err(WpsError::Network(format!("查询仪表盘失败: {resp}")));
+    }
+    Ok(serde_json::json!({
+        "ok": true,
+        "msg": "ok",
+        "data": {
+            "scope_preflight": scope,
+            "action": "dashboard-list",
+            "file_id": file_id,
+            "result": payload(&resp),
+        }
+    }))
+}
+
+async fn dashboard_copy_cmd(s: &ArgMatches) -> Result<Value, WpsError> {
+    let auth = effective_auth_type(s);
+    let dry = s.get_flag("dry-run");
+    let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
+    let scope = ensure_scope(&auth, dry, true).await?;
+    let file_id = resolve_file_id(s, &auth, dry, retry).await?;
+    let dashboard_id = s
+        .get_one::<String>("dashboard-id")
+        .cloned()
+        .ok_or_else(|| WpsError::Validation("缺少 --dashboard-id".to_string()))?;
+    let resp = execute_get_query(
+        format!("/v7/dbsheet/{file_id}/dashboards/{dashboard_id}/copy"),
+        HashMap::new(),
+        &auth,
+        dry,
+        retry,
+    )
+    .await?;
+    if !dry && !api_ok(&resp) {
+        return Err(WpsError::Network(format!("复制仪表盘失败: {resp}")));
+    }
+    Ok(serde_json::json!({
+        "ok": true,
+        "msg": "ok",
+        "data": {
+            "scope_preflight": scope,
+            "action": "dashboard-copy",
+            "file_id": file_id,
+            "dashboard_id": dashboard_id,
             "result": payload(&resp),
         }
     }))

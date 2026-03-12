@@ -142,7 +142,9 @@ wpscli dbsheet select \
   --user-token
 
 # 通用请求（补齐高级端点能力）
-wpscli dbsheet request GET /FILE_ID/schema --user-token
+# 视图与 webhook 等高级能力（语义命令）
+wpscli dbsheet view-list --url "https://365.kdocs.cn/l/xxxx" --sheet-id 2 --user-token
+wpscli dbsheet webhook-list --url "https://365.kdocs.cn/l/xxxx" --with-detail --user-token
 ```
 
 ### 动态 API

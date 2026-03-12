@@ -108,46 +108,6 @@ pub fn command() -> Command {
             with_file_args(Command::new("list-sheets").about("列出所有工作表"), false),
         ))
         .subcommand(with_common_opts(
-            Command::new("request")
-                .about("通用 DBSheet 请求（对齐官方 wps-dbsheet 通用 request 能力）")
-                .arg(
-                    Arg::new("method")
-                        .required(true)
-                        .value_parser(["GET", "POST", "PUT", "PATCH", "DELETE"])
-                        .help("HTTP 方法"),
-                )
-                .arg(
-                    Arg::new("path")
-                        .required(true)
-                        .help("请求路径，例如 /{file_id}/schema 或 /files/search"),
-                )
-                .arg(
-                    Arg::new("prefix")
-                        .long("prefix")
-                        .default_value("/v7/coop/dbsheet")
-                        .num_args(1)
-                        .help("接口前缀，默认 /v7/coop/dbsheet；可改为 /v7 或 /v7/dbsheet"),
-                )
-                .arg(
-                    Arg::new("body")
-                        .long("body")
-                        .num_args(1)
-                        .help("JSON 请求体（支持内联 JSON 或 @文件路径）"),
-                )
-                .arg(
-                    Arg::new("params")
-                        .long("params")
-                        .num_args(1)
-                        .help("查询参数 JSON（对象）"),
-                )
-                .arg(
-                    Arg::new("headers")
-                        .long("headers")
-                        .num_args(1)
-                        .help("附加请求头 JSON（对象）"),
-                ),
-        ))
-        .subcommand(with_common_opts(
             with_file_args(
                 Command::new("init")
                     .about("基于 schema 文件初始化多维表结构")
@@ -252,6 +212,78 @@ pub fn command() -> Command {
         ))
         .subcommand(with_common_opts(
             with_file_args(
+                Command::new("view-list")
+                    .about("列出指定工作表视图（内化 dbsheet 视图 API）")
+                    .arg(Arg::new("sheet-id").long("sheet-id").required(true).num_args(1).help("工作表 ID")),
+                false,
+            ),
+        ))
+        .subcommand(with_common_opts(
+            with_file_args(
+                Command::new("view-get")
+                    .about("获取单个视图详情（内化 dbsheet 视图 API）")
+                    .arg(Arg::new("sheet-id").long("sheet-id").required(true).num_args(1).help("工作表 ID"))
+                    .arg(Arg::new("view-id").long("view-id").required(true).num_args(1).help("视图 ID")),
+                false,
+            ),
+        ))
+        .subcommand(with_common_opts(
+            with_file_args(
+                Command::new("view-create")
+                    .about("创建视图（通过结构化入参，不暴露底层路径）")
+                    .arg(Arg::new("sheet-id").long("sheet-id").required(true).num_args(1).help("工作表 ID"))
+                    .arg(Arg::new("data-json").long("data-json").num_args(1).help("视图创建 payload JSON"))
+                    .arg(Arg::new("data-file").long("data-file").num_args(1).help("从文件读取视图创建 payload JSON")),
+                false,
+            ),
+        ))
+        .subcommand(with_common_opts(
+            with_file_args(
+                Command::new("view-update")
+                    .about("更新视图（通过结构化入参，不暴露底层路径）")
+                    .arg(Arg::new("sheet-id").long("sheet-id").required(true).num_args(1).help("工作表 ID"))
+                    .arg(Arg::new("view-id").long("view-id").required(true).num_args(1).help("视图 ID"))
+                    .arg(Arg::new("data-json").long("data-json").num_args(1).help("视图更新 payload JSON"))
+                    .arg(Arg::new("data-file").long("data-file").num_args(1).help("从文件读取视图更新 payload JSON")),
+                false,
+            ),
+        ))
+        .subcommand(with_common_opts(
+            with_file_args(
+                Command::new("view-delete")
+                    .about("删除视图（通过结构化入参，不暴露底层路径）")
+                    .arg(Arg::new("sheet-id").long("sheet-id").required(true).num_args(1).help("工作表 ID"))
+                    .arg(Arg::new("view-id").long("view-id").required(true).num_args(1).help("视图 ID")),
+                false,
+            ),
+        ))
+        .subcommand(with_common_opts(
+            with_file_args(
+                Command::new("webhook-list")
+                    .about("列出 webhook（内化 dbsheet webhook API）")
+                    .arg(Arg::new("with-detail").long("with-detail").action(ArgAction::SetTrue).help("是否返回规则详情")),
+                false,
+            ),
+        ))
+        .subcommand(with_common_opts(
+            with_file_args(
+                Command::new("webhook-create")
+                    .about("创建 webhook（通过结构化入参，不暴露底层路径）")
+                    .arg(Arg::new("data-json").long("data-json").num_args(1).help("webhook 创建 payload JSON"))
+                    .arg(Arg::new("data-file").long("data-file").num_args(1).help("从文件读取 webhook 创建 payload JSON")),
+                false,
+            ),
+        ))
+        .subcommand(with_common_opts(
+            with_file_args(
+                Command::new("webhook-delete")
+                    .about("删除 webhook（通过结构化入参，不暴露底层路径）")
+                    .arg(Arg::new("hook-id").long("hook-id").required(true).num_args(1).help("hook ID")),
+                false,
+            ),
+        ))
+        .subcommand(with_common_opts(
+            with_file_args(
                 Command::new("clean")
                     .about("清理默认字段和默认空行")
                     .arg(Arg::new("sheet-id").long("sheet-id").required(true).num_args(1).help("工作表 ID")),
@@ -293,12 +325,19 @@ pub async fn handle(args: &[String]) -> Result<Value, WpsError> {
     match m.subcommand() {
         Some(("schema", s)) => get_schema_cmd(s).await,
         Some(("list-sheets", s)) => list_sheets_cmd(s).await,
-        Some(("request", s)) => request_cmd(s).await,
         Some(("init", s)) => init_cmd(s).await,
         Some(("select", s)) => select_cmd(s).await,
         Some(("insert", s)) => insert_cmd(s).await,
         Some(("update", s)) => update_cmd(s).await,
         Some(("delete", s)) => delete_cmd(s).await,
+        Some(("view-list", s)) => view_list_cmd(s).await,
+        Some(("view-get", s)) => view_get_cmd(s).await,
+        Some(("view-create", s)) => view_create_cmd(s).await,
+        Some(("view-update", s)) => view_update_cmd(s).await,
+        Some(("view-delete", s)) => view_delete_cmd(s).await,
+        Some(("webhook-list", s)) => webhook_list_cmd(s).await,
+        Some(("webhook-create", s)) => webhook_create_cmd(s).await,
+        Some(("webhook-delete", s)) => webhook_delete_cmd(s).await,
         Some(("clean", s)) => clean_cmd(s).await,
         _ => Err(WpsError::Validation("unknown dbsheet subcommand".to_string())),
     }
@@ -315,70 +354,19 @@ fn read_json_input(raw: &str, label: &str) -> Result<Value, WpsError> {
     serde_json::from_str(input).map_err(|e| WpsError::Validation(format!("{label} JSON 解析失败: {e}")))
 }
 
-fn json_scalar_to_string(v: &Value) -> Option<String> {
-    match v {
-        Value::String(s) => Some(s.clone()),
-        Value::Number(n) => Some(n.to_string()),
-        Value::Bool(b) => Some(b.to_string()),
-        Value::Null => None,
-        _ => Some(v.to_string()),
+fn read_payload_arg(s: &ArgMatches, inline_key: &str, file_key: &str) -> Result<Value, WpsError> {
+    if let Some(v) = s.get_one::<String>(inline_key) {
+        return read_json_input(v, inline_key);
     }
-}
-
-fn parse_json_kv(raw: Option<&String>, label: &str) -> Result<HashMap<String, String>, WpsError> {
-    let Some(raw) = raw else {
-        return Ok(HashMap::new());
-    };
-    let value = read_json_input(raw, label)?;
-    let obj = value
-        .as_object()
-        .ok_or_else(|| WpsError::Validation(format!("{label} 必须是 JSON 对象")))?;
-    let mut out = HashMap::new();
-    for (k, v) in obj {
-        if let Some(s) = json_scalar_to_string(v) {
-            out.insert(k.clone(), s);
-        }
+    if let Some(path) = s.get_one::<String>(file_key) {
+        let raw = std::fs::read_to_string(path)
+            .map_err(|e| WpsError::Validation(format!("读取 {file_key} 失败: {e}")))?;
+        return serde_json::from_str::<Value>(&raw)
+            .map_err(|e| WpsError::Validation(format!("{file_key} JSON 解析失败: {e}")));
     }
-    Ok(out)
-}
-
-async fn request_cmd(s: &ArgMatches) -> Result<Value, WpsError> {
-    let method = s.get_one::<String>("method").expect("required");
-    let raw_path = s.get_one::<String>("path").expect("required");
-    let prefix = s
-        .get_one::<String>("prefix")
-        .cloned()
-        .unwrap_or_else(|| "/v7/coop/dbsheet".to_string());
-    let mut path = raw_path.clone();
-    if !path.starts_with('/') {
-        path = format!("/{path}");
-    }
-    let full_path = if raw_path.starts_with("http://") || raw_path.starts_with("https://") {
-        raw_path.clone()
-    } else {
-        format!("{}{}", prefix.trim_end_matches('/'), path)
-    };
-    let auth = effective_auth_type(s);
-    let dry = s.get_flag("dry-run");
-    let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
-    let query_params = parse_json_kv(s.get_one::<String>("params"), "params")?;
-    let headers = parse_json_kv(s.get_one::<String>("headers"), "headers")?;
-    let body = if let Some(raw_body) = s.get_one::<String>("body") {
-        Some(read_json_input(raw_body, "body")?.to_string())
-    } else {
-        None
-    };
-    executor::execute_raw(
-        method,
-        &full_path,
-        query_params,
-        headers,
-        body,
-        &auth,
-        dry,
-        retry,
-    )
-    .await
+    Err(WpsError::Validation(format!(
+        "缺少 --{inline_key} 或 --{file_key}"
+    )))
 }
 
 fn effective_auth_type(s: &ArgMatches) -> String {
@@ -507,6 +495,285 @@ async fn list_sheets_cmd(s: &ArgMatches) -> Result<Value, WpsError> {
         "sheets": sheets
     });
     Ok(out)
+}
+
+async fn view_list_cmd(s: &ArgMatches) -> Result<Value, WpsError> {
+    let auth = effective_auth_type(s);
+    let dry = s.get_flag("dry-run");
+    let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
+    let scope = ensure_scope(&auth, dry, false).await?;
+    let file_id = resolve_file_id(s, &auth, dry, retry).await?;
+    let sheet_id = parse_sheet_id(s)?;
+    let resp = execute(
+        "GET",
+        &format!("/v7/dbsheet/{file_id}/sheets/{sheet_id}/views"),
+        None,
+        &auth,
+        dry,
+        retry,
+    )
+    .await?;
+    if !dry && !api_ok(&resp) {
+        return Err(WpsError::Network(format!("列出视图失败: {resp}")));
+    }
+    Ok(serde_json::json!({
+        "ok": true,
+        "msg": "ok",
+        "data": {
+            "scope_preflight": scope,
+            "action": "view-list",
+            "file_id": file_id,
+            "sheet_id": sheet_id,
+            "views": payload(&resp),
+        }
+    }))
+}
+
+async fn view_get_cmd(s: &ArgMatches) -> Result<Value, WpsError> {
+    let auth = effective_auth_type(s);
+    let dry = s.get_flag("dry-run");
+    let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
+    let scope = ensure_scope(&auth, dry, false).await?;
+    let file_id = resolve_file_id(s, &auth, dry, retry).await?;
+    let sheet_id = parse_sheet_id(s)?;
+    let view_id = s
+        .get_one::<String>("view-id")
+        .cloned()
+        .ok_or_else(|| WpsError::Validation("缺少 --view-id".to_string()))?;
+    let resp = execute(
+        "GET",
+        &format!("/v7/dbsheet/{file_id}/sheets/{sheet_id}/views/{view_id}"),
+        None,
+        &auth,
+        dry,
+        retry,
+    )
+    .await?;
+    if !dry && !api_ok(&resp) {
+        return Err(WpsError::Network(format!("读取视图失败: {resp}")));
+    }
+    Ok(serde_json::json!({
+        "ok": true,
+        "msg": "ok",
+        "data": {
+            "scope_preflight": scope,
+            "action": "view-get",
+            "file_id": file_id,
+            "sheet_id": sheet_id,
+            "view_id": view_id,
+            "view": payload(&resp),
+        }
+    }))
+}
+
+async fn view_create_cmd(s: &ArgMatches) -> Result<Value, WpsError> {
+    let auth = effective_auth_type(s);
+    let dry = s.get_flag("dry-run");
+    let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
+    let scope = ensure_scope(&auth, dry, true).await?;
+    let file_id = resolve_file_id(s, &auth, dry, retry).await?;
+    let sheet_id = parse_sheet_id(s)?;
+    let body = read_payload_arg(s, "data-json", "data-file")?;
+    let resp = execute(
+        "POST",
+        &format!("/v7/coop/dbsheet/{file_id}/sheets/{sheet_id}/views"),
+        Some(body),
+        &auth,
+        dry,
+        retry,
+    )
+    .await?;
+    if !dry && !api_ok(&resp) {
+        return Err(WpsError::Network(format!("创建视图失败: {resp}")));
+    }
+    Ok(serde_json::json!({
+        "ok": true,
+        "msg": "ok",
+        "data": {
+            "scope_preflight": scope,
+            "action": "view-create",
+            "file_id": file_id,
+            "sheet_id": sheet_id,
+            "result": payload(&resp),
+        }
+    }))
+}
+
+async fn view_update_cmd(s: &ArgMatches) -> Result<Value, WpsError> {
+    let auth = effective_auth_type(s);
+    let dry = s.get_flag("dry-run");
+    let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
+    let scope = ensure_scope(&auth, dry, true).await?;
+    let file_id = resolve_file_id(s, &auth, dry, retry).await?;
+    let sheet_id = parse_sheet_id(s)?;
+    let view_id = s
+        .get_one::<String>("view-id")
+        .cloned()
+        .ok_or_else(|| WpsError::Validation("缺少 --view-id".to_string()))?;
+    let body = read_payload_arg(s, "data-json", "data-file")?;
+    let resp = execute(
+        "POST",
+        &format!("/v7/coop/dbsheet/{file_id}/sheets/{sheet_id}/views/{view_id}/update"),
+        Some(body),
+        &auth,
+        dry,
+        retry,
+    )
+    .await?;
+    if !dry && !api_ok(&resp) {
+        return Err(WpsError::Network(format!("更新视图失败: {resp}")));
+    }
+    Ok(serde_json::json!({
+        "ok": true,
+        "msg": "ok",
+        "data": {
+            "scope_preflight": scope,
+            "action": "view-update",
+            "file_id": file_id,
+            "sheet_id": sheet_id,
+            "view_id": view_id,
+            "result": payload(&resp),
+        }
+    }))
+}
+
+async fn view_delete_cmd(s: &ArgMatches) -> Result<Value, WpsError> {
+    let auth = effective_auth_type(s);
+    let dry = s.get_flag("dry-run");
+    let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
+    let scope = ensure_scope(&auth, dry, true).await?;
+    let file_id = resolve_file_id(s, &auth, dry, retry).await?;
+    let sheet_id = parse_sheet_id(s)?;
+    let view_id = s
+        .get_one::<String>("view-id")
+        .cloned()
+        .ok_or_else(|| WpsError::Validation("缺少 --view-id".to_string()))?;
+    let resp = execute(
+        "POST",
+        &format!("/v7/coop/dbsheet/{file_id}/sheets/{sheet_id}/views/{view_id}/delete"),
+        Some(serde_json::json!({})),
+        &auth,
+        dry,
+        retry,
+    )
+    .await?;
+    if !dry && !api_ok(&resp) {
+        return Err(WpsError::Network(format!("删除视图失败: {resp}")));
+    }
+    Ok(serde_json::json!({
+        "ok": true,
+        "msg": "ok",
+        "data": {
+            "scope_preflight": scope,
+            "action": "view-delete",
+            "file_id": file_id,
+            "sheet_id": sheet_id,
+            "view_id": view_id,
+            "result": payload(&resp),
+        }
+    }))
+}
+
+async fn webhook_list_cmd(s: &ArgMatches) -> Result<Value, WpsError> {
+    let auth = effective_auth_type(s);
+    let dry = s.get_flag("dry-run");
+    let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
+    let scope = ensure_scope(&auth, dry, true).await?;
+    let file_id = resolve_file_id(s, &auth, dry, retry).await?;
+    let mut query = HashMap::new();
+    if s.get_flag("with-detail") {
+        query.insert("with_detail".to_string(), "true".to_string());
+    }
+    let resp = executor::execute_raw(
+        "GET",
+        &format!("/v7/coop/dbsheet/{file_id}/hooks"),
+        query,
+        HashMap::new(),
+        None,
+        &auth,
+        dry,
+        retry,
+    )
+    .await?;
+    if !dry && !api_ok(&resp) {
+        return Err(WpsError::Network(format!("列出 webhook 失败: {resp}")));
+    }
+    Ok(serde_json::json!({
+        "ok": true,
+        "msg": "ok",
+        "data": {
+            "scope_preflight": scope,
+            "action": "webhook-list",
+            "file_id": file_id,
+            "hooks": payload(&resp),
+        }
+    }))
+}
+
+async fn webhook_create_cmd(s: &ArgMatches) -> Result<Value, WpsError> {
+    let auth = effective_auth_type(s);
+    let dry = s.get_flag("dry-run");
+    let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
+    let scope = ensure_scope(&auth, dry, true).await?;
+    let file_id = resolve_file_id(s, &auth, dry, retry).await?;
+    let body = read_payload_arg(s, "data-json", "data-file")?;
+    let resp = execute(
+        "POST",
+        &format!("/v7/coop/dbsheet/{file_id}/hooks/create"),
+        Some(body),
+        &auth,
+        dry,
+        retry,
+    )
+    .await?;
+    if !dry && !api_ok(&resp) {
+        return Err(WpsError::Network(format!("创建 webhook 失败: {resp}")));
+    }
+    Ok(serde_json::json!({
+        "ok": true,
+        "msg": "ok",
+        "data": {
+            "scope_preflight": scope,
+            "action": "webhook-create",
+            "file_id": file_id,
+            "result": payload(&resp),
+        }
+    }))
+}
+
+async fn webhook_delete_cmd(s: &ArgMatches) -> Result<Value, WpsError> {
+    let auth = effective_auth_type(s);
+    let dry = s.get_flag("dry-run");
+    let retry = *s.get_one::<u32>("retry").unwrap_or(&1);
+    let scope = ensure_scope(&auth, dry, true).await?;
+    let file_id = resolve_file_id(s, &auth, dry, retry).await?;
+    let hook_id = s
+        .get_one::<String>("hook-id")
+        .cloned()
+        .ok_or_else(|| WpsError::Validation("缺少 --hook-id".to_string()))?;
+    let resp = execute(
+        "POST",
+        &format!("/v7/coop/dbsheet/{file_id}/hooks/{hook_id}/delete"),
+        Some(serde_json::json!({})),
+        &auth,
+        dry,
+        retry,
+    )
+    .await?;
+    if !dry && !api_ok(&resp) {
+        return Err(WpsError::Network(format!("删除 webhook 失败: {resp}")));
+    }
+    Ok(serde_json::json!({
+        "ok": true,
+        "msg": "ok",
+        "data": {
+            "scope_preflight": scope,
+            "action": "webhook-delete",
+            "file_id": file_id,
+            "hook_id": hook_id,
+            "result": payload(&resp),
+        }
+    }))
 }
 
 async fn init_cmd(s: &ArgMatches) -> Result<Value, WpsError> {

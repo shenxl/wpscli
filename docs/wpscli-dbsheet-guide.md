@@ -44,33 +44,33 @@ wpscli dbsheet --help
 
 - `schema`：读取多维表结构
 - `list-sheets`：列出工作表
-- `request`：通用 API 请求（支持自定义前缀，兼容官方 `wps-dbsheet request` 风格）
 - `init`：按 YAML schema 初始化工作表
 - `select`：SQL-like 查询
 - `insert`：新增记录（支持批量）
 - `update`：更新记录（支持批量）
 - `delete`：删除记录（按 id 或 where）
+- `view-list/view-get/view-create/view-update/view-delete`：视图能力
+- `webhook-list/webhook-create/webhook-delete`：Webhook 能力
 - `clean`：清理默认字段与默认空行
 
 ---
 
-## 2.1 通用请求模式（补齐高级能力）
+## 2.1 视图与 Webhook（内化高级能力）
 
-当你需要调用 `webhooks/permissions/forms/share-views` 等尚未 helper 化的接口时，可用 `request`：
+不再通过通用 request 暴露底层路径，而是以语义命令操作：
 
 ```bash
-# 默认前缀 /v7/coop/dbsheet
-wpscli dbsheet request GET /FILE_ID/schema --user-token
+# 视图
+wpscli dbsheet view-list --url "https://365.kdocs.cn/l/<link_id>" --sheet-id 2 --user-token
+wpscli dbsheet view-get --url "https://365.kdocs.cn/l/<link_id>" --sheet-id 2 --view-id VIEW_ID --user-token
+wpscli dbsheet view-create --url "https://365.kdocs.cn/l/<link_id>" --sheet-id 2 --data-file ./view_create.json --user-token
+wpscli dbsheet view-update --url "https://365.kdocs.cn/l/<link_id>" --sheet-id 2 --view-id VIEW_ID --data-file ./view_update.json --user-token
+wpscli dbsheet view-delete --url "https://365.kdocs.cn/l/<link_id>" --sheet-id 2 --view-id VIEW_ID --user-token
 
-# 使用 /v7/dbsheet 前缀
-wpscli dbsheet request GET /files/FILE_ID/views --prefix /v7/dbsheet --user-token
-
-# 传 body / params / headers（支持 @文件）
-wpscli dbsheet request POST /FILE_ID/sheets/SHEET_ID/records/create \
-  --body @./assets/create-records.json \
-  --params '{"page_size":100}' \
-  --headers '{"X-Kso-Id-Type":"internal"}' \
-  --user-token
+# Webhook
+wpscli dbsheet webhook-list --url "https://365.kdocs.cn/l/<link_id>" --with-detail --user-token
+wpscli dbsheet webhook-create --url "https://365.kdocs.cn/l/<link_id>" --data-file ./hook_create.json --user-token
+wpscli dbsheet webhook-delete --url "https://365.kdocs.cn/l/<link_id>" --hook-id HOOK_ID --user-token
 ```
 
 ---

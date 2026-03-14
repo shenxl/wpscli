@@ -1,11 +1,12 @@
 # 文档框架（Docs Framework）
 
-`wpscli` 是一个对文档一致性要求很高的 CLI 项目。  
+`wpscli` 是一个对文档一致性与质量可观测要求很高的 CLI 项目。  
 本项目采用以下成熟方案：
 
 - **Docs as Code**：文档与代码同仓库管理
 - **命令帮助自动生成**：从真实 `clap --help` 输出生成文档，避免手写漂移
 - **可检查模式（--check）**：用于提交前/CI 校验文档是否过期
+- **质量门禁命令**：通过 `wpscli quality` 提供全量 service/endpoint 基线验证
 
 ---
 
@@ -45,6 +46,17 @@ python3 scripts/generate_docs.py
 - `docs/commands/07-system.md`
 - `docs/commands/README.md`
 
+其中 `07-system.md` 已覆盖：
+
+- `schema`
+- `catalog`
+- `raw`
+- `generate-skills`
+- `completions`
+- `ui`
+- `doctor`
+- `quality`
+
 ---
 
 ## 4) 检查文档是否过期
@@ -78,10 +90,11 @@ python3 scripts/generate_docs.py --check
 
 ## 6) 推荐工作流
 
-1. 修改命令代码（新增参数/子命令）
+1. 修改命令代码（新增参数/子命令/质量门禁）
 2. 运行 `python3 scripts/generate_docs.py`
-3. 检查 `docs/commands` 变化
-4. 提交代码与文档变更
+3. 运行 `wpscli quality`，确认静态/构造门禁通过
+4. 检查 `docs/commands` 变化
+5. 提交代码与文档变更
 
 ---
 

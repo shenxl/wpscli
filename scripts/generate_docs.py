@@ -85,7 +85,7 @@ DOC_SPECS: List[Dict] = [
     {
         "file": "docs/commands/07-system.md",
         "title": "系统命令",
-        "desc": "框架级命令：schema/catalog/raw/generate-skills/completions/ui/doctor。",
+        "desc": "框架级命令：schema/catalog/raw/generate-skills/completions/ui/doctor/quality。",
         "entries": [
             {"label": "schema", "cmd": "schema --help"},
             {"label": "catalog", "cmd": "catalog --help"},
@@ -94,6 +94,7 @@ DOC_SPECS: List[Dict] = [
             {"label": "completions", "cmd": "completions --help"},
             {"label": "ui", "cmd": "ui --help"},
             {"label": "doctor", "cmd": "doctor --help"},
+            {"label": "quality", "cmd": "quality --help"},
         ],
     },
 ]
@@ -158,7 +159,16 @@ def map_changed_files_to_docs(changed_files: Set[str]) -> Set[str]:
         }:
             affected.add("docs/commands/06-integrations.md")
             continue
-        if p in {"src/schema.rs", "src/skill_gen.rs", "src/doctor.rs", "src/ui.rs"}:
+        if p in {
+            "src/schema.rs",
+            "src/skill_gen.rs",
+            "src/doctor.rs",
+            "src/ui.rs",
+            "src/quality.rs",
+            "src/help_schema_contract.rs",
+            "src/capability_domains.rs",
+            "src/descriptor.rs",
+        }:
             affected.add("docs/commands/07-system.md")
             continue
         if p == "src/helpers/mod.rs":

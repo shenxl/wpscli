@@ -54,7 +54,7 @@ Options:
       --file-id <file-id>
           文件 ID
       --format <format>
-          输出格式 [default: markdown] [possible values: markdown, plain, kdc]
+          输出格式（dbt 会路由到 wpscli dbsheet SQL-like 查询模块） [default: markdown] [aliases: --fomat] [possible values: markdown, plain, kdc, dbt]
       --mode <mode>
           读取模式：sync/async/auto [default: sync] [possible values: sync, async, auto]
       --task-id <task-id>
@@ -62,7 +62,7 @@ Options:
       --include-elements <include-elements>
           元素过滤，逗号分隔：para,table,component,textbox,all
       --auth-type <auth-type>
-          鉴权类型：app 或 user [default: user] [possible values: app, user]
+          鉴权类型：app / user / cookie [default: user] [possible values: app, user, cookie]
       --user-token
           快捷方式：等价于 --auth-type user
       --dry-run
@@ -112,6 +112,7 @@ Options:
 
 示例：
   wpscli doc read-doc --url "https://365.kdocs.cn/l/xxxx" --format markdown --mode auto --user-token
+  wpscli doc read-doc --url "https://365.kdocs.cn/l/xxxx" --format dbt --dbsheet-sheet-id 2 --dbsheet-fields "标题,状态" --user-token
   wpscli doc read-doc --drive-id <drive_id> --file-id <file_id> --user-token
   wpscli doc read-doc --url "https://365.kdocs.cn/l/xxxx" --xlsx-row-offset 500 --xlsx-row-head 200 --output-file /tmp/xlsx_page_3.json --user-token
   wpscli doc read-doc --url "https://365.kdocs.cn/l/xxxx" --xlsx-row-head 1000 --export-parquet /tmp/xlsx.parquet --user-token
@@ -136,7 +137,9 @@ Options:
       --file-id <file-id>
           文件 ID
       --target-format <target-format>
-          目标格式（默认自动识别） [default: auto] [possible values: auto, otl, dbt, xlsx]
+          目标格式（默认自动识别） [default: auto] [aliases: --fomat] [possible values: auto, otl, dbt, xlsx]
+      --format <format>
+          target-format 的兼容别名 [possible values: auto, otl, dbt, xlsx]
       --write-mode <write-mode>
           OTL 写入模式：replace 或 append [default: replace] [possible values: replace, append]
       --content <content>
@@ -170,7 +173,7 @@ Options:
       --xlsx-values-file <xlsx-values-file>
           从文件读取 XLSX 写入 JSON
       --auth-type <auth-type>
-          鉴权类型：app 或 user [default: user] [possible values: app, user]
+          鉴权类型：app / user / cookie [default: user] [possible values: app, user, cookie]
       --user-token
           快捷方式：等价于 --auth-type user
       --dry-run

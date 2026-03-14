@@ -33,6 +33,7 @@ Commands:
   completions      生成 shell 自动补全脚本
   ui               显示交互引导 ASCII 场景
   doctor           执行本地诊断（安装状态/鉴权就绪/安全检查）
+  quality          运行描述符质量门禁（静态/构造/连通抽样）
   help             Print this message or the help of the given subcommand(s)
 
 Options:

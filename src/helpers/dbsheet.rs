@@ -132,9 +132,15 @@ pub fn command() -> Command {
                     .arg(
                         Arg::new("limit")
                             .long("limit")
-                            .default_value("100")
+                            .default_value("0")
                             .value_parser(clap::value_parser!(usize))
-                            .help("最多返回条数"),
+                            .help("最多返回条数（默认返回全部，--limit 0 等价于 --all）"),
+                    )
+                    .arg(
+                        Arg::new("all")
+                            .long("all")
+                            .action(ArgAction::SetTrue)
+                            .help("读取全部记录（自动分页，等价于 --limit 0）"),
                     )
                     .arg(
                         Arg::new("offset")
@@ -146,9 +152,9 @@ pub fn command() -> Command {
                     .arg(
                         Arg::new("page-size")
                             .long("page-size")
-                            .default_value("100")
+                            .default_value("200")
                             .value_parser(clap::value_parser!(usize))
-                            .help("分页抓取时的每页大小"),
+                            .help("分页抓取时的每页大小（默认 200）"),
                     ),
                 false,
             ),
@@ -1417,9 +1423,10 @@ async fn select_cmd(s: &ArgMatches) -> Result<Value, WpsError> {
     let file_id = resolve_file_id(s, &auth, dry, retry).await?;
     let sheet_id = parse_sheet_id(s)?;
     let where_clause = s.get_one::<String>("where").cloned();
-    let limit = *s.get_one::<usize>("limit").unwrap_or(&100);
+    let fetch_all = s.get_flag("all");
+    let limit = if fetch_all { 0 } else { *s.get_one::<usize>("limit").unwrap_or(&0) };
     let offset = *s.get_one::<usize>("offset").unwrap_or(&0);
-    let page_size = *s.get_one::<usize>("page-size").unwrap_or(&100);
+    let page_size = *s.get_one::<usize>("page-size").unwrap_or(&200);
     let selected_fields = s
         .get_one::<String>("fields")
         .map(|x| x.split(',').map(|v| v.trim().to_string()).filter(|v| !v.is_empty()).collect::<Vec<_>>())
@@ -1636,10 +1643,11 @@ pub async fn sql_like_select_records(
         parsed_records.retain(|rec| eval_filter_expr(&expr, rec));
     }
     let total = parsed_records.len();
+    // limit 为 0 时表示返回全部
     let sliced = parsed_records
         .into_iter()
         .skip(offset)
-        .take(limit)
+        .take(if limit == 0 { total } else { limit })
         .map(|r| project_record(r, &selected_fields))
         .collect::<Vec<_>>();
     Ok(SelectedRows { total, records: sliced })

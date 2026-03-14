@@ -1,11 +1,13 @@
 # Rust
 /target/
+/mock/
 **/*.rs.bk
 
 # Editor / OS
 .DS_Store
 .idea/
 .vscode/
+*.swp
 
 # Local env and secrets
 .env

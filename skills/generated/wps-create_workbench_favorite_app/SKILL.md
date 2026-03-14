@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli create_workbench_favorite_app --help"
+    auth_types: ["user"]
 ---
 
 # create_workbench_favorite_app service
@@ -22,7 +23,7 @@ wpscli create_workbench_favorite_app <endpoint> [flags]
 
 ### create_workbench_favorite_app
 
-  - `create-workbench-favorite-app` — 添加用户【常用】应用 (`GET` `/v7/create_workbench_favorite_app`; scopes: `kso.app.readwrite`)
+  - `create-workbench-favorite-app` — 添加用户【常用】应用 (`GET` `/v7/create_workbench_favorite_app`; scopes: `kso.app.readwrite`; auth: `user`)
 
 ## Discovering Commands
 

@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli devhub --help"
+    auth_types: ["app", "user"]
 ---
 
 # devhub service
@@ -22,13 +23,13 @@ wpscli devhub <endpoint> [flags]
 
 ### devhub
 
-  - `app-detail` — 智能体应用详情查询 (`GET` `/v7/devhub/apps/{app_id}/detail`; scopes: `kso.devhub_app.readwrite, kso.devhub_app.readwrite`)
-  - `chat-cancel` — 取消对话 (`GET` `/v7/devhub/apps/{app_id}/chats/cancel`; scopes: `kso.devhub_chat.readwrite`)
-  - `session-create` — 创建会话 (`GET` `/v7/devhub/apps/{app_id}/sessions/create`; scopes: `kso.devhub_session.readwrite`)
-  - `session-delete` — 删除会话 (`GET` `/v7/devhub/sessions/{session_id}/delete`; scopes: `kso.devhub_session.readwrite`)
-  - `session-list` — 查询会话列表 (`GET` `/v7/devhub/apps/{app_id}/sessions/list`; scopes: `kso.devhub_session.readwrite`)
-  - `session-message` — 查询会话历史消息 (`GET` `/v7/devhub/apps/{app_id}/sessions/messages`; scopes: `kso.devhub_session.readwrite`)
-  - `session-single-name` — 查询单个会话名称 (`GET` `/v7/devhub/sessions/{session_id}/name`; scopes: `kso.devhub_session.readwrite`)
+  - `app-detail` — 智能体应用详情查询 (`GET` `/v7/devhub/apps/{app_id}/detail`; scopes: `kso.devhub_app.readwrite, kso.devhub_app.readwrite`; auth: `both`)
+  - `chat-cancel` — 取消对话 (`GET` `/v7/devhub/apps/{app_id}/chats/cancel`; scopes: `kso.devhub_chat.readwrite`; auth: `user`)
+  - `session-create` — 创建会话 (`GET` `/v7/devhub/apps/{app_id}/sessions/create`; scopes: `kso.devhub_session.readwrite`; auth: `user`)
+  - `session-delete` — 删除会话 (`GET` `/v7/devhub/sessions/{session_id}/delete`; scopes: `kso.devhub_session.readwrite`; auth: `user`)
+  - `session-list` — 查询会话列表 (`GET` `/v7/devhub/apps/{app_id}/sessions/list`; scopes: `kso.devhub_session.readwrite`; auth: `user`)
+  - `session-message` — 查询会话历史消息 (`GET` `/v7/devhub/apps/{app_id}/sessions/messages`; scopes: `kso.devhub_session.readwrite`; auth: `user`)
+  - `session-single-name` — 查询单个会话名称 (`GET` `/v7/devhub/sessions/{session_id}/name`; scopes: `kso.devhub_session.readwrite`; auth: `user`)
 
 ## Discovering Commands
 

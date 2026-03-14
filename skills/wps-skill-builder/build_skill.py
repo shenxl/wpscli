@@ -119,6 +119,36 @@ def _descriptor_dir() -> Path:
     return _repo_root() / "descriptors"
 
 
+_SKILL_SYNC_DONE = False
+
+
+def _generated_skills_dir() -> Path:
+    return _repo_root() / "skills" / "generated"
+
+
+def _ensure_generated_skills(wpscli_bin: str) -> None:
+    """Keep builder and Rust skill pipeline aligned by invoking `wpscli generate-skills`."""
+    global _SKILL_SYNC_DONE
+    if _SKILL_SYNC_DONE:
+        return
+    out_dir = _generated_skills_dir()
+    proc = subprocess.run(
+        [wpscli_bin, "generate-skills", "--out-dir", str(out_dir), "--output", "json"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        check=False,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"failed to sync generated skills via wpscli generate-skills\n"
+            f"command: {wpscli_bin} generate-skills --out-dir {out_dir}\n"
+            f"stdout:\n{proc.stdout}\n"
+            f"stderr:\n{proc.stderr}"
+        )
+    _SKILL_SYNC_DONE = True
+
+
 def _run_wpscli(wpscli_bin: str, args: List[str]) -> Dict[str, Any]:
     proc = subprocess.run(
         [wpscli_bin, *args],
@@ -355,6 +385,62 @@ def _render_helper_reference(helpers: List[str]) -> str:
     return "\n".join(lines)
 
 
+def _render_workflow_guardrails(name: str, goal: str, helpers: List[str]) -> str:
+    helper_hint = ", ".join(helpers) if helpers else "files, doc, users"
+    return "\n".join(
+        [
+            "# Workflow Guardrails",
+            "",
+            "Use these rules to keep execution deterministic and reduce trial-and-error.",
+            "",
+            "## 1) Workflow-first policy",
+            "",
+            "- Prefer helper/recipe composition before single endpoint calls.",
+            "- Use `wpscli raw` only when helper/recipe path is clearly unavailable.",
+            f"- For this skill (`{name}`), start from helpers: `{helper_hint}`.",
+            "",
+            "## 2) Temporary file contract (/tmp)",
+            "",
+            "Before executing any command, write structured files:",
+            "",
+            f"- Plan file: `/tmp/{name}_plan.json`",
+            f"- Step params: `/tmp/{name}_step_<N>.json`",
+            f"- Step result: `/tmp/{name}_result_<N>.json`",
+            "",
+            "Each `step_<N>.json` should include:",
+            "",
+            "```json",
+            "{",
+            '  "step": 1,',
+            '  "intent": "what this step does",',
+            '  "command": "wpscli <helper> <cmd> ...",',
+            '  "auth_type": "app|user|cookie",',
+            '  "inputs": {},',
+            '  "expected_keys": ["ok", "data"],',
+            '  "fallback": "what to do on failure"',
+            "}",
+            "```",
+            "",
+            "## 3) Retry / recovery policy",
+            "",
+            "- Retry same command at most 2 times.",
+            "- If failure repeats, switch to predefined fallback branch.",
+            "- Return structured error class: `auth`, `scope`, `parameter`, `network`, `business`.",
+            "",
+            "## 4) Hard stops",
+            "",
+            "- Do not keep mutating parameters without a schema-based reason.",
+            "- For write/delete actions, run `--dry-run` first when possible.",
+            "- If required identifiers are missing, stop and request exact input.",
+            "",
+            "## 5) Goal reminder",
+            "",
+            f"- Target business goal: {goal}",
+            "",
+        ]
+    )
+
+
 def _build_eval_prompts(skill_name: str, goal: str, helpers: List[str]) -> List[Dict[str, Any]]:
     helper_hint = "、".join(helpers) if helpers else "files/doc/users"
     return [
@@ -413,6 +499,24 @@ def _render_business_skill_md(
         "Use this skill whenever user requests imply a multi-step WPS business workflow,",
         "especially when tasks require chaining create/read/write/search/sync actions instead of single API calls.",
         "",
+        "## Workflow-First Operating Mode",
+        "",
+        "Do NOT default to low-level endpoint probing. Use this strict order:",
+        "1. Match an existing recipe/workflow pattern first.",
+        "2. Compose helper commands (`files/doc/users/dbsheet/...`).",
+        "3. Use service endpoints only for missing helper capability.",
+        "4. Use `raw` as last resort with explicit rationale.",
+        "",
+        "If a step can be executed through a helper command, do not replace it with raw endpoint calls.",
+        "",
+        "## /tmp Execution Contract",
+        "",
+        "Claude Code often materializes parameters into temp files. Reuse that behavior intentionally:",
+        f"- Write a plan to `/tmp/{name}_plan.json` before execution.",
+        f"- Write each step's params to `/tmp/{name}_step_<N>.json`.",
+        f"- Save each step's result to `/tmp/{name}_result_<N>.json`.",
+        "This keeps runs reproducible and makes retries deterministic.",
+        "",
         "## Execution Loop",
         "",
         "1. Capture user intent, constraints, and expected output format.",
@@ -459,6 +563,7 @@ def _render_business_skill_md(
         "",
         "- `references/HELPER_COMPOSITION.md`",
         "- `references/API_BASELINE.md`",
+        "- `references/WORKFLOW_GUARDRAILS.md`",
         "- `commands.json`",
     ]
     return "\n".join(lines) + "\n"
@@ -568,6 +673,7 @@ def cmd_discover(args: argparse.Namespace) -> int:
 
 
 def cmd_create_api(args: argparse.Namespace) -> int:
+    _ensure_generated_skills(args.wpscli_bin)
     normalized_name = _normalize_name(args.name)
     description = args.description.strip()
     if not description:
@@ -646,6 +752,7 @@ def cmd_create_api(args: argparse.Namespace) -> int:
 
 
 def cmd_create_business(args: argparse.Namespace) -> int:
+    _ensure_generated_skills(args.wpscli_bin)
     normalized_name = _normalize_name(args.name)
     description = args.description.strip()
     goal = args.goal.strip()
@@ -698,6 +805,7 @@ def cmd_create_business(args: argparse.Namespace) -> int:
     )
     helper_md = _render_helper_reference(helpers)
     api_md = _render_api_reference(selected, args.auth_type)
+    guardrails_md = _render_workflow_guardrails(normalized_name, goal, helpers)
     evals = {
         "skill_name": normalized_name,
         "evals": _build_eval_prompts(normalized_name, goal, helpers),
@@ -736,6 +844,7 @@ def cmd_create_business(args: argparse.Namespace) -> int:
     (skill_dir / "Skill.md").write_text(skill_md, encoding="utf-8")
     (skill_dir / "references" / "HELPER_COMPOSITION.md").write_text(helper_md, encoding="utf-8")
     (skill_dir / "references" / "API_BASELINE.md").write_text(api_md, encoding="utf-8")
+    (skill_dir / "references" / "WORKFLOW_GUARDRAILS.md").write_text(guardrails_md, encoding="utf-8")
     (skill_dir / "evals" / "evals.json").write_text(json.dumps(evals, ensure_ascii=False, indent=2), encoding="utf-8")
     (skill_dir / "commands.json").write_text(json.dumps(commands_json, ensure_ascii=False, indent=2), encoding="utf-8")
     (skill_dir / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -756,6 +865,7 @@ def cmd_create_business(args: argparse.Namespace) -> int:
                     "Skill.md",
                     "references/HELPER_COMPOSITION.md",
                     "references/API_BASELINE.md",
+                    "references/WORKFLOW_GUARDRAILS.md",
                     "evals/evals.json",
                     "commands.json",
                     "manifest.json",

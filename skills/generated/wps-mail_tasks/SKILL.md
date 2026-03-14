@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli mail_tasks --help"
+    auth_types: ["app"]
 ---
 
 # mail_tasks service
@@ -22,7 +23,7 @@ wpscli mail_tasks <endpoint> [flags]
 
 ### mail_tasks
 
-  - `get-mail-task` — 获取邮箱任务信息 (`GET` `/v7/mail_tasks/{task_id}`; scopes: `kso.mail_contact.readwrite, kso.mail_contact.read`)
+  - `get-mail-task` — 获取邮箱任务信息 (`GET` `/v7/mail_tasks/{task_id}`; scopes: `kso.mail_contact.readwrite, kso.mail_contact.read`; auth: `app`)
 
 ## Discovering Commands
 

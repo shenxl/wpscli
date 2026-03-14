@@ -1,8 +1,8 @@
 {
   "version": "1.0.0",
   "generated_from": "/Users/shen/openclaw_src/googlews/wpsskill/wps-openapi-nav/data/api_index.json",
-  "total_services": 64,
-  "total_endpoints": 488,
+  "total_services": 66,
+  "total_endpoints": 493,
   "services": [
     {
       "service": "aidocs",
@@ -48,6 +48,16 @@
       "service": "contacts",
       "file": "contacts.json",
       "count": 1
+    },
+    {
+      "service": "cookie_contacts",
+      "file": "cookie_contacts.json",
+      "count": 1
+    },
+    {
+      "service": "cookie_im",
+      "file": "cookie_im.json",
+      "count": 4
     },
     {
       "service": "coop_dbsheet",

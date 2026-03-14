@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli deleted_files --help"
+    auth_types: ["app", "user"]
 ---
 
 # deleted_files service
@@ -22,13 +23,13 @@ wpscli deleted_files <endpoint> [flags]
 
 ### deleted_files
 
-  - `batch-delete-files` — 一级回收站批量文件删除 (`GET` `/v7/deleted_files/batch_delete`; scopes: `kso.deleted_file.readwrite, kso.deleted_file.readwrite`)
-  - `batch-restore-files` — 批量还原回收站文件 (`GET` `/v7/deleted_files/batch_restore`; scopes: `kso.deleted_file.readwrite, kso.deleted_file.readwrite`)
-  - `clear-files` — 清空回收站文件 (`GET` `/v7/deleted_files/clear`; scopes: `kso.deleted_file.readwrite, kso.deleted_file.readwrite`)
-  - `delete-file` — 删除一级回收站文件 (`GET` `/v7/deleted_files/{file_id}/delete`; scopes: `kso.deleted_file.readwrite, kso.deleted_file.readwrite`)
-  - `get-file-meta` — 获取回收站文件信息 (`GET` `/v7/deleted_files/{file_id}/meta`; scopes: `kso.deleted_file.read, kso.deleted_file.read`)
-  - `list-files` — 获取回收站文件列表 (`GET` `/v7/deleted_files`; scopes: `kso.deleted_file.read, kso.deleted_file.read`)
-  - `restore-file` — 还原回收站文件 (`GET` `/v7/deleted_files/{file_id}/restore`; scopes: `kso.deleted_file.readwrite, kso.deleted_file.readwrite`)
+  - `batch-delete-files` — 一级回收站批量文件删除 (`GET` `/v7/deleted_files/batch_delete`; scopes: `kso.deleted_file.readwrite, kso.deleted_file.readwrite`; auth: `both`)
+  - `batch-restore-files` — 批量还原回收站文件 (`GET` `/v7/deleted_files/batch_restore`; scopes: `kso.deleted_file.readwrite, kso.deleted_file.readwrite`; auth: `both`)
+  - `clear-files` — 清空回收站文件 (`GET` `/v7/deleted_files/clear`; scopes: `kso.deleted_file.readwrite, kso.deleted_file.readwrite`; auth: `both`)
+  - `delete-file` — 删除一级回收站文件 (`GET` `/v7/deleted_files/{file_id}/delete`; scopes: `kso.deleted_file.readwrite, kso.deleted_file.readwrite`; auth: `both`)
+  - `get-file-meta` — 获取回收站文件信息 (`GET` `/v7/deleted_files/{file_id}/meta`; scopes: `kso.deleted_file.read, kso.deleted_file.read`; auth: `both`)
+  - `list-files` — 获取回收站文件列表 (`GET` `/v7/deleted_files`; scopes: `kso.deleted_file.read, kso.deleted_file.read`; auth: `both`)
+  - `restore-file` — 还原回收站文件 (`GET` `/v7/deleted_files/{file_id}/restore`; scopes: `kso.deleted_file.readwrite, kso.deleted_file.readwrite`; auth: `both`)
 
 ## Discovering Commands
 

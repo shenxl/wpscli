@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli subscription --help"
+    auth_types: ["app", "user"]
 ---
 
 # subscription service
@@ -22,10 +23,10 @@ wpscli subscription <endpoint> [flags]
 
 ### subscription
 
-  - `get-subscription-account-storage` — 获取账号文件下载链接 (`GET` `/v7/subscription/accounts/{account_id}/storages/{store_key}`; scopes: `kso.subscription_account.read`)
-  - `get-subscription-accounts` — 获取账号列表 (`GET` `/v7/subscription/accounts`; scopes: `kso.subscription_account.read`)
-  - `get-subscription-content-storage` — 获取内容文件下载链接 (`GET` `/v7/subscription/contents/{content_id}/storages/{store_key}`; scopes: `kso.subscription_content.read`)
-  - `get-subscription-published-content` — 获取已发布内容列表 (`GET` `/v7/subscription/accounts/{account_id}/published_contents`; scopes: `kso.subscription_content.read`)
+  - `get-subscription-account-storage` — 获取账号文件下载链接 (`GET` `/v7/subscription/accounts/{account_id}/storages/{store_key}`; scopes: `kso.subscription_account.read`; auth: `both`)
+  - `get-subscription-accounts` — 获取账号列表 (`GET` `/v7/subscription/accounts`; scopes: `kso.subscription_account.read`; auth: `both`)
+  - `get-subscription-content-storage` — 获取内容文件下载链接 (`GET` `/v7/subscription/contents/{content_id}/storages/{store_key}`; scopes: `kso.subscription_content.read`; auth: `both`)
+  - `get-subscription-published-content` — 获取已发布内容列表 (`GET` `/v7/subscription/accounts/{account_id}/published_contents`; scopes: `kso.subscription_content.read`; auth: `both`)
 
 ## Discovering Commands
 

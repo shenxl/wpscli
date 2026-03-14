@@ -152,6 +152,10 @@ wpscli dbsheet share-status --url "https://365.kdocs.cn/l/xxxx" --sheet-id 2 --v
 ```bash
 wpscli catalog drives
 wpscli drives list-files --path-param drive_id=<id> --path-param parent_id=0 --query page_size=5
+
+# schema 自省（执行导向）
+wpscli schema drives list-files --mode invoke
+wpscli schema drives list-files --mode invoke --emit-template /tmp/list_files_template.json
 ```
 
 ### Raw 调用
@@ -193,6 +197,7 @@ wps-cli/
   - `skills/wps-doc-rw/SKILL.md`
   - `skills/wps-app-files/SKILL.md`
   - `skills/wps-users/SKILL.md`
+  - `skills/wps-workflow-org-sync-report/SKILL.md`（流程型示例：组织同步 -> 多维表 -> 报告）
   - `skills/wps-skill-builder/SKILL.md`（Skill Creator：发现全量 API + 组合 helpers 生成业务技能）
 
 ---

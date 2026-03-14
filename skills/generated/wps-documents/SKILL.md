@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli documents --help"
+    auth_types: ["app", "user"]
 ---
 
 # documents service
@@ -22,10 +23,10 @@ wpscli documents <endpoint> [flags]
 
 ### documents
 
-  - `batch-get-attachment-info` — 批量查询附件信息 (`GET` `/v7/documents/{file_id}/attachments/batch_get`; scopes: `kso.documents.readwrite, kso.documents.readwrite`)
-  - `multiupload-1-get-upload-address` — 附件多段式上传-申请上传地址 (`GET` `/v7/documents/{file_id}/attachments/upload/address`; scopes: `kso.documents.readwrite, kso.documents.readwrite`)
-  - `multiupload-3-complete-upload` — 附件多段式上传-提交上传完成 (`GET` `/v7/documents/{file_id}/attachments/upload/complete`; scopes: `kso.documents.readwrite, kso.documents.readwrite`)
-  - `upload-attachment` — 上传附件 (`GET` `/v7/documents/{file_id}/attachments/upload`; scopes: `kso.documents.readwrite, kso.documents.readwrite`)
+  - `batch-get-attachment-info` — 批量查询附件信息 (`GET` `/v7/documents/{file_id}/attachments/batch_get`; scopes: `kso.documents.readwrite, kso.documents.readwrite`; auth: `both`)
+  - `multiupload-1-get-upload-address` — 附件多段式上传-申请上传地址 (`GET` `/v7/documents/{file_id}/attachments/upload/address`; scopes: `kso.documents.readwrite, kso.documents.readwrite`; auth: `both`)
+  - `multiupload-3-complete-upload` — 附件多段式上传-提交上传完成 (`GET` `/v7/documents/{file_id}/attachments/upload/complete`; scopes: `kso.documents.readwrite, kso.documents.readwrite`; auth: `both`)
+  - `upload-attachment` — 上传附件 (`GET` `/v7/documents/{file_id}/attachments/upload`; scopes: `kso.documents.readwrite, kso.documents.readwrite`; auth: `both`)
 
 ## Discovering Commands
 

@@ -41,6 +41,13 @@ pub fn build_service_command(desc: &ServiceDescriptor) -> Command {
     for ep in &desc.endpoints {
         let endpoint_name = ep.id.replace('_', "-");
         let endpoint_name: &'static str = Box::leak(endpoint_name.into_boxed_str());
+        let default_auth = if ep.cookie_only {
+            "cookie"
+        } else if !ep.auth_types.is_empty() && ep.auth_types.len() == 1 && ep.auth_types[0].eq_ignore_ascii_case("cookie") {
+            "cookie"
+        } else {
+            "app"
+        };
         let mut ep_cmd = Command::new(endpoint_name)
             .about(ep.summary.clone())
             .arg(
@@ -72,7 +79,7 @@ pub fn build_service_command(desc: &ServiceDescriptor) -> Command {
                 Arg::new("auth-type")
                     .long("auth-type")
                     .value_parser(["app", "user", "cookie"])
-                    .default_value("app")
+                    .default_value(default_auth)
                     .help("鉴权类型：app / user / cookie"),
             )
             .arg(
@@ -169,10 +176,25 @@ pub fn build_schema_command() -> Command {
         .after_help(
             "示例：\n  \
              wpscli schema drives\n  \
-             wpscli schema drives list-files",
+             wpscli schema drives list-files\n  \
+             wpscli schema drives list-files --mode invoke\n  \
+             wpscli schema drives list-files --mode invoke --emit-template /tmp/list_files_template.json",
         )
         .arg(Arg::new("service").required(true))
         .arg(Arg::new("endpoint").required(false))
+        .arg(
+            Arg::new("mode")
+                .long("mode")
+                .value_parser(["raw", "invoke"])
+                .default_value("raw")
+                .help("输出模式：raw=原始 descriptor，invoke=执行导向 schema（含 command/template）"),
+        )
+        .arg(
+            Arg::new("emit-template")
+                .long("emit-template")
+                .num_args(1)
+                .help("将 invoke_template 写入文件（需同时提供 endpoint）"),
+        )
 }
 
 pub fn build_catalog_command() -> Command {

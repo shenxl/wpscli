@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli drive_freq --help"
+    auth_types: ["app", "user"]
 ---
 
 # drive_freq service
@@ -22,7 +23,7 @@ wpscli drive_freq <endpoint> [flags]
 
 ### drive_freq
 
-  - `get-frequent-list` — 获取常用列表 (`GET` `/v7/drive_freq/items`; scopes: `kso.file.readwrite, kso.file.read, kso.file.readwrite, kso.file.read`)
+  - `get-frequent-list` — 获取常用列表 (`GET` `/v7/drive_freq/items`; scopes: `kso.file.readwrite, kso.file.read, kso.file.readwrite, kso.file.read`; auth: `both`)
 
 ## Discovering Commands
 

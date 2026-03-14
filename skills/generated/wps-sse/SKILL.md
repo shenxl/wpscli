@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli sse --help"
+    auth_types: ["app", "user"]
 ---
 
 # sse service
@@ -22,8 +23,8 @@ wpscli sse <endpoint> [flags]
 
 ### sse
 
-  - `chat-create` — 开始对话 (`GET` `/v7/sse/devhub/apps/{app_id}/chats/create`; scopes: `kso.devhub_chat.readwrite`)
-  - `search-gpt` — 团队文档智能问答 (`POST` `/v7/sse/aidocs/search/gpt`; scopes: `kso.aidocs.readwrite, kso.aidocs.readwrite`)
+  - `chat-create` — 开始对话 (`GET` `/v7/sse/devhub/apps/{app_id}/chats/create`; scopes: `kso.devhub_chat.readwrite`; auth: `user`)
+  - `search-gpt` — 团队文档智能问答 (`POST` `/v7/sse/aidocs/search/gpt`; scopes: `kso.aidocs.readwrite, kso.aidocs.readwrite`; auth: `both`)
 
 ## Discovering Commands
 

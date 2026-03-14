@@ -42,6 +42,10 @@ pub struct EndpointDescriptor {
     #[serde(default)]
     pub scopes: Vec<String>,
     #[serde(default)]
+    pub auth_types: Vec<String>,
+    #[serde(default)]
+    pub cookie_only: bool,
+    #[serde(default)]
     pub params: EndpointParamGroup,
 }
 

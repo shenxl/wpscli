@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli companies --help"
+    auth_types: ["app", "user"]
 ---
 
 # companies service
@@ -22,11 +23,11 @@ wpscli companies <endpoint> [flags]
 
 ### companies
 
-  - `create-attr` — 新增自定义用户属性 (`POST` `/v7/companies/user_custom_attrs/batch_create`; scopes: `kso.user_custom_attr.readwrite`)
-  - `delete-attr` — 删除自定义用户属性 (`POST` `/v7/companies/user_custom_attrs/batch_delete`; scopes: `kso.user_custom_attr.readwrite`)
-  - `get-attr` — 获取自定义用户属性 (`GET` `/v7/companies/user_custom_attrs/batch_read`; scopes: `kso.user_custom_attr.readwrite`)
-  - `get-company-info` — 查询企业信息 (`GET` `/v7/companies/current`; scopes: `kso.contact.readwrite, kso.contact.read`)
-  - `update-attr` — 修改自定义用户属性 (`POST` `/v7/companies/user_custom_attrs/batch_update`; scopes: `kso.user_custom_attr.readwrite`)
+  - `create-attr` — 新增自定义用户属性 (`POST` `/v7/companies/user_custom_attrs/batch_create`; scopes: `kso.user_custom_attr.readwrite`; auth: `app`)
+  - `delete-attr` — 删除自定义用户属性 (`POST` `/v7/companies/user_custom_attrs/batch_delete`; scopes: `kso.user_custom_attr.readwrite`; auth: `app`)
+  - `get-attr` — 获取自定义用户属性 (`GET` `/v7/companies/user_custom_attrs/batch_read`; scopes: `kso.user_custom_attr.readwrite`; auth: `app`)
+  - `get-company-info` — 查询企业信息 (`GET` `/v7/companies/current`; scopes: `kso.contact.readwrite, kso.contact.read`; auth: `both`)
+  - `update-attr` — 修改自定义用户属性 (`POST` `/v7/companies/user_custom_attrs/batch_update`; scopes: `kso.user_custom_attr.readwrite`; auth: `app`)
 
 ## Discovering Commands
 

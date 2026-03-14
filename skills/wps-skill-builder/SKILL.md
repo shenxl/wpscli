@@ -79,3 +79,28 @@ python3 build_skill.py create-api \
 - 结构化输出：方便 agent 自动恢复与串联
 - 可验证：默认带 eval 脚手架，便于持续迭代
 - 可维护：能力基线来自当前 descriptors / `wpscli`，可重复生成
+
+## 执行约束（减少 Agent 试错）
+
+当技能落地到 Claude Code 时，按下面顺序执行，避免“边猜边调参数”：
+
+1. **优先 workflow/recipe**：先尝试工作流模板，再退到 helper 命令。
+2. **禁止直接跳 raw**：只有 helper/service 都缺失能力时才允许 `raw`。
+3. **失败分支显式化**：每一步都要有 fallback，不允许无限重试。
+4. **写操作先演练**：可行时先 `--dry-run`。
+
+## /tmp 临时文件契约（Claude Code）
+
+Claude Code 在执行过程中常会生成 `/tmp` 参数文件（json/py）。这个行为要变成“标准流程”，而不是偶发：
+
+- 执行前写计划：`/tmp/<skill_name>_plan.json`
+- 每步参数：`/tmp/<skill_name>_step_<N>.json`
+- 每步结果：`/tmp/<skill_name>_result_<N>.json`
+
+这样可以实现：
+
+- 参数来源可追溯
+- 重试行为可复现
+- 错误定位可审计
+
+`create-business` 生成的技能会自动带上 `references/WORKFLOW_GUARDRAILS.md`，用于约束上述流程。

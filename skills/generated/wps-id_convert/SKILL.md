@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli id_convert --help"
+    auth_types: ["app", "user"]
 ---
 
 # id_convert service
@@ -22,7 +23,7 @@ wpscli id_convert <endpoint> [flags]
 
 ### id_convert
 
-  - `id-convert` — ID转换 (`POST` `/v7/id_convert`; scopes: `-`)
+  - `id-convert` — ID转换 (`POST` `/v7/id_convert`; scopes: `-`; auth: `both`)
 
 ## Discovering Commands
 

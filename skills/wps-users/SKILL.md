@@ -11,7 +11,7 @@ metadata:
 
 # WPS 用户与组织架构
 
-> PREREQUISITE: 推荐使用 `app` 授权（默认），并确保具备 `kso.contact.read` 或 `kso.contact.readwrite`。
+> PREREQUISITE: 使用 `app` 授权（默认），并确保具备 `kso.contact.read` 或 `kso.contact.readwrite`。
 
 ## 核心命令
 

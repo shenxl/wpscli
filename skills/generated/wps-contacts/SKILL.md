@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli contacts --help"
+    auth_types: ["app", "user"]
 ---
 
 # contacts service
@@ -22,7 +23,7 @@ wpscli contacts <endpoint> [flags]
 
 ### contacts
 
-  - `get-range` — 获取通讯录权限范围 (`GET` `/v7/contacts/permissions_scope`; scopes: `kso.contact.readwrite, kso.contact.read`)
+  - `get-range` — 获取通讯录权限范围 (`GET` `/v7/contacts/permissions_scope`; scopes: `kso.contact.readwrite, kso.contact.read`; auth: `both`)
 
 ## Discovering Commands
 

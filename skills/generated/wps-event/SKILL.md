@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli event --help"
+    auth_types: ["app"]
 ---
 
 # event service
@@ -22,7 +23,7 @@ wpscli event <endpoint> [flags]
 
 ### event
 
-  - `get_event_egress_ip` — 获取事件出口地址 (`GET` `/v7/event/egress_ip`; scopes: `kso.event_egress_ip.read`)
+  - `get_event_egress_ip` — 获取事件出口地址 (`GET` `/v7/event/egress_ip`; scopes: `kso.event_egress_ip.read`; auth: `app`)
 
 ## Discovering Commands
 

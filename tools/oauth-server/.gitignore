@@ -1,0 +1,5 @@
+auth.conf
+data/
+*.log
+*.pid
+__pycache__/

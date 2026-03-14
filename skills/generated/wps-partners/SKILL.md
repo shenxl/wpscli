@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli partners --help"
+    auth_types: ["app", "user"]
 ---
 
 # partners service
@@ -22,9 +23,9 @@ wpscli partners <endpoint> [flags]
 
 ### partners
 
-  - `get-partners` — 获取关联组织列表 (`GET` `/v7/partners`; scopes: `kso.contact.readwrite, kso.contact.read`)
-  - `get-partners-dept-list` — 获取关联组织下的部门列表 (`GET` `/v7/partners/{partner_id}/depts/{dept_id}/children`; scopes: `kso.contact.readwrite, kso.contact.read`)
-  - `get-partners-dept-user-list` — 获取关联组织的指定部门的用户列表 (`GET` `/v7/partners/{partner_id}/depts/{dept_id}/members`; scopes: `kso.contact.readwrite, kso.contact.read`)
+  - `get-partners` — 获取关联组织列表 (`GET` `/v7/partners`; scopes: `kso.contact.readwrite, kso.contact.read`; auth: `both`)
+  - `get-partners-dept-list` — 获取关联组织下的部门列表 (`GET` `/v7/partners/{partner_id}/depts/{dept_id}/children`; scopes: `kso.contact.readwrite, kso.contact.read`; auth: `both`)
+  - `get-partners-dept-user-list` — 获取关联组织的指定部门的用户列表 (`GET` `/v7/partners/{partner_id}/depts/{dept_id}/members`; scopes: `kso.contact.readwrite, kso.contact.read`; auth: `both`)
 
 ## Discovering Commands
 

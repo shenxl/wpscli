@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli misc --help"
+    auth_types: ["app", "user"]
 ---
 
 # misc service
@@ -22,7 +23,7 @@ wpscli misc <endpoint> [flags]
 
 ### api
 
-  - `signature-description-wps-3` — 签名说明（WPS-3） (`GET` `/api/v1/dosomething?name=xiaoming&age=18`; scopes: `-`)
+  - `signature-description-wps-3` — 签名说明（WPS-3） (`GET` `/api/v1/dosomething?name=xiaoming&age=18`; scopes: `-`; auth: `both`)
 
 ## Discovering Commands
 

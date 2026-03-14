@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli user_mailboxes --help"
+    auth_types: ["app"]
 ---
 
 # user_mailboxes service
@@ -22,12 +23,12 @@ wpscli user_mailboxes <endpoint> [flags]
 
 ### user_mailboxes
 
-  - `create-alias` — 创建别名邮箱 (`GET` `/v7/user_mailboxes/{user_id}/aliases`; scopes: `kso.user_mailbox.readwrite`)
-  - `create-user-mailbox` — 创建用户邮箱 (`GET` `/v7/user_mailboxes/{user_id}/create`; scopes: `kso.user_mailbox.readwrite`)
-  - `delete-alias` — 删除别名邮箱 (`GET` `/v7/user_mailboxes/{user_id}/delete_alias`; scopes: `kso.user_mailbox.readwrite`)
-  - `delete-user-mailbox` — 删除用户邮箱 (`GET` `/v7/user_mailboxes/{user_id}/delete`; scopes: `kso.user_mailbox.readwrite`)
-  - `get-user-aliases` — 获取用户所有别名邮箱 (`GET` `/v7/user_mailboxes/{user_id}/aliases`; scopes: `kso.user_mailbox.readwrite, kso.user_mailbox.read`)
-  - `get-user-mailbox` — 根据用户ID获取用户邮箱信息 (`GET` `/v7/user_mailboxes/{user_id}`; scopes: `kso.user_mailbox.readwrite, kso.user_mailbox.read`)
+  - `create-alias` — 创建别名邮箱 (`GET` `/v7/user_mailboxes/{user_id}/aliases`; scopes: `kso.user_mailbox.readwrite`; auth: `app`)
+  - `create-user-mailbox` — 创建用户邮箱 (`GET` `/v7/user_mailboxes/{user_id}/create`; scopes: `kso.user_mailbox.readwrite`; auth: `app`)
+  - `delete-alias` — 删除别名邮箱 (`GET` `/v7/user_mailboxes/{user_id}/delete_alias`; scopes: `kso.user_mailbox.readwrite`; auth: `app`)
+  - `delete-user-mailbox` — 删除用户邮箱 (`GET` `/v7/user_mailboxes/{user_id}/delete`; scopes: `kso.user_mailbox.readwrite`; auth: `app`)
+  - `get-user-aliases` — 获取用户所有别名邮箱 (`GET` `/v7/user_mailboxes/{user_id}/aliases`; scopes: `kso.user_mailbox.readwrite, kso.user_mailbox.read`; auth: `app`)
+  - `get-user-mailbox` — 根据用户ID获取用户邮箱信息 (`GET` `/v7/user_mailboxes/{user_id}`; scopes: `kso.user_mailbox.readwrite, kso.user_mailbox.read`; auth: `app`)
 
 ## Discovering Commands
 

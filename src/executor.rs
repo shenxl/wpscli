@@ -446,6 +446,8 @@ pub async fn execute_raw(
             .as_ref()
             .map(|r| r.scopes.clone())
             .unwrap_or_default(),
+        auth_types: vec![],
+        cookie_only: false,
         params: Default::default(),
     };
 

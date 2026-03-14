@@ -1,0 +1,48 @@
+{
+  "service": "cookie_contacts",
+  "base_url": "https://api.wps.cn",
+  "endpoints": [
+    {
+      "id": "search-users-cookie",
+      "doc_id": null,
+      "name": "企业通讯录搜索（Cookie）",
+      "summary": "通过 cookie 会话搜索用户（私有 V7）",
+      "http_method": "GET",
+      "path": "/v7/users/search",
+      "signature": "COOKIE",
+      "scopes": [],
+      "auth_types": ["cookie"],
+      "cookie_only": true,
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "query",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "搜索关键字（姓名/拼音/邮箱等）",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页游标",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    }
+  ]
+}

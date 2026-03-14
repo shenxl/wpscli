@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli automation --help"
+    auth_types: ["user"]
 ---
 
 # automation service
@@ -22,8 +23,8 @@ wpscli automation <endpoint> [flags]
 
 ### automation
 
-  - `list-automation` — 列出自动化流程 (`GET` `/v7/automation/{file_id}/workflows`; scopes: `kso.automation.readwrite, kso.automation.read`)
-  - `update-automation-status` — 更新自动化流程状态 (`GET` `/v7/automation/{file_id}/workflows/{workflow_id}/status`; scopes: `kso.automation.readwrite`)
+  - `list-automation` — 列出自动化流程 (`GET` `/v7/automation/{file_id}/workflows`; scopes: `kso.automation.readwrite, kso.automation.read`; auth: `user`)
+  - `update-automation-status` — 更新自动化流程状态 (`GET` `/v7/automation/{file_id}/workflows/{workflow_id}/status`; scopes: `kso.automation.readwrite`; auth: `user`)
 
 ## Discovering Commands
 

@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli docqa --help"
+    auth_types: ["app", "user"]
 ---
 
 # docqa service
@@ -22,7 +23,7 @@ wpscli docqa <endpoint> [flags]
 
 ### docqa
 
-  - `insight-recall-rank` — 团队文档片段召回 (`GET` `/v7/docqa/instore/recall/rank`; scopes: `kso.docqa.readwrite, kso.aidocs.readwrite, kso.docqa.readwrite, kso.aidocs.readwrite`)
+  - `insight-recall-rank` — 团队文档片段召回 (`GET` `/v7/docqa/instore/recall/rank`; scopes: `kso.docqa.readwrite, kso.aidocs.readwrite, kso.docqa.readwrite, kso.aidocs.readwrite`; auth: `both`)
 
 ## Discovering Commands
 

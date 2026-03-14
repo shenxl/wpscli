@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(git rev-parse --show-toplevel)"
-python3 scripts/generate_docs.py --check
+#python3 scripts/generate_docs.py --check

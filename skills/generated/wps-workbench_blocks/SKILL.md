@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli workbench_blocks --help"
+    auth_types: ["app"]
 ---
 
 # workbench_blocks service
@@ -22,7 +23,7 @@ wpscli workbench_blocks <endpoint> [flags]
 
 ### workbench_blocks
 
-  - `update-block-content` — 更新小组件内容 (`GET` `/v7/workbench_blocks/{block_id}/update_content`; scopes: `kso.workbench_block.readwrite`)
+  - `update-block-content` — 更新小组件内容 (`GET` `/v7/workbench_blocks/{block_id}/update_content`; scopes: `kso.workbench_block.readwrite`; auth: `app`)
 
 ## Discovering Commands
 

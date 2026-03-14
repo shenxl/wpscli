@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli messages --help"
+    auth_types: ["app"]
 ---
 
 # messages service
@@ -22,11 +23,11 @@ wpscli messages <endpoint> [flags]
 
 ### messages
 
-  - `create-msg` — 批量发送消息 (`POST` `/v7/messages/batch_create`; scopes: `kso.chat_message.readwrite`)
-  - `get-message-ids` — 根据三方业务id获取消息id (`POST` `/v7/messages/get_message_ids`; scopes: `kso.chat_message.readwrite`)
-  - `recall-msg` — 撤回消息 (`POST` `/v7/messages/{message_id}/recall`; scopes: `kso.chat_message.readwrite`)
-  - `single-create-msg` — 发送消息 (`POST` `/v7/messages/create`; scopes: `kso.chat_message.readwrite`)
-  - `update-msg` — 更新消息 (`POST` `/v7/messages/{message_id}/update`; scopes: `kso.chat_message.readwrite`)
+  - `create-msg` — 批量发送消息 (`POST` `/v7/messages/batch_create`; scopes: `kso.chat_message.readwrite`; auth: `app`)
+  - `get-message-ids` — 根据三方业务id获取消息id (`POST` `/v7/messages/get_message_ids`; scopes: `kso.chat_message.readwrite`; auth: `app`)
+  - `recall-msg` — 撤回消息 (`POST` `/v7/messages/{message_id}/recall`; scopes: `kso.chat_message.readwrite`; auth: `app`)
+  - `single-create-msg` — 发送消息 (`POST` `/v7/messages/create`; scopes: `kso.chat_message.readwrite`; auth: `app`)
+  - `update-msg` — 更新消息 (`POST` `/v7/messages/{message_id}/update`; scopes: `kso.chat_message.readwrite`; auth: `app`)
 
 ## Discovering Commands
 

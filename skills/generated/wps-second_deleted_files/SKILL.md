@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli second_deleted_files --help"
+    auth_types: ["app", "user"]
 ---
 
 # second_deleted_files service
@@ -22,8 +23,8 @@ wpscli second_deleted_files <endpoint> [flags]
 
 ### second_deleted_files
 
-  - `batch-delete-second-deleted-files` — 二级回收站批量文件删除 (`GET` `/v7/second_deleted_files/batch_delete`; scopes: `kso.deleted_file.readwrite, kso.deleted_file.readwrite`)
-  - `delete-second-deleted-file` — 二级回收站单文件删除 (`GET` `/v7/second_deleted_files/{file_id}/delete`; scopes: `kso.deleted_file.readwrite, kso.deleted_file.readwrite`)
+  - `batch-delete-second-deleted-files` — 二级回收站批量文件删除 (`GET` `/v7/second_deleted_files/batch_delete`; scopes: `kso.deleted_file.readwrite, kso.deleted_file.readwrite`; auth: `both`)
+  - `delete-second-deleted-file` — 二级回收站单文件删除 (`GET` `/v7/second_deleted_files/{file_id}/delete`; scopes: `kso.deleted_file.readwrite, kso.deleted_file.readwrite`; auth: `both`)
 
 ## Discovering Commands
 

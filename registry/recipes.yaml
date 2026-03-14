@@ -1,0 +1,142 @@
+recipes:
+  - name: create-dbsheet-with-data
+    title: 创建多维表并初始化数据
+    description: "创建 dbt 文件、授权用户、建表并批量写入记录。"
+    category: productivity
+    services: [drives, files, coop_dbsheet]
+    auth_sequence: [app, app, user, user]
+    steps:
+      - "获取应用盘: `wpscli drives list-drives --auth-type app --query allotee_type=app`"
+      - "创建多维表文件: `wpscli drives create-file --auth-type app --path-param drive_id=<drive_id> --path-param parent_id=0 --body '{\"name\":\"项目管理.dbt\",\"file_type\":\"file\"}'`"
+      - "授予目标用户可编辑权限: `wpscli files batch-create-file-permission --auth-type app --path-param drive_id=<drive_id> --path-param file_id=<file_id> --body '{...}'`"
+      - "初始化表结构: `wpscli dbsheet init --file-id <file_id> --schema-file <schema.yaml> --auth-type user`"
+      - "批量写入记录: `wpscli dbsheet insert --file-id <file_id> --sheet-id <sheet_id> --data-json @records.json --batch-size 100 --auth-type user`"
+    caution: "多维表写入必须使用 batch 模式，建议 batch_size=100。"
+
+  - name: dbsheet-from-share-link
+    title: 从分享链接读取并更新多维表
+    description: "从 link_id 解析 file_id 后执行 schema 查询和记录更新。"
+    category: productivity
+    services: [links, coop_dbsheet]
+    auth_sequence: [user, user]
+    steps:
+      - "解析分享链接: `wpscli doc resolve-link 'https://365.kdocs.cn/l/<link_id>' --auth-type user`"
+      - "读取 schema: `wpscli dbsheet schema --file-id <file_id> --auth-type user`"
+      - "按条件查询: `wpscli dbsheet select --file-id <file_id> --sheet-id <sheet_id> --where \"状态 = '进行中'\" --auth-type user`"
+      - "批量更新: `wpscli dbsheet update --file-id <file_id> --sheet-id <sheet_id> --data-json @updates.json --batch-size 100 --auth-type user`"
+
+  - name: schedule-meeting-with-contacts
+    title: 查人后排会（Cookie 场景）
+    description: "通过 cookie 私有接口搜索联系人、查忙闲并创建会议。"
+    category: scheduling
+    services: [cookie_contacts, free_busy_list, meetings]
+    auth_sequence: [cookie, user, user]
+    steps:
+      - "搜索参会人: `wpscli cookie_contacts search-users-cookie --auth-type cookie --query query=张三`"
+      - "查询忙闲: `wpscli free_busy_list get-free-busy-list --auth-type user --query start_time=<iso> --query end_time=<iso>`"
+      - "创建会议: `wpscli meetings create-meeting --auth-type user --body '{...participants...}'`"
+    caution: "cookie 接口为私有能力，稳定性不保证；失败时需重新抓取 wps_sid。"
+
+  - name: send-doc-to-chat
+    title: 上传文件并发送到群聊
+    description: "先上传文件再通过 cookie 私有接口发送云文档消息。"
+    category: communication
+    services: [files, links, cookie_im]
+    auth_sequence: [user, user, cookie]
+    steps:
+      - "上传文件: `wpscli files upload --app <app> --file <local_path> --auth-type user`"
+      - "获取分享元信息: `wpscli links get-link-meta --auth-type user --path-param link_id=<link_id>`"
+      - "发送云文档消息: `wpscli cookie_im send-cloud-file-cookie --auth-type cookie --path-param chat_id=<chat_id> --body '{...}'`"
+
+  - name: search-chat-history
+    title: 搜索聊天历史（Cookie 场景）
+    description: "基于私有 IM 搜索接口执行会话和消息的全局检索。"
+    category: communication
+    services: [cookie_im]
+    auth_sequence: [cookie, cookie]
+    steps:
+      - "搜索会话: `wpscli cookie_im search-chats-cookie --auth-type cookie --query query=项目群`"
+      - "搜索消息: `wpscli cookie_im search-messages-cookie --auth-type cookie --query keyword=需求`"
+      - "按会话和时间段二次过滤结果"
+
+  - name: daily-report-from-calendar
+    title: 日程与消息汇总日报
+    description: "聚合日历和聊天信息，生成日报并发送。"
+    category: productivity
+    services: [calendars, cookie_im, chats, messages]
+    auth_sequence: [user, cookie, user]
+    steps:
+      - "查询今日日程: `wpscli calendars list-events --auth-type user --path-param calendar_id=primary --query ...`"
+      - "检索今日关键消息: `wpscli cookie_im search-messages-cookie --auth-type cookie --query keyword=日报`"
+      - "整理为 markdown 报告"
+      - "发送到目标会话: `wpscli messages create-message --auth-type user --path-param chat_id=<chat_id> --body '{...}'`"
+
+  - name: analyze-meeting-minutes
+    title: 会议纪要分析并回写文档
+    description: "读取纪要与转写内容，提取待办后写入智能文档。"
+    category: knowledge
+    services: [meetings, minutes, documents]
+    auth_sequence: [user, user, user]
+    steps:
+      - "获取会议纪要列表: `wpscli minutes list-minutes --auth-type user --path-param meeting_id=<meeting_id>`"
+      - "获取纪要全文: `wpscli minutes get-minute-transcript --auth-type user --path-param meeting_id=<meeting_id> --path-param minute_id=<minute_id>`"
+      - "提取决策与待办并生成 markdown"
+      - "写入文档: `wpscli airpage write-md --file-id <file_id> --content-file <report.md> --auth-type user`"
+
+  - name: sync-org-to-dbsheet
+    title: 组织架构同步到多维表
+    description: "同步部门和成员并批量落库到多维表。"
+    category: hr
+    services: [users, depts, coop_dbsheet, files]
+    auth_sequence: [app, app, user]
+    steps:
+      - "同步部门: `wpscli users depts --auth-type app`"
+      - "同步成员: `wpscli users members --dept-id root --recursive true --auth-type app`"
+      - "创建/定位目标表: `wpscli files ensure-app --app 组织同步 --auth-type user`"
+      - "批量写入成员: `wpscli dbsheet insert --file-id <file_id> --sheet-id <sheet_id> --data-json @members.json --batch-size 100 --auth-type user`"
+    caution: "跨 auth 切换流程中，必须先完成 app 查询再执行 user 写入。"
+
+  - name: batch-file-upload-and-share
+    title: 批量上传并授权
+    description: "批量上传文件后，统一授予协作者访问权限。"
+    category: productivity
+    services: [files, drives]
+    auth_sequence: [user, app]
+    steps:
+      - "批量上传文件: `wpscli files transfer --mode upload --batch-file <manifest.json> --auth-type user`"
+      - "查询角色: `wpscli drives list-roles --auth-type app --path-param drive_id=<drive_id>`"
+      - "批量授权: `wpscli files batch-create-file-permission --auth-type app --path-param drive_id=<drive_id> --path-param file_id=<file_id> --body '{...}'`"
+
+  - name: cross-chat-broadcast
+    title: 跨群摘要广播
+    description: "读取源群消息，提取摘要并分发到多个目标群。"
+    category: communication
+    services: [cookie_im, messages]
+    auth_sequence: [cookie, user]
+    steps:
+      - "读取源群历史: `wpscli cookie_im search-messages-cookie --auth-type cookie --query chat_ids=<source_chat_id>`"
+      - "生成摘要文本"
+      - "循环发送到目标群: `wpscli messages create-message --auth-type user --path-param chat_id=<target_chat_id> --body '{...}'`"
+
+  - name: create-project-workspace
+    title: 一键创建项目工作区
+    description: "创建目录、任务表和项目说明文档。"
+    category: project
+    services: [files, drives, coop_dbsheet, documents]
+    auth_sequence: [user, user, user]
+    steps:
+      - "创建应用目录: `wpscli files ensure-app --app 项目A --auth-type user`"
+      - "创建任务表: `wpscli files create --app 项目A --file 任务跟踪.dbt --auth-type user`"
+      - "初始化字段: `wpscli dbsheet init --file-id <dbt_file_id> --schema-file <schema.yaml> --auth-type user`"
+      - "创建说明文档: `wpscli files create --app 项目A --file 项目说明.otl --auth-type user`"
+
+  - name: doc-read-transform-write
+    title: 文档读取-转换-回写
+    description: "读取原文档，执行结构化抽取后写回新文档。"
+    category: productivity
+    services: [documents, files]
+    auth_sequence: [user, user]
+    steps:
+      - "读取文档: `wpscli doc read-doc --url <share_url> --format markdown --auth-type user`"
+      - "执行抽取与转换（本地/agent 处理）"
+      - "写回目标文档: `wpscli doc write-doc --file-id <target_file_id> --target-format otl --content-file <output.md> --auth-type user`"

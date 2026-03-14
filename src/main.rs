@@ -71,7 +71,9 @@ async fn run() -> Result<(), WpsError> {
             .get_one::<String>("service")
             .ok_or_else(|| WpsError::Validation("missing schema service".to_string()))?;
         let endpoint = s.get_one::<String>("endpoint").map(|s| s.as_str());
-        let value = schema::run(service, endpoint)?;
+        let mode = s.get_one::<String>("mode").map(|v| v.as_str()).unwrap_or("raw");
+        let emit_template = s.get_one::<String>("emit-template").map(|v| v.as_str());
+        let value = schema::run(service, endpoint, mode, emit_template)?;
         print_value(&value, format);
         return Ok(());
     }

@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli get_workbench_favorite_apps --help"
+    auth_types: ["app", "user"]
 ---
 
 # get_workbench_favorite_apps service
@@ -22,7 +23,7 @@ wpscli get_workbench_favorite_apps <endpoint> [flags]
 
 ### get_workbench_favorite_apps
 
-  - `get-workbench-favorites-apps` — 获取用户【常用】应用列表 (`GET` `/v7/get_workbench_favorite_apps`; scopes: `kso.app.read`)
+  - `get-workbench-favorites-apps` — 获取用户【常用】应用列表 (`GET` `/v7/get_workbench_favorite_apps`; scopes: `kso.app.read`; auth: `both`)
 
 ## Discovering Commands
 

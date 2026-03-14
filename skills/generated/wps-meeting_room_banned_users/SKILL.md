@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli meeting_room_banned_users --help"
+    auth_types: ["app"]
 ---
 
 # meeting_room_banned_users service
@@ -22,9 +23,9 @@ wpscli meeting_room_banned_users <endpoint> [flags]
 
 ### meeting_room_banned_users
 
-  - `create-meeting-room-banned-user` — 创建会议室黑名单用户 (`GET` `/v7/meeting_room_banned_users/create`; scopes: `kso.meeting_rooms.readwrite`)
-  - `delete-meeting-room-banned-user` — 删除会议室黑名单用户 (`GET` `/v7/meeting_room_banned_users/delete`; scopes: `kso.meeting_rooms.readwrite`)
-  - `get-meeting-room-banned-user-list` — 获取会议室黑名单用户列表 (`GET` `/v7/meeting_room_banned_users`; scopes: `kso.meeting_rooms.read, kso.meeting_rooms.readwrite`)
+  - `create-meeting-room-banned-user` — 创建会议室黑名单用户 (`GET` `/v7/meeting_room_banned_users/create`; scopes: `kso.meeting_rooms.readwrite`; auth: `app`)
+  - `delete-meeting-room-banned-user` — 删除会议室黑名单用户 (`GET` `/v7/meeting_room_banned_users/delete`; scopes: `kso.meeting_rooms.readwrite`; auth: `app`)
+  - `get-meeting-room-banned-user-list` — 获取会议室黑名单用户列表 (`GET` `/v7/meeting_room_banned_users`; scopes: `kso.meeting_rooms.read, kso.meeting_rooms.readwrite`; auth: `app`)
 
 ## Discovering Commands
 

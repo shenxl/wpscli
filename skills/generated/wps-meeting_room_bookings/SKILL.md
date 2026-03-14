@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli meeting_room_bookings --help"
+    auth_types: ["app"]
 ---
 
 # meeting_room_bookings service
@@ -22,8 +23,8 @@ wpscli meeting_room_bookings <endpoint> [flags]
 
 ### meeting_room_bookings
 
-  - `batch-get-meeting-room-booking` — 批量查询会议室预约 (`GET` `/v7/meeting_room_bookings/batch_get`; scopes: `kso.meeting_rooms.read, kso.meeting_rooms.readwrite`)
-  - `update-meeting-booking-status` — 更新会议室预约状态 (`GET` `/v7/meeting_room_bookings/{booking_id}/update_status`; scopes: `kso.meeting_rooms.readwrite`)
+  - `batch-get-meeting-room-booking` — 批量查询会议室预约 (`GET` `/v7/meeting_room_bookings/batch_get`; scopes: `kso.meeting_rooms.read, kso.meeting_rooms.readwrite`; auth: `app`)
+  - `update-meeting-booking-status` — 更新会议室预约状态 (`GET` `/v7/meeting_room_bookings/{booking_id}/update_status`; scopes: `kso.meeting_rooms.readwrite`; auth: `app`)
 
 ## Discovering Commands
 

@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli doclibs --help"
+    auth_types: ["app", "user"]
 ---
 
 # doclibs service
@@ -22,7 +23,7 @@ wpscli doclibs <endpoint> [flags]
 
 ### doclibs
 
-  - `get-doclib-list` — 获取团队文档库列表 (`GET` `/v7/doclibs`; scopes: `kso.doclib.readwrite, kso.doclib.readwrite, kso.doclib.read`)
+  - `get-doclib-list` — 获取团队文档库列表 (`GET` `/v7/doclibs`; scopes: `kso.doclib.readwrite, kso.doclib.readwrite, kso.doclib.read`; auth: `both`)
 
 ## Discovering Commands
 

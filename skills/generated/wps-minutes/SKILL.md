@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli minutes --help"
+    auth_types: ["app", "user"]
 ---
 
 # minutes service
@@ -22,9 +23,9 @@ wpscli minutes <endpoint> [flags]
 
 ### minutes
 
-  - `delete-imported-minute` — 删除导入生成的纪要 (`POST` `/v7/minutes/{minute_id}/delete`; scopes: `kso.meeting_minutes.readwrite`)
-  - `get-imported-minute` — 获取导入生成的纪要 (`GET` `/v7/minutes/{minute_id}`; scopes: `kso.meeting_minutes.read, kso.meeting_minutes.readwrite`)
-  - `import-minutes` — 导入录制文件生成纪要 (`POST` `/v7/minutes/create`; scopes: `kso.meeting_minutes.readwrite`)
+  - `delete-imported-minute` — 删除导入生成的纪要 (`POST` `/v7/minutes/{minute_id}/delete`; scopes: `kso.meeting_minutes.readwrite`; auth: `app`)
+  - `get-imported-minute` — 获取导入生成的纪要 (`GET` `/v7/minutes/{minute_id}`; scopes: `kso.meeting_minutes.read, kso.meeting_minutes.readwrite`; auth: `both`)
+  - `import-minutes` — 导入录制文件生成纪要 (`POST` `/v7/minutes/create`; scopes: `kso.meeting_minutes.readwrite`; auth: `app`)
 
 ## Discovering Commands
 

@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli links --help"
+    auth_types: ["app", "user"]
 ---
 
 # links service
@@ -22,10 +23,10 @@ wpscli links <endpoint> [flags]
 
 ### links
 
-  - `get-link-info` — 获取分享链接信息 (`GET` `/v7/links/{link_id}/meta`; scopes: `kso.file_link.readwrite, kso.file_link.readwrite`)
-  - `get-recv-link-list` — 获取接收的分享链接列表 (`GET` `/v7/links/recv`; scopes: `kso.file_link.readwrite, kso.file_link.readwrite`)
-  - `get-send-link-list` — 获取发送的分享链接列表 (`GET` `/v7/links/send`; scopes: `kso.file_link.readwrite, kso.file_link.readwrite`)
-  - `update-link` — 修改分享链接属性 (`GET` `/v7/links/{link_id}/update`; scopes: `kso.file_link.readwrite, kso.file_link.readwrite`)
+  - `get-link-info` — 获取分享链接信息 (`GET` `/v7/links/{link_id}/meta`; scopes: `kso.file_link.readwrite, kso.file_link.readwrite`; auth: `both`)
+  - `get-recv-link-list` — 获取接收的分享链接列表 (`GET` `/v7/links/recv`; scopes: `kso.file_link.readwrite, kso.file_link.readwrite`; auth: `both`)
+  - `get-send-link-list` — 获取发送的分享链接列表 (`GET` `/v7/links/send`; scopes: `kso.file_link.readwrite, kso.file_link.readwrite`; auth: `both`)
+  - `update-link` — 修改分享链接属性 (`GET` `/v7/links/{link_id}/update`; scopes: `kso.file_link.readwrite, kso.file_link.readwrite`; auth: `both`)
 
 ## Discovering Commands
 

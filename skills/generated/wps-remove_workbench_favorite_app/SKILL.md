@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli remove_workbench_favorite_app --help"
+    auth_types: ["user"]
 ---
 
 # remove_workbench_favorite_app service
@@ -22,7 +23,7 @@ wpscli remove_workbench_favorite_app <endpoint> [flags]
 
 ### remove_workbench_favorite_app
 
-  - `remove-workbench-favorite-app` — 取消用户【常用】应用 (`GET` `/v7/remove_workbench_favorite_app`; scopes: `kso.app.readwrite`)
+  - `remove-workbench-favorite-app` — 取消用户【常用】应用 (`GET` `/v7/remove_workbench_favorite_app`; scopes: `kso.app.readwrite`; auth: `user`)
 
 ## Discovering Commands
 

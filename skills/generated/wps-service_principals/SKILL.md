@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli service_principals --help"
+    auth_types: ["app", "user"]
 ---
 
 # service_principals service
@@ -22,7 +23,7 @@ wpscli service_principals <endpoint> [flags]
 
 ### service_principals
 
-  - `get-sp` — 获取应用当前服务主体信息 (`GET` `/v7/service_principals/current`; scopes: `-`)
+  - `get-sp` — 获取应用当前服务主体信息 (`GET` `/v7/service_principals/current`; scopes: `-`; auth: `both`)
 
 ## Discovering Commands
 

@@ -1,0 +1,51 @@
+# WPS OAuth Token Server - systemd service
+# 
+# 安装步骤：
+#   1. 复制到 systemd 目录：
+#      sudo cp wps-oauth.service /etc/systemd/system/
+#
+#   2. 修改 WorkingDirectory 和 ExecStart 中的路径为实际部署路径
+#
+#   3. 启用并启动：
+#      sudo systemctl daemon-reload
+#      sudo systemctl enable wps-oauth
+#      sudo systemctl start wps-oauth
+#
+#   4. 查看状态：
+#      sudo systemctl status wps-oauth
+#
+#   5. 查看日志：
+#      sudo journalctl -u wps-oauth -f
+
+[Unit]
+Description=WPS 365 OAuth Token Server
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+
+# ⚠️ 修改为实际部署路径
+WorkingDirectory=/root/.openclaw/workspace/skills/wps-oauth
+ExecStart=/usr/bin/python3 /root/.openclaw/workspace/skills/wps-oauth/oauth_server.py --no-browser
+
+# 环境变量（可选，按需配置）
+# Environment=WPS_OAUTH_PORT=80
+# Environment=WPS_OAUTH_DOMAIN=wps-mac.shenxl.com
+# Environment=WPS_AUTH_CONF=/path/to/auth.conf
+# Environment=WPS_REFRESH_INTERVAL=3600
+
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# 安全设置
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/root/.openclaw/workspace/skills/wps-oauth/data
+
+[Install]
+WantedBy=multi-user.target

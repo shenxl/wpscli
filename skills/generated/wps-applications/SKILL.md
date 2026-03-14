@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli applications --help"
+    auth_types: ["app", "user"]
 ---
 
 # applications service
@@ -22,7 +23,7 @@ wpscli applications <endpoint> [flags]
 
 ### applications
 
-  - `applications` — 获取用户【可用】应用列表 (`GET` `/v7/applications`; scopes: `kso.app.read`)
+  - `applications` — 获取用户【可用】应用列表 (`GET` `/v7/applications`; scopes: `kso.app.read`; auth: `both`)
 
 ## Discovering Commands
 

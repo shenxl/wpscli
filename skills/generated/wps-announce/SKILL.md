@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli announce --help"
+    auth_types: ["app", "user"]
 ---
 
 # announce service
@@ -22,10 +23,10 @@ wpscli announce <endpoint> [flags]
 
 ### announce
 
-  - `get-announce-cover-url` — 获取封面图下载链接 (`GET` `/v7/announce/announces/{announce_id}/download`; scopes: `kso.announce.read, kso.announce.read`)
-  - `get-announce-detail` — 查询公告详情 (`GET` `/v7/announce/announces/{announce_id}`; scopes: `kso.announce.read, kso.announce.read`)
-  - `get-announce-list` — 分页查询公告列表 (`GET` `/v7/announce/announces`; scopes: `kso.announce.read, kso.announce.read`)
-  - `get-announce-visibilities` — 分页查询公告可见范围 (`GET` `/v7/announce/announces/{announce_id}/visibilities`; scopes: `kso.announce.read`)
+  - `get-announce-cover-url` — 获取封面图下载链接 (`GET` `/v7/announce/announces/{announce_id}/download`; scopes: `kso.announce.read, kso.announce.read`; auth: `both`)
+  - `get-announce-detail` — 查询公告详情 (`GET` `/v7/announce/announces/{announce_id}`; scopes: `kso.announce.read, kso.announce.read`; auth: `both`)
+  - `get-announce-list` — 分页查询公告列表 (`GET` `/v7/announce/announces`; scopes: `kso.announce.read, kso.announce.read`; auth: `both`)
+  - `get-announce-visibilities` — 分页查询公告可见范围 (`GET` `/v7/announce/announces/{announce_id}/visibilities`; scopes: `kso.announce.read`; auth: `both`)
 
 ## Discovering Commands
 

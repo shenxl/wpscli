@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli drive_tasks --help"
+    auth_types: ["app", "user"]
 ---
 
 # drive_tasks service
@@ -22,7 +23,7 @@ wpscli drive_tasks <endpoint> [flags]
 
 ### drive_tasks
 
-  - `get-file-task` — 获取异步任务信息 (`GET` `/v7/drive_tasks/{task_id}/meta`; scopes: `kso.file.readwrite, kso.file.read, kso.file.readwrite, kso.file.read`)
+  - `get-file-task` — 获取异步任务信息 (`GET` `/v7/drive_tasks/{task_id}/meta`; scopes: `kso.file.readwrite, kso.file.read, kso.file.readwrite, kso.file.read`; auth: `both`)
 
 ## Discovering Commands
 

@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli doclib --help"
+    auth_types: ["app", "user"]
 ---
 
 # doclib service
@@ -22,10 +23,10 @@ wpscli doclib <endpoint> [flags]
 
 ### doclib
 
-  - `create-doclib` — 创建团队文档库 (`GET` `/v7/doclib/create`; scopes: `kso.doclib.readwrite, kso.doclib.readwrite`)
-  - `delete-doclib` — 删除团队文档库 (`GET` `/v7/doclib/delete`; scopes: `kso.doclib.readwrite, kso.doclib.readwrite`)
-  - `get-doclib` — 获取文档库信息 (`GET` `/v7/doclib/meta`; scopes: `kso.doclib.readwrite, kso.doclib.readwrite, kso.doclib.read`)
-  - `search-doclib` — 搜索团队文档库 (`GET` `/v7/doclib/search`; scopes: `kso.doclib.readwrite, kso.doclib.read, kso.doclib.readwrite, kso.doclib.read`)
+  - `create-doclib` — 创建团队文档库 (`GET` `/v7/doclib/create`; scopes: `kso.doclib.readwrite, kso.doclib.readwrite`; auth: `both`)
+  - `delete-doclib` — 删除团队文档库 (`GET` `/v7/doclib/delete`; scopes: `kso.doclib.readwrite, kso.doclib.readwrite`; auth: `both`)
+  - `get-doclib` — 获取文档库信息 (`GET` `/v7/doclib/meta`; scopes: `kso.doclib.readwrite, kso.doclib.readwrite, kso.doclib.read`; auth: `both`)
+  - `search-doclib` — 搜索团队文档库 (`GET` `/v7/doclib/search`; scopes: `kso.doclib.readwrite, kso.doclib.read, kso.doclib.readwrite, kso.doclib.read`; auth: `both`)
 
 ## Discovering Commands
 

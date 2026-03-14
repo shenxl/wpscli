@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli depts --help"
+    auth_types: ["app", "user"]
 ---
 
 # depts service
@@ -22,17 +23,17 @@ wpscli depts <endpoint> [flags]
 
 ### depts
 
-  - `batch-dept-info` — 批量查询指定部门信息 (`POST` `/v7/depts/batch_read`; scopes: `kso.contact.readwrite, kso.contact.read`)
-  - `batch-get-dept-user` — 批量查询部门下的成员信息 (`POST` `/v7/depts/{dept_id}/members/batch_read`; scopes: `kso.contact.readwrite, kso.contact.read`)
-  - `create-dept` — 创建部门 (`POST` `/v7/depts/create`; scopes: `kso.contact.readwrite`)
-  - `delete-dept` — 删除部门 (`POST` `/v7/depts/{dept_id}/delete`; scopes: `kso.contact.readwrite`)
-  - `get-dept-list` — 查询子部门列表 (`GET` `/v7/depts/{dept_id}/children`; scopes: `kso.contact.readwrite, kso.contact.read`)
-  - `get-dept-user` — 查询部门下用户列表 (`GET` `/v7/depts/{dept_id}/members`; scopes: `kso.contact.readwrite, kso.contact.read`)
-  - `get-ex-dept` — 根据ex_dept_id获取部门信息 (`POST` `/v7/depts/by_ex_dept_ids`; scopes: `kso.contact.readwrite, kso.contact.read`)
-  - `get-root-dept` — 获取根部门 (`GET` `/v7/depts/root`; scopes: `kso.contact.readwrite, kso.contact.read`)
-  - `join-dept` — 将用户加入到部门 (`POST` `/v7/depts/{dept_id}/members/{user_id}/create`; scopes: `kso.contact.readwrite`)
-  - `remove-dept` — 将用户移除部门 (`POST` `/v7/depts/{dept_id}/members/{user_id}/delete`; scopes: `kso.contact.readwrite`)
-  - `update-dept` — 更新部门 (`POST` `/v7/depts/{dept_id}/update`; scopes: `kso.contact.readwrite`)
+  - `batch-dept-info` — 批量查询指定部门信息 (`POST` `/v7/depts/batch_read`; scopes: `kso.contact.readwrite, kso.contact.read`; auth: `both`)
+  - `batch-get-dept-user` — 批量查询部门下的成员信息 (`POST` `/v7/depts/{dept_id}/members/batch_read`; scopes: `kso.contact.readwrite, kso.contact.read`; auth: `both`)
+  - `create-dept` — 创建部门 (`POST` `/v7/depts/create`; scopes: `kso.contact.readwrite`; auth: `app`)
+  - `delete-dept` — 删除部门 (`POST` `/v7/depts/{dept_id}/delete`; scopes: `kso.contact.readwrite`; auth: `app`)
+  - `get-dept-list` — 查询子部门列表 (`GET` `/v7/depts/{dept_id}/children`; scopes: `kso.contact.readwrite, kso.contact.read`; auth: `both`)
+  - `get-dept-user` — 查询部门下用户列表 (`GET` `/v7/depts/{dept_id}/members`; scopes: `kso.contact.readwrite, kso.contact.read`; auth: `both`)
+  - `get-ex-dept` — 根据ex_dept_id获取部门信息 (`POST` `/v7/depts/by_ex_dept_ids`; scopes: `kso.contact.readwrite, kso.contact.read`; auth: `both`)
+  - `get-root-dept` — 获取根部门 (`GET` `/v7/depts/root`; scopes: `kso.contact.readwrite, kso.contact.read`; auth: `both`)
+  - `join-dept` — 将用户加入到部门 (`POST` `/v7/depts/{dept_id}/members/{user_id}/create`; scopes: `kso.contact.readwrite`; auth: `app`)
+  - `remove-dept` — 将用户移除部门 (`POST` `/v7/depts/{dept_id}/members/{user_id}/delete`; scopes: `kso.contact.readwrite`; auth: `app`)
+  - `update-dept` — 更新部门 (`POST` `/v7/depts/{dept_id}/update`; scopes: `kso.contact.readwrite`; auth: `app`)
 
 ## Discovering Commands
 

@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli free_busy_list --help"
+    auth_types: ["app", "user"]
 ---
 
 # free_busy_list service
@@ -22,7 +23,7 @@ wpscli free_busy_list <endpoint> [flags]
 
 ### free_busy_list
 
-  - `get-main-calendar-freebusy` — 查询主日历日程忙闲 (`GET` `/v7/free_busy_list`; scopes: `kso.calendar_events.read, kso.calendar_events.readwrite, kso.calendar_events.read, kso.calendar_events.readwrite`)
+  - `get-main-calendar-freebusy` — 查询主日历日程忙闲 (`GET` `/v7/free_busy_list`; scopes: `kso.calendar_events.read, kso.calendar_events.readwrite, kso.calendar_events.read, kso.calendar_events.readwrite`; auth: `both`)
 
 ## Discovering Commands
 

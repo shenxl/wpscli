@@ -1,0 +1,166 @@
+{
+  "service": "cookie_im",
+  "base_url": "https://api.wps.cn",
+  "endpoints": [
+    {
+      "id": "list-recent-chats-cookie",
+      "doc_id": null,
+      "name": "最近会话列表（Cookie）",
+      "summary": "读取最近会话（私有 V7）",
+      "http_method": "GET",
+      "path": "/v7/recent_chats",
+      "signature": "COOKIE",
+      "scopes": [],
+      "auth_types": ["cookie"],
+      "cookie_only": true,
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": false,
+            "description": "分页大小",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页游标",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "search-chats-cookie",
+      "doc_id": null,
+      "name": "搜索会话（Cookie）",
+      "summary": "按关键字搜索会话（私有 V7）",
+      "http_method": "GET",
+      "path": "/v7/chats/search",
+      "signature": "COOKIE",
+      "scopes": [],
+      "auth_types": ["cookie"],
+      "cookie_only": true,
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "query",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "搜索关键字",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "分页大小（最小值 1）",
+            "enum": null
+          },
+          {
+            "name": "page_token",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "分页游标",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "search-messages-cookie",
+      "doc_id": null,
+      "name": "全局消息搜索（Cookie）",
+      "summary": "跨会话搜索消息（私有 V7）",
+      "http_method": "GET",
+      "path": "/v7/messages/search",
+      "signature": "COOKIE",
+      "scopes": [],
+      "auth_types": ["cookie"],
+      "cookie_only": true,
+      "params": {
+        "path": [],
+        "query": [
+          {
+            "name": "keyword",
+            "location": "query",
+            "ptype": "string",
+            "required": true,
+            "description": "消息关键字",
+            "enum": null
+          },
+          {
+            "name": "page_size",
+            "location": "query",
+            "ptype": "integer",
+            "required": true,
+            "description": "分页大小（最小值 1）",
+            "enum": null
+          },
+          {
+            "name": "chat_ids",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "会话 ID 列表（逗号分隔）",
+            "enum": null
+          },
+          {
+            "name": "start_time",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "开始时间（ISO8601）",
+            "enum": null
+          },
+          {
+            "name": "end_time",
+            "location": "query",
+            "ptype": "string",
+            "required": false,
+            "description": "结束时间（ISO8601）",
+            "enum": null
+          }
+        ],
+        "header": []
+      }
+    },
+    {
+      "id": "send-cloud-file-cookie",
+      "doc_id": null,
+      "name": "发送云文档消息（Cookie）",
+      "summary": "向会话发送云文档消息（私有 V7）",
+      "http_method": "POST",
+      "path": "/v7/chats/{chat_id}/messages/send_cloud_file",
+      "signature": "COOKIE",
+      "scopes": [],
+      "auth_types": ["cookie"],
+      "cookie_only": true,
+      "params": {
+        "path": [
+          {
+            "name": "chat_id",
+            "location": "path",
+            "ptype": "string",
+            "required": true,
+            "description": "会话 ID",
+            "enum": null
+          }
+        ],
+        "query": [],
+        "header": []
+      }
+    }
+  ]
+}

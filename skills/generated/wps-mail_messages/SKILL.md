@@ -8,6 +8,7 @@ metadata:
     requires:
       bins: ["wpscli"]
     cliHelp: "wpscli mail_messages --help"
+    auth_types: ["user"]
 ---
 
 # mail_messages service
@@ -22,7 +23,7 @@ wpscli mail_messages <endpoint> [flags]
 
 ### mail_messages
 
-  - `advance-search-mail` — 搜索邮件【高级搜索】 (`GET` `/v7/mail_messages/search`; scopes: `kso.mail.readwrite, kso.mail.read`)
+  - `advance-search-mail` — 搜索邮件【高级搜索】 (`GET` `/v7/mail_messages/search`; scopes: `kso.mail.readwrite, kso.mail.read`; auth: `user`)
 
 ## Discovering Commands
 

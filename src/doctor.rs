@@ -4,6 +4,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use serde_json::json;
 
 use crate::auth;
+use crate::quality;
 
 fn ts_secs(st: SystemTime) -> u64 {
     st.duration_since(UNIX_EPOCH)
@@ -133,6 +134,36 @@ pub fn run() -> serde_json::Value {
         }));
     }
 
+    let quality_snapshot = quality::baseline_snapshot().unwrap_or_else(|e| {
+        json!({
+            "contract_version": null,
+            "error": e.to_string(),
+            "descriptor_static": {"error_count": 0, "warning_count": 0},
+            "help_schema_consistency": {"inconsistent_endpoints": 0},
+            "red_lines": []
+        })
+    });
+    let descriptor_errors = quality_snapshot
+        .get("descriptor_static")
+        .and_then(|v| v.get("error_count"))
+        .and_then(|v| v.as_u64())
+        .unwrap_or(0);
+    let descriptor_warnings = quality_snapshot
+        .get("descriptor_static")
+        .and_then(|v| v.get("warning_count"))
+        .and_then(|v| v.as_u64())
+        .unwrap_or(0);
+    let inconsistent_endpoints = quality_snapshot
+        .get("help_schema_consistency")
+        .and_then(|v| v.get("inconsistent_endpoints"))
+        .and_then(|v| v.as_u64())
+        .unwrap_or(0);
+    let mut descriptor_health_score = 100i64;
+    descriptor_health_score -= descriptor_errors as i64 * 10;
+    descriptor_health_score -= descriptor_warnings as i64 * 3;
+    descriptor_health_score -= inconsistent_endpoints as i64 * 2;
+    descriptor_health_score = descriptor_health_score.clamp(0, 100);
+
     json!({
         "ok": true,
         "doctor": {
@@ -160,6 +191,16 @@ pub fn run() -> serde_json::Value {
                 "has_user_access_token": cache.user_access_token.is_some(),
                 "user_expires_at": cache.user_expires_at,
                 "user_token_expired": user_expired
+            },
+            "quality_probe": {
+                "descriptor_health_score": descriptor_health_score,
+                "contract_version": quality_snapshot.get("contract_version").cloned().unwrap_or(serde_json::Value::Null),
+                "descriptor_error_count": descriptor_errors,
+                "descriptor_warning_count": descriptor_warnings,
+                "help_schema_inconsistent_endpoints": inconsistent_endpoints,
+                "red_lines": quality_snapshot.get("red_lines").cloned().unwrap_or(serde_json::json!([])),
+                "top_domains": quality_snapshot.get("top_domains").cloned().unwrap_or(serde_json::Value::Null),
+                "hint": "运行 `wpscli quality` 获取完整门禁报告（含 dry-run 与连通抽样）"
             },
             "checks": checks
         }

@@ -1,6 +1,7 @@
 use clap::{Arg, ArgAction, Command};
 
 use crate::descriptor::ServiceDescriptor;
+use crate::help_schema_contract;
 
 pub fn build_root() -> Command {
     Command::new("wpscli")
@@ -39,14 +40,14 @@ pub fn build_service_command(desc: &ServiceDescriptor) -> Command {
     let mut cmd = Command::new(service_name)
         .about("描述符驱动的动态 API 命令");
     for ep in &desc.endpoints {
-        let endpoint_name = ep.id.replace('_', "-");
+        let endpoint_name = help_schema_contract::endpoint_command_name(&ep.id);
         let endpoint_name: &'static str = Box::leak(endpoint_name.into_boxed_str());
-        let default_auth = if ep.cookie_only {
-            "cookie"
-        } else if !ep.auth_types.is_empty() && ep.auth_types.len() == 1 && ep.auth_types[0].eq_ignore_ascii_case("cookie") {
-            "cookie"
-        } else {
-            "app"
+        let auth_types = help_schema_contract::supported_auth_types(ep);
+        let default_auth_owned = help_schema_contract::recommended_auth_type(&auth_types);
+        let default_auth = match default_auth_owned.as_str() {
+            "user" => "user",
+            "cookie" => "cookie",
+            _ => "app",
         };
         let mut ep_cmd = Command::new(endpoint_name)
             .about(ep.summary.clone())
@@ -107,21 +108,7 @@ pub fn build_service_command(desc: &ServiceDescriptor) -> Command {
 }
 
 fn endpoint_aliases(endpoint_name: &str) -> Vec<String> {
-    let mut aliases = Vec::new();
-    if endpoint_name.starts_with("get-") && endpoint_name.ends_with("-list") {
-        let inner = endpoint_name
-            .trim_start_matches("get-")
-            .trim_end_matches("-list");
-        if !inner.is_empty() {
-            let plural = if inner.ends_with('s') {
-                inner.to_string()
-            } else {
-                format!("{inner}s")
-            };
-            aliases.push(format!("list-{plural}"));
-        }
-    }
-    aliases
+    help_schema_contract::endpoint_aliases(endpoint_name)
 }
 
 pub fn build_raw_command() -> Command {
@@ -204,16 +191,42 @@ pub fn build_catalog_command() -> Command {
             "示例：\n  \
              wpscli catalog\n  \
              wpscli catalog --mode service\n  \
+             wpscli catalog --mode ai\n  \
              wpscli catalog drives",
         )
         .arg(
             Arg::new("mode")
                 .long("mode")
-                .value_parser(["show", "service"])
+                .value_parser(["show", "service", "ai"])
                 .default_value("show")
-                .help("分组模式：show=按 show.json 层级，service=按服务平铺"),
+                .help("分组模式：show=按 show.json 层级，service=按服务平铺，ai=机器可读索引"),
         )
         .arg(Arg::new("service").required(false))
+}
+
+pub fn build_quality_command() -> Command {
+    Command::new("quality")
+        .about("运行描述符质量门禁（静态/构造/连通抽样）")
+        .after_help(
+            "示例：\n  \
+             wpscli quality\n  \
+             wpscli quality --connectivity-sample 10\n  \
+             wpscli quality --connectivity-sample 10 --connectivity-auth user",
+        )
+        .arg(
+            Arg::new("connectivity-sample")
+                .long("connectivity-sample")
+                .default_value("0")
+                .value_parser(clap::value_parser!(u32))
+                .help("连通抽样数量（仅 GET + 无必填参数端点，0=跳过）"),
+        )
+        .arg(
+            Arg::new("connectivity-auth")
+                .long("connectivity-auth")
+                .value_parser(["auto", "app", "user", "cookie"])
+                .default_value("auto")
+                .help("连通抽样鉴权策略"),
+        )
 }
 
 pub fn build_completions_command() -> Command {

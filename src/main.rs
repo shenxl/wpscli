@@ -6,11 +6,14 @@ mod doctor;
 mod error;
 mod executor;
 mod formatter;
+mod help_schema_contract;
 mod helpers;
 mod link_resolver;
+mod quality;
 mod schema;
 mod secure_store;
 mod scope_catalog;
+mod capability_domains;
 mod skill_runtime;
 mod skill_gen;
 mod services;
@@ -46,7 +49,8 @@ async fn run() -> Result<(), WpsError> {
             .subcommand(commands::build_generate_skills_command())
             .subcommand(commands::build_completions_command())
             .subcommand(commands::build_ui_command())
-            .subcommand(commands::build_doctor_command());
+            .subcommand(commands::build_doctor_command())
+            .subcommand(commands::build_quality_command());
         root.print_long_help()
             .map_err(|e| WpsError::Validation(format!("failed to print help: {e}")))?;
         println!();
@@ -160,6 +164,24 @@ async fn run() -> Result<(), WpsError> {
         };
         let format = OutputFormat::parse(m.get_one::<String>("output"));
         let value = doctor::run();
+        print_value(&value, format);
+        return Ok(());
+    }
+    if first == "quality" {
+        let root = commands::build_root().subcommand(commands::build_quality_command());
+        let Some(m) = parse_matches_or_print(root, args.clone())? else {
+            return Ok(());
+        };
+        let format = OutputFormat::parse(m.get_one::<String>("output"));
+        let qm = m
+            .subcommand_matches("quality")
+            .ok_or_else(|| WpsError::Validation("missing quality subcommand".to_string()))?;
+        let connectivity_sample = *qm.get_one::<u32>("connectivity-sample").unwrap_or(&0);
+        let connectivity_auth = qm
+            .get_one::<String>("connectivity-auth")
+            .map(|s| s.as_str())
+            .unwrap_or("auto");
+        let value = quality::run(connectivity_sample as usize, connectivity_auth).await?;
         print_value(&value, format);
         return Ok(());
     }
@@ -375,12 +397,55 @@ fn run_catalog(service: Option<&str>, mode: &str) -> Result<serde_json::Value, W
             "services": services
         }));
     }
+    if mode == "ai" {
+        return build_ai_catalog();
+    }
 
     let categorized = build_show_grouped_catalog()?;
     Ok(serde_json::json!({
         "ok": true,
         "catalog_mode": "show",
         "groups": categorized
+    }))
+}
+
+fn build_ai_catalog() -> Result<serde_json::Value, WpsError> {
+    let manifest = descriptor::load_manifest()?;
+    let mut services = Vec::new();
+    let mut endpoint_total = 0usize;
+    for entry in manifest.services {
+        let Some(name) = entry.get("service").and_then(|v| v.as_str()) else {
+            continue;
+        };
+        let desc = descriptor::load_service_descriptor(name)?;
+        let mut endpoints = Vec::new();
+        for ep in &desc.endpoints {
+            endpoint_total += 1;
+            let contract = help_schema_contract::endpoint_contract(&desc.service, &desc.base_url, ep);
+            endpoints.push(serde_json::json!({
+                "endpoint": contract.endpoint,
+                "name": contract.name,
+                "summary": contract.summary,
+                "http": contract.http,
+                "auth": contract.auth,
+                "required_params": contract.params.required,
+                "command_template": contract.command_template,
+            }));
+        }
+        services.push(serde_json::json!({
+            "service": desc.service,
+            "base_url": desc.base_url,
+            "endpoint_count": desc.endpoints.len(),
+            "endpoints": endpoints
+        }));
+    }
+    Ok(serde_json::json!({
+        "ok": true,
+        "catalog_mode": "ai",
+        "contract_version": help_schema_contract::HELP_SCHEMA_CONTRACT_VERSION,
+        "total_services": services.len(),
+        "total_endpoints": endpoint_total,
+        "services": services
     }))
 }
 
